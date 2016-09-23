@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<%
+  plane_width = 300
+  plane_length = 300
+
+  model_width = 20
+  model_length = 20
+
+  #========================
+
+  # Probably should have made this more parametric/dynamic. Oh well.
+  iters_x = 14    # -140 to 140
+  iters_y = 14    # -140 to 140
+%>
+<sdf version="1.5">
+<model name="grass_plane">
+  <static>true</static>
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size><%= plane_width %> <%= plane_length %></size>
+          </plane>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>100</mu>
+              <mu2>50</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <% (-iters_x/2..iters_x/2).each do |x| %>
+      <% (-iters_y/2..iters_y/2).each do |y| %>
+      <%= '<visual name="' + 'visual_(' + String(x) + ', ' + String(y) + ')">' %>
+        <pose><%= model_width*x %> <%= model_length*y %> 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size><%= model_width %> <%= model_length %></size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts/</uri>
+            <uri>model://grass_plane/materials/textures/</uri>
+            <name>grass_dry</name>
+          </script>
+        </material>
+      </visual>
+      <% end %>
+      <% end %>
+    </link>
+  </model>
+</sdf>
