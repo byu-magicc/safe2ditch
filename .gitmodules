@@ -4,3 +4,12 @@
 [submodule "catkin_ws/src/visual_mtt"]
 	path = catkin_ws/src/visual_mtt
 	url = ssh://git@magiccvs.byu.edu:290/robust_tracking/visual_mtt.git
+[submodule "catkin_ws/src/fcu_common"]
+	path = catkin_ws/src/rosflight_stack/fcu_common
+	url = https://github.com/byu-magicc/fcu_common
+[submodule "catkin_ws/src/relative_nav"]
+	path = catkin_ws/src/rosflight_stack/relative_nav
+	url = ssh://git@magiccvs.byu.edu:290/relative_nav/relative_nav.git
+[submodule "catkin_ws/src/rotor_controller"]
+	path = catkin_ws/src/rosflight_stack/rotor_controller
+	url = ssh://git@magiccvs.byu.edu:290/relative_nav/rotor_controller.git
