@@ -47,8 +47,125 @@
       <direction>0.1 0.1 -1</direction>
       <cast_shadows>false</cast_shadows>
     </light>
+
+    <!-- The ground plane -->
     <include>
       <uri>model://grass_plane</uri>
     </include>
+
+    <!-- The asphalt plane -->
+    <model name="asphalt_road_1">
+      <include>
+        <uri>model://asphalt_plane</uri>
+      </include>
+      <pose>40 60 0 0 0 0</pose>
+    </model>
+    <model name="asphalt_road_2">
+      <include>
+        <uri>model://asphalt_plane</uri>
+      </include>
+      <pose>40 40 0 0 0 0</pose>
+    </model>
+    <model name="asphalt_road_3">
+      <include>
+        <uri>model://asphalt_plane</uri>
+      </include>
+      <pose>40 20 0 0 0 0</pose>
+    </model>
+    <model name="asphalt_road_4">
+      <include>
+        <uri>model://asphalt_plane</uri>
+      </include>
+      <pose>40 0 0 0 0 0</pose>
+    </model>
+    <model name="asphalt_road_5">
+      <include>
+        <uri>model://asphalt_plane</uri>
+      </include>
+      <pose>40 -20 0 0 0 0</pose>
+    </model>
+    <model name="asphalt_road_6">
+      <include>
+        <uri>model://asphalt_plane</uri>
+      </include>
+      <pose>40 -40 0 0 0 0</pose>
+    </model>
+
+    <!-- The Gas station on the road -->
+    <model name="gas_station">
+      <include>
+        <uri>model://gas_station</uri>
+      </include>
+      <pose>40 60 0 0 0 0</pose>
+    </model>
+
+    <!-- automatic population of trees -->
+    <population name="tall_pine_population">
+      <model name="tall_pine">
+        <include>
+          <static>true</static>
+          <uri>model://tall_pine</uri>
+        </include>
+      </model>
+      <pose>-50 50 0 0 0 0</pose>
+      <box>
+        <size>40 40 0.01</size>
+      </box>
+      <model_count>25</model_count>
+      <distribution>
+        <type>random</type>
+      </distribution>
+    </population>
+
+    <population name="red_spruce_population_by_road">
+      <model name="roadside_red_spruce">
+        <include>
+          <uri>model://red_spruce</uri>
+        </include>
+      </model>
+      <pose>25 20 0 0 0 0</pose>
+      <box>
+        <size>5 100 0.01</size>
+      </box>
+      <model_count>7</model_count>
+      <distribution>
+        <type>linear-y</type>
+      </distribution>
+    </population>
+
+    <population name="sequoia_population">
+      <model name="sequoia">
+        <include>
+          <static>true</static>
+          <uri>model://sequoia</uri>
+        </include>
+      </model>
+      <pose>0 0 0 0 0 0</pose>
+      <box>
+        <size>60 60 0.01</size>
+      </box>
+      <model_count>5</model_count>
+      <distribution>
+        <type>random</type>
+      </distribution>
+    </population>
+
+    <population name="walnut_population">
+      <model name="walnut">
+        <include>
+          <static>true</static>
+          <uri>model://walnut</uri>
+        </include>
+      </model>
+      <pose>0 0 0 0 0 0</pose>
+      <box>
+        <size>60 60 0.01</size>
+      </box>
+      <model_count>5</model_count>
+      <distribution>
+        <type>random</type>
+      </distribution>
+    </population>
+
   </world>
 </sdf>

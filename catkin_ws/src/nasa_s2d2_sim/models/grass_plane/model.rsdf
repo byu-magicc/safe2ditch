@@ -1,16 +1,20 @@
 <?xml version="1.0"?>
 <%
-  plane_width = 300
-  plane_length = 300
+  plane_width = 200 # meters
+  plane_length = 200 # meters
 
-  model_width = 20
-  model_length = 20
+  model_width = 20 # meters
+  model_length = 20 # meters
 
   #========================
 
   # Probably should have made this more parametric/dynamic. Oh well.
-  iters_x = 14    # -140 to 140
-  iters_y = 14    # -140 to 140
+  # 0 is not counted in this -- so if iters_x == 6, then there will be
+  # 3 on the left and three on the right and the one at the origin
+  iters_x_start = -3
+  iters_x_end = 1
+  iters_y_start = -2
+  iters_y_end = 3
 %>
 <sdf version="1.5">
 <model name="grass_plane">
@@ -32,8 +36,8 @@
           </friction>
         </surface>
       </collision>
-      <% (-iters_x/2..iters_x/2).each do |x| %>
-      <% (-iters_y/2..iters_y/2).each do |y| %>
+      <% (iters_x_start..iters_x_end).each do |x| %>
+      <% (iters_y_start..iters_y_end).each do |y| %>
       <%= '<visual name="' + 'visual_(' + String(x) + ', ' + String(y) + ')">' %>
         <pose><%= model_width*x %> <%= model_length*y %> 0 0 0 0</pose>
         <cast_shadows>false</cast_shadows>

@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="sequoia">
+    <static>true</static>
+    <link name="link">
+      <collision name='collision_trunk'>
+        <pose>0 0 2 0 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.5</radius>
+            <length>4</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='collision_top'>
+        <pose>0 0 6.5 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>3 3 5</size>
+          </box>
+        </geometry>
+      </collision>
+
+      <visual name="visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://sequoia/meshes/sequoia_lowpoly.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://sequoia/materials/scripts</uri>
+            <uri>model://sequoia/materials/textures</uri>
+            <name>trees/sequoia</name>
+          </script>
+        </material>
+      </visual>
+      
+    </link>
+  </model>
+</sdf>
