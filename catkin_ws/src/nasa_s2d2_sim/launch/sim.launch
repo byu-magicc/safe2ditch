@@ -25,10 +25,10 @@
 
   <!-- MAV parameters -->
   <arg name="mav_name" default="hummingbird"/>
-  <arg name="x"   default="-20.0"/>
-  <arg name="y"   default="-80.0"/>
-  <arg name="z"   default="40.0"/>
-  <arg name="yaw" default="1.2"/>
+  <arg name="x"   default="0"/>
+  <arg name="y"   default="-75"/>
+  <arg name="z"   default="30"/>
+  <arg name="yaw" default="1.59"/>
   <arg name="color" default="White"/>
   <arg name="starting_node_id" default="0"/>
 
