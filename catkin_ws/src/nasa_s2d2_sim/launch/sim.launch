@@ -9,6 +9,7 @@
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="headless" value="false"/>
+    <arg name="verbose" value="true"/>
   </include>
 
   <!-- Spawn the ground vehicles -->
@@ -46,7 +47,7 @@
     <rosparam command="load" file="$(find fcu_sim)/param/$(arg mav_name)_physical_params.yaml"/>
     <include file="$(find fcu_sim)/launch/spawn_mav.launch">
       <arg name="mav_name"            value="$(arg mav_name)" />
-      <arg name="model"               value="$(find fcu_sim)/urdf/$(arg mav_name)/$(arg mav_name)_base.xacro" />
+      <arg name="model"               value="$(find nasa_s2d2_sim)/urdf/$(arg mav_name)_base.xacro" />
       <arg name="enable_ground_truth" value="true" />
       <arg name="x"                   value="$(arg x)"/>
       <arg name="y"                   value="$(arg y)"/>
