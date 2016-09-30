@@ -13,3 +13,9 @@
 [submodule "catkin_ws/src/rotor_controller"]
 	path = catkin_ws/src/rosflight_stack/rotor_controller
 	url = ssh://git@magiccvs.byu.edu:290/relative_nav/rotor_controller.git
+[submodule "catkin_ws/src/rosflight_stack/rotor_estimator"]
+	path = catkin_ws/src/rosflight_stack/rotor_estimator
+	url = ssh://git@magiccvs.byu.edu:290/relative_nav/rotor_estimator.git
+[submodule "catkin_ws/src/rosflight_stack/joy_commander"]
+	path = catkin_ws/src/rosflight_stack/joy_commander
+	url = ssh://git@magiccvs.byu.edu:290/relative_nav/joy_commander.git

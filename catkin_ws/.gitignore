@@ -54,7 +54,3 @@ CATKIN_IGNORE
 
 # MATLAB ROS
 src/matlab_gen
-
-# Temporarily ignore until I can add these add submodules
-src/rosflight_stack/joy_commander
-src/rosflight_stack/rotor_estimator
