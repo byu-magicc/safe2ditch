@@ -20,6 +20,9 @@
 		<param name="image_transport" value="compressed"/>
 	</node>
 
+	<!-- OMG this is so gross (rransac.launch should be more flexible) -->
+	<remap from="/image_raw" to="camera/image_raw" />
+
 	<!-- Visual MTT with R-RANSAC -->	
 	<include file="$(find visual_mtt)/launch/rransac.launch">
 		<arg name="use_imu_in_sync" value="false" />
