@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+	<node pkg="ueye" type="camera" name="ueye_camera" output="screen">
+		<param name="zoom" value="2" />
+		<param name="exposure_time" value="100" />
+		<param name="frame_rate" value="30" />
+	</node>
+	<node pkg="image_view" type="image_view" name="camera_view" output="screen">
+		<remap from="image" to="image_raw"/>
+		<param name="image_transport" value="compressed"/>
+	</node>
+
+	<!-- Visual MTT with R-RANSAC -->	
+	<include file="$(find visual_mtt)/launch/rransac.launch">
+		<arg name="use_imu_in_sync" value="false" />
+	</include>
+
+</launch>
