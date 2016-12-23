@@ -19,4 +19,4 @@ $ catkin_make
 
 - Ubuntu 16.04.1 LTS (Xenial)
 - ROS Kinetic
-- `sudo apt-get install ros-kinetic-joy libncurses5-dev`
+- `sudo apt-get install ros-kinetic-joy ros-kinetic-serial libncurses5-dev`
