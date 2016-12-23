@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-	<node pkg="ueye" type="camera" name="ueye_camera" output="screen">
-		<param name="zoom" value="2" />
-		<param name="exposure_time" value="100" />
-		<param name="frame_rate" value="30" />
-	</node>
+	<!-- Connect to ueye camera and publish topic -->
+	<include file="$(find nasa_s2d2)/launch/ueye.launch">
+		<!-- ROS piping -->
+		<arg name="camera_name"  value="camera" />
+		<arg name="camera_topic" value="image_raw" />
+
+		<!-- Image AOI (use binning to downsample) -->
+		<arg name="image_width"  value="1600" />
+		<arg name="image_height" value="1200" />
+
+		<!-- Zoom/Downsample -->
+		<arg name="binning" value="2" />
+		<!-- setting to 2 makes images 800x600, allows for higher fps, and does not change FOV -->
+	</include>
+
 	<node pkg="image_view" type="image_view" name="camera_view" output="screen">
-		<remap from="image" to="image_raw"/>
+		<remap from="image" to="camera/image_raw"/>
 		<param name="image_transport" value="compressed"/>
 	</node>
 

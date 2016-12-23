@@ -20,3 +20,5 @@ $ catkin_make
 - Ubuntu 16.04.1 LTS (Xenial)
 - ROS Kinetic
 - `sudo apt-get install ros-kinetic-joy ros-kinetic-serial libncurses5-dev`
+
+For now, [ueye_cam](https://github.com/anqixu/ueye_cam) does not have a Jenkins job for `armhf` in the ROS buildfarm. Until that gets resolved, I have added `ueye_cam` as a git submodule. This package depends on having the IDS Software Suite and SDK installed on this machine, see [here](https://magiccvs.byu.edu/gitlab/robust_tracking/nasa-s2d2/wikis/software-setup).

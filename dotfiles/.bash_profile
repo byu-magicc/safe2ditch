@@ -8,4 +8,4 @@ alias ...='cd ../..'
 source /opt/ros/kinetic/setup.bash
 
 # ODROID ROS Commands
-alias catkin_make_odroid='catkin_make -DCATKIN_WHITELIST_PACKAGES="nasa_s2d2;visual_mtt"'
+alias catkin_make_odroid='catkin_make -DCATKIN_WHITELIST_PACKAGES="nasa_s2d2;visual_mtt;ueye_cam"'
