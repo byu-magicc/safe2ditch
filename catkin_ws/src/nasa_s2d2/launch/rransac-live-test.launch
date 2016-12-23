@@ -10,6 +10,14 @@
 		<arg name="image_width"  value="1600" />
 		<arg name="image_height" value="1200" />
 
+		<!-- Camera acquisition rate -->
+		<!-- these values were empirically selected using -->
+		<!-- dynamic reconfigure on an ODROID XU4 -->
+		<arg name="auto_frame_rate" default="False" />
+		<arg name="frame_rate"      default="16.0" />
+		<arg name="output_rate"     default="0.0" /> <!-- >0: throttle rate for publishing frames -->
+		<arg name="pixel_clock"     default="34" />
+
 		<!-- Zoom/Downsample -->
 		<arg name="binning" value="2" />
 		<!-- setting to 2 makes images 800x600, allows for higher fps, and does not change FOV -->
