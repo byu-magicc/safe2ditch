@@ -1,10 +1,16 @@
 #!/usr/bin/env python
-import rospy
 import pyqtgraph as pg
 import time, tf
 import numpy as np
+import utm
 import thread
+
+import rospy
 from nav_msgs.msg import Odometry
+from sensor_msgs.msg import NavSatFix
+
+# How many targets are there?
+targets = 1
 
 # initialize variables
 plot_init = True # center square plot over initial data
@@ -21,6 +27,9 @@ pw.showGrid(x=True,y=True)
 pw.resize(800,800)
 pw.addLegend()
 
+def setup_legend():
+    pass
+
 # tracker path and orientation objects
 tracker_path = pw.plot(name='tracker_path')
 tracker_path.setPen(width=2, color=(255,0,0)) # set pen color
@@ -28,16 +37,17 @@ tracker_ori = pw.plot()
 tracker_ori.setPen(width=3, color=(0,255,0)) # set pen color
 
 # target path and orientation objects
-target_path = pw.plot(name='target_path')
-target_path.setPen(width=2, color=(0,0,255)) # set pen color
-target_ori = pw.plot()
-target_ori.setPen(width=3, color=(0,255,0)) # set pen color
+for i in xrange(targets):
+    target_path = pw.plot(name='target_path')
+    target_path.setPen(width=2, color=(0,0,255)) # set pen color
+    target_ori = pw.plot()
+    target_ori.setPen(width=3, color=(0,255,0)) # set pen color
 
 # my arrow in body coordinates to show orientation (UTM)
 my_arrow = np.array(((0,1,0.7,1,0.7),(0,0,-0.2,0,0.2),(0,0,0,0,0)))
 
 # this function stores the tracker's position and orientation in UTM coordinates
-def tracker_callback(msg):
+def uav_callback(msg):
     # orientation in quaternion form
     quaternion = (
         msg.pose.pose.orientation.x,
@@ -57,21 +67,17 @@ def tracker_callback(msg):
                                         euler[2])))
 
 # this function stores the target's position and orientation in UTM coordinates
-def target_callback(msg):
-    # orientation in quaternion form
-    quaternion = (
-        msg.pose.pose.orientation.x,
-        msg.pose.pose.orientation.y,
-        msg.pose.pose.orientation.z,
-        msg.pose.pose.orientation.w)
+def target_callback(target, msg):
+    # Android GPS Beacon doesn't give orientation :(
+    euler = [0, 0, 0]
 
-    # Use ROS tf to convert to Euler angles from quaternion
-    euler = tf.transformations.euler_from_quaternion(quaternion)
+    # Convert from lat/lon to UTM (https://pypi.python.org/pypi/utm)
+    u = utm.from_latlon(msg.latitude, msg.longitude)
 
     # save pose
-    target_state_list.append(np.array((msg.pose.pose.position.x, \
-                                        msg.pose.pose.position.y, \
-                                        msg.pose.pose.position.z, \
+    target_state_list.append(np.array((u[0], \
+                                        u[1], \
+                                        msg.altitude, \
                                         euler[0],                 \
                                         euler[1],                 \
                                         euler[2])))
@@ -125,30 +131,6 @@ def draw_target():
     if x_values.size == y_values.size:
         target_path.setData(x=x_values, y=y_values)
 
-    # build rotation matrix
-    phi = target_state_list[-1][3]
-    theta = target_state_list[-1][4]
-    psi = target_state_list[-1][5]
-    R_v2_to_b = np.array(((1.,  0.         , 0.         ),
-                          (0.,  np.cos(phi), np.sin(phi)),
-                          (0., -np.sin(phi), np.cos(phi))))
-    R_v1_to_v2 = np.array(((np.cos(theta), 0., -np.sin(theta)),
-                           (0.           , 1.,  0.           ),
-                           (np.sin(theta), 0.,  np.cos(theta))))
-    R_v_to_v1 = np.array((( np.cos(psi), np.sin(psi), 0.),
-                          (-np.sin(psi), np.cos(psi), 0.),
-                          ( 0.         , 0.         , 1.)))
-    R_v_to_b = R_v2_to_b.dot(R_v1_to_v2.dot(R_v_to_v1))
-
-    # translation vector
-    p_trans = np.atleast_2d(target_state_list[-1][0:3]).transpose()
-
-    # compute new orientation arrow in 3-D
-    p_new = R_v_to_b.transpose().dot(my_arrow) + p_trans
-
-    # draw orientation
-    target_ori.setData(x=p_new[0,:], y=p_new[1,:])
-
 def plot_data():
     # set the drawn data
     if tracker_state_list: # make sure list is not empty
@@ -161,11 +143,17 @@ def plot_data():
 
 def main():
     # initialize node
-    rospy.init_node('plot_odometry', anonymous=True)
+    rospy.init_node('gps_plotter', anonymous=True)
 
-    # setup subsribers
-    rospy.Subscriber('/gigabyte/mavros/global_position/local', Odometry, tracker_callback)
-    rospy.Subscriber('/target/mavros/global_position/local', Odometry, target_callback)
+    # The UAV subscriber expects the `/mavros/global_position/local` message from MAVROS
+    rospy.Subscriber('uav', Odometry, uav_callback)
+
+    # For every target, create a listener
+    for i in xrange(targets):
+        rospy.Subscriber('target{}'.format(i), NavSatFix, lambda msg: target_callback(i, msg))
+
+    # Add a legend for UAV and targets
+    setup_legend()
 
     # listen for messages and plot
     while not rospy.is_shutdown():
