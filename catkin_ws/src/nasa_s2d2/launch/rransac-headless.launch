@@ -18,4 +18,13 @@
 		<arg name="imgtopic" value="/camera/image_raw" />
 	</include>
 
+	<!-- MAVROS -->
+	<include file="$(find mavros)/launch/px4.launch">
+		<!-- Connected to Pixhawk via FTDI cable to telem2 -->
+		<arg name="fcu_url" value="/dev/ttyUSB0:57600" />
+	</include>
+
+	<!-- MAVROS / MAVLink stream rates -->
+	<node name="mavsys" pkg="mavros" type="mavsys" />
+
 </launch>
