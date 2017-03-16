@@ -25,6 +25,9 @@
 	</include>
 
 	<!-- MAVROS / MAVLink stream rates -->
-	<node name="mavsys" pkg="mavros" type="mavsys" />
+	<node name="mavsys" pkg="mavros" type="mavsys" args="rate --extra1 10" />
+	<node name="mavsys" pkg="mavros" type="mavsys" args="rate --ext-status 10" />
+	<node name="mavsys" pkg="mavros" type="mavsys" args="rate --position 10" />
+	<node name="mavsys" pkg="mavros" type="mavsys" args="rate --raw-sensors 10" />
 
 </launch>
