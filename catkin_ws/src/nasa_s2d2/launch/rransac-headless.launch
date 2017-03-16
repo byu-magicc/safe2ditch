@@ -3,11 +3,6 @@
 	<!-- Connect to ueye camera configured for ODROID and publish topic -->
 	<include file="$(find nasa_s2d2)/launch/run-camera.launch" />
 
-	<node pkg="image_view" type="image_view" name="camera_view" output="screen">
-		<remap from="image" to="camera/image_raw"/>
-		<param name="image_transport" value="compressed"/>
-	</node>
-
 	<!-- Visual MTT with R-RANSAC -->	
 	<include file="$(find visual_mtt)/launch/rransac.launch">
 		<arg name="use_imu_in_sync" value="false" />
@@ -20,7 +15,7 @@
 		<arg name="show_moving_obj_video" value="false" />
 
 		<!-- remap imageGyroSync image topic to what the user wants -->
-		<arg name="imgtopic" value="camera/image_raw" />
+		<arg name="imgtopic" value="/camera/image_raw" />
 	</include>
 
 </launch>
