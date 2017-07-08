@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 	<!-- Connect to ueye camera and publish topic -->
-	<include file="$(find nasa_s2d2)/launch/ueye.launch">
+	<include file="$(find nasas2dval)/launch/ueye.launch">
 		<!-- ROS piping -->
-		<arg name="camera_name"  value="camera" />
+		<arg name="camera_name"  value="ueye1250" />
 		<arg name="camera_topic" value="image_raw" />
 
 		<!-- Image AOI (use binning to downsample) -->
@@ -14,9 +14,9 @@
 		<!-- these values were empirically selected using -->
 		<!-- dynamic reconfigure on an ODROID XU4 -->
 		<arg name="auto_frame_rate" default="False" />
-		<arg name="frame_rate"      default="16.0" />
+		<arg name="frame_rate"      default="30.0" />
 		<arg name="output_rate"     default="0.0" /> <!-- >0: throttle rate for publishing frames -->
-		<arg name="pixel_clock"     default="34" />
+		<arg name="pixel_clock"     default="65" />
 
 		<!-- Zoom/Downsample -->
 		<arg name="binning" value="2" />
@@ -24,3 +24,4 @@
 	</include>
 
 </launch>
+
