@@ -6,9 +6,9 @@
         <arg name="fcu_url"  value="/dev/ttyTHS2" />
     </include>
 
-    <node name="gofast" pkg="nasas2dval" type="gofast.sh" output="screen" />
+    <node name="gofast" pkg="nasa_s2d" type="gofast.sh" output="screen" />
 
-    <include file="$(find nasas2dval)/launch/run-camera.launch">
+    <include file="$(find nasa_s2d)/launch/run-camera.launch">
     </include>
 
     <!-- launch visual_mtt -->

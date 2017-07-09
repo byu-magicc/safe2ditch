@@ -1,5 +1,5 @@
 # Get path to this file, no matter where it is sourced from
-MYPATH=`dirname BASH_SOURCE[0]`
+MYPATH=`dirname ${BASH_SOURCE[0]}`
 
 alias ll='ls -lh --color=auto'
 alias l='ls -alh --color=auto'
