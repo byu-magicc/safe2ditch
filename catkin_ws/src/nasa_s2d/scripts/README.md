@@ -7,3 +7,7 @@ Taken from Jerel's work on the [gps_gimal_pointing](https://magiccvs.byu.edu/git
 
 **Dependencies:**
 - `sudo -H pip install pyqtgraph utm`
+
+## `go_fast.sh` ##
+
+Increase stream rates of `mavros` for IMU and GPS.
