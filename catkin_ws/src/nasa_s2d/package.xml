@@ -4,8 +4,11 @@
   <version>0.0.0</version>
   <description>NASA Safe2Ditch - Vision Assisted Landing</description>
   
+  <license>BSD 3-Clause</license>
+  
   <maintainer email="parkerclusk@gmail.com">Parker Lusk</maintainer>
   <author email="parkerclusk@gmail.com">Parker Lusk</author>
+
 
 
   <!-- The *_depend tags are used to specify dependencies -->
