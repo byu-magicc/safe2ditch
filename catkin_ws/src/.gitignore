@@ -1,6 +1,0 @@
-# Ignore everything
-*
-# But not these files...
-!.gitignore
-!nasa_s2d2
-!nasa_s2d2_sim

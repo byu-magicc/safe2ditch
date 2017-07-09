@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <!-- Connect to ueye camera and publish topic -->
+    <include file="$(find mavros)/launch/px4.launch">
+        <!-- Pixhawk is on TX2 UART 1 -->
+        <arg name="fcu_url"  value="/dev/ttyTHS2" />
+    </include>
+
+    <node name="gofast" pkg="nasas2dval" type="gofast.sh" output="screen" />
+
+    <include file="$(find nasas2dval)/launch/run-camera.launch">
+    </include>
+
+    <!-- launch visual_mtt -->
+     <include if="1" file="$(find visual_mtt)/launch/visual_mtt.launch">
+       <!-- <arg name="params" value="default" /> -->
+       <arg name="tuning" value="false" />
+       <arg name="show_tracks" value="false" />
+       <arg name="pub_output_img" value="true" />
+       <arg name="imgtopic" value="/camera/image_raw" />
+     </include>
+
+</launch>
+

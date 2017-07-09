@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 	<!-- Connect to ueye camera and publish topic -->
-	<include file="$(find nasa_s2d)/launch/ueye.launch">
+	<include file="$(find nasas2dval)/launch/ueye.launch">
 		<!-- ROS piping -->
 		<arg name="camera_name"  value="ueye1250" />
 		<arg name="camera_topic" value="image_raw" />
