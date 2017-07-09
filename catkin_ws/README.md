@@ -1,3 +1,0 @@
-ROS Catkin Workspace
-====================
-
