@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<launch>
-
-	<node name="gps_plotter" pkg="nasa_s2d" type="gps_plotter.py" output="screen">
-		<remap from="target0" to="signglass/fix" />
-	</node>
-
-</launch>

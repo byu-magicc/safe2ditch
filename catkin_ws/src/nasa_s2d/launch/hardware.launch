@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <!-- Connect to ueye camera and publish topic -->
+    <!-- Start mavros connected to a Pixhawk running APM:Copter -->
     <include file="$(find mavros)/launch/px4.launch">
         <!-- Pixhawk is on TX2 UART 1 -->
         <arg name="fcu_url"  value="/dev/ttyTHS2" />
     </include>
 
+    <!-- Run a series of mavros mavsys commands to increase sensor pub rate -->
     <node name="gofast" pkg="nasa_s2d" type="gofast.sh" output="screen" />
 
-    <include file="$(find nasa_s2d)/launch/run-camera.launch">
-    </include>
+    <!-- Connect to ueye camera and publish camera/image_raw topic and camera_info -->
+    <include file="$(find nasa_s2d)/launch/run-camera.launch" />
 
     <!-- launch visual_mtt -->
-     <include if="1" file="$(find visual_mtt)/launch/visual_mtt.launch">
-       <!-- <arg name="params" value="default" /> -->
-       <arg name="tuning" value="false" />
-       <arg name="show_tracks" value="false" />
-       <arg name="pub_output_img" value="true" />
-       <arg name="imgtopic" value="/camera/image_raw" />
-     </include>
+    <include file="$(find visual_mtt)/launch/visual_mtt.launch">
+        <!-- <arg name="params" value="default" /> -->
+        <arg name="tuning" value="false" />
+        <arg name="show_tracks" value="false" />
+        <arg name="pub_output_img" value="true" />
+        <arg name="imgtopic" value="/camera/image_raw" />
+    </include>
 
 </launch>
-

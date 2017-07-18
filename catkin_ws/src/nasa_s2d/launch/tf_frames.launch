@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <node pkg="nasa_s2d" type="tf_frames" name="sully_tf_frames" output="screen">
+        <remap from="uav_pose" to="mavros/local_position/pose" />
+    </node>
+
+    <node pkg="tf" type="static_transform_publisher" name="static_tf2" args="0 0 0 0 0 3.14159 fcu_body fcu_body_ned 10" />
+    <node pkg="tf" type="static_transform_publisher" name="static_tf1" args="0 0 6 0 0 0 map fcu 10" />
+
+</launch>

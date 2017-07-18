@@ -11,8 +11,8 @@
 		<arg name="image_height" value="1200" />
 
 		<!-- Camera acquisition rate -->
-		<!-- these values were empirically selected using -->
-		<!-- dynamic reconfigure on an ODROID XU4 -->
+		<!-- 	these values were empirically selected using -->
+		<!-- 	dynamic reconfigure on a Jetson TX2 -->
 		<arg name="auto_frame_rate" default="False" />
 		<arg name="frame_rate"      default="30.0" />
 		<arg name="output_rate"     default="0.0" /> <!-- >0: throttle rate for publishing frames -->
