@@ -5,7 +5,18 @@
         <remap from="uav_pose" to="mavros/local_position/pose" />
     </node>
 
-    <node pkg="tf" type="static_transform_publisher" name="static_tf2" args="0 0 0 0 0 3.14159 fcu_body fcu_body_ned 10" />
-    <node pkg="tf" type="static_transform_publisher" name="static_tf1" args="0 0 6 0 0 0 map fcu 10" />
+    <!-- Relate the inertial map to the fcu (ENU) inertial frame -->
+    <node pkg="tf" type="static_transform_publisher" name="static_tf1" args="0 0 0 0 0 0 map fcu 10" />
+
+    <!-- Transform NWU base_link (ROS body frame) to body NED (UAV book) -->
+    <node pkg="tf" type="static_transform_publisher" name="static_tf2" args="0 0 0 0 0 3.14159 base_link base_link_ned 10" />
+
+    <!-- Transform from body NED frame into the gimbal frame. For Sully, it's a static 45 deg camera -->
+    <!-- Remember that gimbal rotation uses a 3-1-2 (y-r-p) Euler angle sequence -->
+    <node pkg="tf" type="static_transform_publisher" name="static_tf3" args="0 0 0 0 -0.7854 0 base_link_ned gimbal 10" />
+
+    <!-- Transform from gimbal body-NED frame into the camera frame (right-down-optical_axis) -->
+    <node pkg="tf" type="static_transform_publisher" name="static_tf4" args="0 0 0 1.5708 0 1.5708 gimbal camera 10" />
+    
 
 </launch>

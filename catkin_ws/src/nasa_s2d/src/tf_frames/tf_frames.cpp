@@ -16,10 +16,10 @@ void TFFrames::cb_uav(const geometry_msgs::PoseStampedPtr& msg)
     // Create an empty transform
     tf::Transform transform;
 
-    // Link the camera to the quad body
+    // Translate and rotate into the body (base_link) frame -- remember that this is all in ENU instead of NED
     transform.setOrigin(tf::Vector3(msg->pose.position.x, msg->pose.position.y, msg->pose.position.z));
     transform.setRotation(tf::Quaternion(msg->pose.orientation.x, msg->pose.orientation.y, msg->pose.orientation.z, msg->pose.orientation.w));
-    tf_br_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "fcu", "fcu_body")); // fcu_body is in ROS Body (REP 103) -- body NWU
+    tf_br_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "fcu", "base_link")); // base_link is in ROS Body (REP 103) -- body NWU
 
 }
 
