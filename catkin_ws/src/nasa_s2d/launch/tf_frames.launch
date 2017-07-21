@@ -5,9 +5,11 @@
         <remap from="uav_pose" to="mavros/local_position/pose" />
     </node>
 
-    <!-- Relate the inertial map to the fcu (ENU) inertial frame -->
-    <node pkg="tf" type="static_transform_publisher" name="static_tf1" args="0 0 0 0 0 0 map fcu 10" />
+    <!-- Create an NED inertial map -->
     <node pkg="tf" type="static_transform_publisher" name="static_tf0" args="0 0 0 1.5708 0 3.14159 map map_ned 10" />
+
+    <!-- Relate the inertial map (ENU) to the fcu (ENU) inertial frame -->
+    <node pkg="tf" type="static_transform_publisher" name="static_tf1" args="0 0 0 0 0 0 map fcu 10" />
 
     <!-- Transform NWU base_link (ROS body frame) to body NED (UAV book) -->
     <node pkg="tf" type="static_transform_publisher" name="static_tf2" args="0 0 0 0 0 3.14159 base_link base_link_ned 10" />
