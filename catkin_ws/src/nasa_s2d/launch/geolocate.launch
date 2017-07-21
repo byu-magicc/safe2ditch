@@ -24,6 +24,7 @@
         <arg name="show3d" value="$(arg show3d)" />
     </include>
 
+
     <!-- Call ROS Service to set UAV position offsets and heading override -->
     <group if="$(eval str(arg('heading')) is not '' or str(arg('altitude')) is not '')">
 

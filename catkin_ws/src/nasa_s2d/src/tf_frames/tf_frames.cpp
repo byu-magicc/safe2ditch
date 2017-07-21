@@ -9,9 +9,25 @@ TFFrames::TFFrames() :
 
     // Set up Publishers and Subscribers
     sub_uav_ = nh_.subscribe("uav_pose", 1, &TFFrames::cb_uav, this);
+    sub_uav_fix_ = nh_.subscribe("uav_gps_fix", 1, &TFFrames::cb_uav_fix, this);
 
     // ROS Services
     srv_uavpose_ = nh_private.advertiseService("set_uav_pose", &TFFrames::srv_set_pose, this);
+}
+
+// ----------------------------------------------------------------------------
+
+bool TFFrames::srv_set_pose(nasa_s2d::SetUAVPose::Request &req, nasa_s2d::SetUAVPose::Response &res)
+{
+    pose_override_ = true;
+
+    // Allow the user to set the UAV heading
+    // Heading w.r.t ENU inertial frame (i.e., heading is zero at East)
+    heading_ = req.heading_enu * (M_PI/180);
+
+    // Provide an offset to the position of the UAV
+    // Position is w.r.t ENU inertial frame
+    position_offset_ = tf::Vector3(req.offset_enu.x, req.offset_enu.y, req.offset_enu.z);
 }
 
 // ----------------------------------------------------------------------------
@@ -60,17 +76,23 @@ void TFFrames::cb_uav(const geometry_msgs::PoseStampedPtr& msg)
 
 // ----------------------------------------------------------------------------
 
-bool TFFrames::srv_set_pose(nasa_s2d::SetUAVPose::Request &req, nasa_s2d::SetUAVPose::Response &res)
+void TFFrames::cb_uav_fix(const sensor_msgs::NavSatFix& msg)
 {
-    pose_override_ = true;
+    // Create an identity transform
+    tf::Transform transform;
+    transform.setIdentity();
 
-    // Allow the user to set the UAV heading
-    // Heading w.r.t ENU inertial frame (i.e., heading is zero at East)
-    heading_ = req.heading_enu*M_PI/180;
+    // Convert lat/lon to UTM
+    // http://answers.ros.org/question/50763/need-help-converting-lat-long-coordinates-into-meters/?answer=257140#post-id-257140
+    geographic_msgs::GeoPoint geo_pt;
+    geo_pt.latitude = msg.latitude;
+    geo_pt.longitude = msg.longitude;
+    geo_pt.altitude = msg.altitude;
+    geodesy::UTMPoint utm_pt(geo_pt);
 
-    // Provide an offset to the position of the UAV
-    // Position is w.r.t ENU inertial frame
-    position_offset_ = tf::Vector3(req.offset_enu.x, req.offset_enu.y, req.offset_enu.z);
+    // Link the fcu/map origin to the origin of this UTM zone.
+    transform.setOrigin(tf::Vector3(-utm_pt.easting, -utm_pt.northing, 0));
+    tf_br_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "fcu", "utm_origin_" + std::to_string(utm_pt.zone) + utm_pt.band));
 }
 
 }

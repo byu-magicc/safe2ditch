@@ -6,6 +6,11 @@
 #include <tf/transform_listener.h>
 #include <tf/transform_broadcaster.h>
 
+#include <geodesy/utm.h>
+
+#include <sensor_msgs/NavSatFix.h>
+#include <geographic_msgs/GeoPoint.h>
+
 #include "nasa_s2d/SetUAVPose.h"
 
 namespace tf_frames {
@@ -19,6 +24,7 @@ namespace tf_frames {
         // Node handles, publishers, subscribers
         ros::NodeHandle nh_;
         ros::Subscriber sub_uav_;
+        ros::Subscriber sub_uav_fix_;
 
         // ROS tf listener and broadcaster
         tf::TransformListener tf_listener_;
@@ -34,6 +40,7 @@ namespace tf_frames {
 
         // Functions
         void cb_uav(const geometry_msgs::PoseStampedPtr& msg);
+        void cb_uav_fix(const sensor_msgs::NavSatFix& msg);
         bool srv_set_pose(nasa_s2d::SetUAVPose::Request &req, nasa_s2d::SetUAVPose::Response &res);
         
     };
