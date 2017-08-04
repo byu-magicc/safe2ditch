@@ -4,10 +4,12 @@
     <arg name="show3d"      default="false" />
     <arg name="heading"     default="" />
     <arg name="altitude"    default="" />
+    <arg name="camera_name" default="camera" />
 
     <!-- show3d:          Show the rviz vizualization of the geolocated targets -->
     <!-- heading:         Optional ENU heading overriding (for bad compass data)-->
     <!-- altitude:        Optional ENU altitude offset                          -->
+    <!-- camera_name:     Camera name to subscribe to the camera_info of        -->
 
     <!-- ###################################################################### -->
 
@@ -18,10 +20,10 @@
 
 
     <!-- connect the geolocator to the output of visual_mtt -->
-    <remap from="video" to="camera_sim/image_raw" />
     <remap from="pose"  to="mavros/local_position/pose" />
     <include file="$(find flat_earth_geolocation)/launch/geolocate.launch">
         <arg name="show3d" value="$(arg show3d)" />
+        <arg name="camera_name" value="$(arg camera_name)" />
     </include>
 
 
