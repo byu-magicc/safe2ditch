@@ -16,9 +16,12 @@
     <include file="$(find visual_mtt)/launch/visual_mtt.launch">
         <!-- <arg name="params" value="default" /> -->
         <arg name="tuning" value="false" />
-        <arg name="show_tracks" value="false" />
-        <arg name="pub_output_img" value="true" />
         <arg name="imgtopic" value="/camera/image_raw" />
+    </include>
+
+    <!-- launch geolocation -->
+    <include file="$(find nasa_s2d)/launch/geolocate.launch">
+        <arg name="camera_name" value="camera" />
     </include>
 
 </launch>
