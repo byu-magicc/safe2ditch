@@ -12,6 +12,7 @@ export MAKEFLAGS="-j $(grep -c ^processor /proc/cpuinfo)"
 # ROS Kinetic
 export ROS_MASTER_URI=http://localhost:11311
 export ROS_IP=192.168.0.138
+source /opt/ros/kinetic/setup.bash
 source $MYPATH/../catkin_ws/devel/setup.bash
 
 # ROS Tools
