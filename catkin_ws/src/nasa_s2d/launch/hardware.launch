@@ -6,6 +6,10 @@
         <arg name="fcu_url"  value="/dev/ttyTHS2:115200" />
     </include>
 
+    <node name="gcs_bridge" pkg="mavros" type="gcs_bridge">
+        <param name="gcs_url" value="udp://@localhost" />
+    </node>
+
     <!-- Run a series of mavros mavsys commands to increase sensor pub rate -->
     <node name="gofast" pkg="nasa_s2d" type="gofast.sh" output="screen" />
 
@@ -14,7 +18,7 @@
 
     <!-- launch visual_mtt -->
     <include file="$(find visual_mtt)/launch/visual_mtt.launch">
-        <!-- <arg name="params" value="default" /> -->
+        <arg name="params" value="../../nasa_s2d/param/default" />
         <arg name="tuning" value="false" />
         <arg name="imgtopic" value="/camera/image_raw" />
     </include>
