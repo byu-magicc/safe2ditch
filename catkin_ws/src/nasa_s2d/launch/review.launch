@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-    <arg name="bagroot"     default="$(eval env('HOME') + '/Documents/bags/nasa/')" />
-    <arg name="bagname"     default="run3.bag" />
-    <arg name="bagpath"     default="$(arg bagroot)/$(arg bagname)" />
-    <arg name="hide_bag"    default="false" />
-    <arg name="ns"          default="review" />
+    <arg name="bagroot"         default="$(eval env('HOME') + '/Documents/bags/nasa/')" />
+    <arg name="bagname"         default="run3.bag" />
+    <arg name="bagpath"         default="$(arg bagroot)/$(arg bagname)" />
+    <arg name="hide_bag"        default="false" />
+    <arg name="show_dashboard"  default="true" />
+    <arg name="tuning"          default="true" />
+    <arg name="ns"              default="review" />
 
     <!-- ###################################################################### -->
 
@@ -25,11 +27,14 @@
     <group ns="$(arg ns)">
         <include file="$(find visual_mtt)/launch/visual_mtt.launch">
           <arg name="params"    value="$(find nasa_s2d)/param/sully.yaml" />
-          <arg name="tuning"    value="true" />
+          <arg name="tuning"    value="$(arg tuning)" />
           <arg name="imgtopic"  value="camera/image_raw" />
         </include>
 
-        <node pkg="rqt_gui" type="rqt_gui" name="review_dashboard" args="--perspective-file '$(find nasa_s2d)/rqt/review.perspective'" />
+        <!-- Start up a dashboard perspective -->
+        <group if="$(arg show_dashboard)">
+            <node pkg="rqt_gui" type="rqt_gui" name="review_dashboard" args="--perspective-file '$(find nasa_s2d)/rqt/review.perspective'" />
+        </group>
     </group>
 
 </launch>
