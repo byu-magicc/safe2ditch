@@ -6,10 +6,10 @@
 	url = https://github.com/ros-perception/vision_opencv
 [submodule "catkin_ws/src/visual_mtt2"]
 	path = catkin_ws/src/visual_mtt2
-	url = https://magiccvs.byu.edu/gitlab/robust_tracking/visual_mtt2.git
+	url = ssh://git@magiccvs.byu.edu:290/robust_tracking/visual_mtt2.git
 [submodule "catkin_ws/src/flat_earth_geolocation"]
 	path = catkin_ws/src/flat_earth_geolocation
-	url = https://magiccvs.byu.edu/gitlab/robust_tracking/flat_earth_geolocation.git
+	url = ssh://git@magiccvs.byu.edu:290/robust_tracking/flat_earth_geolocation.git
 [submodule "catkin_ws/src/rviz_satellite"]
 	path = catkin_ws/src/rviz_satellite
 	url = https://github.com/gareth-cross/rviz_satellite
