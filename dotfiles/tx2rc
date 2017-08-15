@@ -21,6 +21,13 @@ alias bagrecord='rosbag record -a -x "/camera/(.*)|/tracks_video(.*)" /camera/im
 alias rosgo='roslaunch nasa_s2d hardware.launch'
 alias roskill='killall -2 rosbag && killall roslaunch'
 
+function rosreview {
+	BAG=$1
+	set -x
+	roslaunch nasa_s2d review.launch bagname:=${BAG} show_dashboard:=false tuning:=false hide_bag:=true bagroot:=/media/nvidia/sullydata/nasa
+	{ set +x; } 2> /dev/null
+}
+
 # Use rosbag filter to create a new bag
 function bagcut {
         BAG=${1:0:-4}
