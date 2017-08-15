@@ -33,10 +33,13 @@ class AdaptiveParams:
         # Recursive-RANSAC Parameters
 
         size_of_object = 1.1 # meters
+        dist_to_merge = size_of_object*1.3 # meters
 
         params = {
                     'tauR': size_of_object/z,
-                    'tauR_RANSAC': size_of_object/z
+                    'tauR_RANSAC': size_of_object/z,
+                    'tau_xpos_abs_diff': dist_to_merge/z,
+                    'tau_ypos_abs_diff': dist_to_merge/z,
                  }
 
         self.update_params('rransac', params)

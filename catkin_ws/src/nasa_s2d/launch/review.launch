@@ -38,6 +38,10 @@
             <remap from="odom" to="/mavros/global_position/local" />
         </node>
 
+        <node pkg="nasa_s2d" type="adaptive_params.py" name="adaptive_params">
+            <remap from="odom" to="/mavros/global_position/local" />
+        </node>
+
         <!-- Start up a dashboard perspective -->
         <group if="$(arg show_dashboard)">
             <node pkg="rqt_gui" type="rqt_gui" name="review_dashboard" args="--perspective-file '$(find nasa_s2d)/rqt/review.perspective'" />

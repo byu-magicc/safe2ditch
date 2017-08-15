@@ -12,12 +12,9 @@ visual_frontend/published_video_scale: 1.0
 # feature manager
 visual_frontend/feature_type:    "GFTT"
 visual_frontend/matching_method: "LK"
-visual_frontend/points_max:      500
-visual_frontend/corner_quality:       0.03  # NOT DYNAMICALLLY RECONFIGURABLE, AUTOMATICALLY ADJUSTED IN ALGORITHM
-visual_frontend/corner_quality_min:   0.03  # NOT DYNAMICALLLY RECONFIGURABLE
-visual_frontend/corner_quality_max:   0.05  # NOT DYNAMICALLLY RECONFIGURABLE
-visual_frontend/corner_quality_alpha: 0.999 # NOT DYNAMICALLLY RECONFIGURABLE
-visual_frontend/pyramid_size: 21            # NOT DYNAMICALLLY RECONFIGURABLE
+visual_frontend/points_max:      800
+visual_frontend/corner_quality:  0.03 # NOT DYNAMICALLLY RECONFIGURABLE
+visual_frontend/pyramid_size:    21   # NOT DYNAMICALLLY RECONFIGURABLE
 
 # feature_outliers
 visual_frontend/feature_outliers_enabled: true
@@ -64,9 +61,9 @@ rransac/gamma: 0.0007
 rransac/ransac_motion_model: 0
 
 # model merging parameters
-rransac/tau_vel_percent_diff: 0.25
-rransac/tau_vel_abs_diff: 1.28
-rransac/tau_angle_abs_diff: 15.0
+rransac/tau_vel_percent_diff: 1
+rransac/tau_vel_abs_diff: 5
+rransac/tau_angle_abs_diff: 90
 rransac/tau_xpos_abs_diff: 0.07
 rransac/tau_ypos_abs_diff: 0.07
 
