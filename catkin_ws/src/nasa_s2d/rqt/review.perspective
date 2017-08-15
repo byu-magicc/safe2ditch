@@ -88,7 +88,7 @@
                 }, 
                 "topic": {
                   "type": "repr", 
-                  "repr": "u'/review/tracks_video/compressed'"
+                  "repr": "u'/review/hud/image_raw/compressed'"
                 }, 
                 "publish_click_location": {
                   "type": "repr", 
