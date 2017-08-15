@@ -7,9 +7,12 @@ TFFrames::TFFrames() :
 {
     ros::NodeHandle nh_private("~");
 
-    // Set up Publishers and Subscribers
-    sub_uav_ = nh_.subscribe("uav_pose", 1, &TFFrames::cb_uav, this);
+    // Get ROS params
+    localize_ = nh_private.param<bool>("localize", false);
+
+    // Set up Publishers and Subscribers based on parameters
     sub_uav_fix_ = nh_.subscribe("uav_gps_fix", 1, &TFFrames::cb_uav_fix, this);
+    sub_uav_odom_ = nh_.subscribe("uav_odom", 1, &TFFrames::cb_uav_odom, this);
 
     // ROS Services
     srv_uavpose_ = nh_private.advertiseService("set_uav_pose", &TFFrames::srv_set_pose, this);
@@ -32,15 +35,35 @@ bool TFFrames::srv_set_pose(nasa_s2d::SetUAVPose::Request &req, nasa_s2d::SetUAV
 
 // ----------------------------------------------------------------------------
 
-void TFFrames::cb_uav(const geometry_msgs::PoseStampedPtr& msg)
+void TFFrames::cb_uav_odom(const nav_msgs::OdometryPtr& msg)
 {
-    // Create an empty transform
-    tf::Transform transform;
-
     // Put current pose into tf data structures
-    tf::Vector3 origin(msg->pose.position.x, msg->pose.position.y, msg->pose.position.z);
-    tf::Quaternion quat(msg->pose.orientation.x, msg->pose.orientation.y, msg->pose.orientation.z, msg->pose.orientation.w);
+    tf::Vector3 origin(msg->pose.pose.position.x, msg->pose.pose.position.y, msg->pose.pose.position.z);
+    tf::Quaternion quat(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);
 
+    if (localize_) {
+
+        // set the home position if not set before
+        if (!localized_) {
+            home_odom_ = msg;
+            localized_ = true;
+        }
+
+        origin.setX(msg->pose.pose.position.x - home_odom_->pose.pose.position.x);
+        origin.setY(msg->pose.pose.position.y - home_odom_->pose.pose.position.y);
+
+        // origin.setX(msg->pose.pose.position.y - home_odom_->pose.pose.position.y);
+        // origin.setY(msg->pose.pose.position.x - home_odom_->pose.pose.position.x);
+    }
+
+    // Send the transform that connects the fcu to the base_link
+    send_transform(origin, quat);
+}
+
+// ----------------------------------------------------------------------------
+
+void TFFrames::send_transform(tf::Vector3& origin, tf::Quaternion& attitude)
+{
     // Allow the user to override the heading and add a position offset to the tf
     if (pose_override_) {
 
@@ -50,14 +73,14 @@ void TFFrames::cb_uav(const geometry_msgs::PoseStampedPtr& msg)
 
         // Convert the attitude quaternion to Euler angles
         double phi, theta, psi;
-        tf::Matrix3x3(quat).getRPY(phi, theta, psi);
+        tf::Matrix3x3(attitude).getRPY(phi, theta, psi);
 
         // Heading w.r.t ENU inertial frame (i.e., heading is zero at East)
         if (std::abs(heading_) < 2*M_PI)
             psi = heading_;
 
         // Set the new attitude with specified heading
-        quat.setRPY(phi, theta, psi);
+        attitude.setRPY(phi, theta, psi);
 
         //
         // Position Offset
@@ -68,10 +91,10 @@ void TFFrames::cb_uav(const geometry_msgs::PoseStampedPtr& msg)
     }
 
     // Translate and rotate into the body (base_link) frame -- remember that this is all in ENU instead of NED
+    tf::Transform transform;
     transform.setOrigin(origin);
-    transform.setRotation(quat);
+    transform.setRotation(attitude);
     tf_br_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "fcu", "base_link")); // base_link is in ROS Body (REP 103) -- body NWU
-
 }
 
 // ----------------------------------------------------------------------------

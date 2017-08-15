@@ -2,8 +2,14 @@
 <launch>
 
     <node pkg="nasa_s2d" type="tf_frames" name="sully_tf_frames" output="screen">
-        <remap from="uav_pose"    to="mavros/local_position/pose" />
+        <remap from="uav_odom"    to="mavros/local_position/odom" />
         <remap from="uav_gps_fix" to="mavros/global_position/raw/fix" />
+
+        <!-- The next two entities are used to create the TF  -->
+        <!-- link between the fcu and base_link frames in the -->
+        <!-- event that local_position/odom is not published  --> 
+        <remap from="uav_odom" to="mavros/global_position/local" />
+        <param name="localize" value="true" />
     </node>
 
     <!-- Create an NED inertial map -->

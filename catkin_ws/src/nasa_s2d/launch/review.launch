@@ -5,6 +5,7 @@
     <arg name="bagname"         default="run3.bag" />
     <arg name="bagpath"         default="$(arg bagroot)/$(arg bagname)" />
     <arg name="hide_bag"        default="false" />
+    <arg name="do_geolocation"  default="false" />
     <arg name="show_dashboard"  default="true" />
     <arg name="tuning"          default="true" />
     <arg name="ns"              default="review" />
@@ -21,6 +22,7 @@
     <!-- Play the selected rosbag. Also, remap the camera_info topic into the review namespace -->
     <node pkg="rosbag" type="play" name="player" args="-l $(arg bagpath) --clock" launch-prefix="$(arg prefix)">
       <remap from="camera/camera_info" to="$(arg ns)/camera/camera_info" />
+      <remap from="/tf" to="/tf_old" />
     </node>
 
     <!-- launch visual_mtt in a namespace to avoid collision with recorded topics -->
@@ -35,6 +37,15 @@
         <group if="$(arg show_dashboard)">
             <node pkg="rqt_gui" type="rqt_gui" name="review_dashboard" args="--perspective-file '$(find nasa_s2d)/rqt/review.perspective'" />
         </group>
+    </group>
+
+    <!-- launch geolocation components -->
+    <group if="$(arg do_geolocation)">
+        <include file="$(find nasa_s2d)/launch/geolocate.launch">
+            <arg name="camera_name" value="$(arg ns)/camera" />
+            <arg name="show3d" value="true" />
+            <arg name="tracks_topic" value="$(arg ns)/tracks" />
+        </include>
     </group>
 
 </launch>

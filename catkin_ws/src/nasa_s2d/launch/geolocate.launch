@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-    <arg name="show3d"      default="false" />
-    <arg name="heading"     default="" />
-    <arg name="altitude"    default="" />
-    <arg name="camera_name" default="camera" />
+    <arg name="show3d"          default="false" />
+    <arg name="heading"         default="" />
+    <arg name="altitude"        default="" />
+    <arg name="camera_name"     default="camera" />
+    <arg name="tracks_topic"    default="tracks" />
 
     <!-- show3d:          Show the rviz vizualization of the geolocated targets -->
     <!-- heading:         Optional ENU heading overriding (for bad compass data)-->
     <!-- altitude:        Optional ENU altitude offset                          -->
     <!-- camera_name:     Camera name to subscribe to the camera_info of        -->
+    <!-- tracks_topic:    topic name of R-RANSAC output tracks                  -->
 
     <!-- ###################################################################### -->
 
@@ -24,6 +26,7 @@
     <include file="$(find flat_earth_geolocation)/launch/geolocate.launch">
         <arg name="show3d" value="$(arg show3d)" />
         <arg name="camera_name" value="$(arg camera_name)" />
+        <arg name="tracks_topic" value="$(arg tracks_topic)" />
     </include>
 
 
