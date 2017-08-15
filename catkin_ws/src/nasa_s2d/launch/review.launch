@@ -33,6 +33,11 @@
           <arg name="imgtopic"  value="camera/image_raw" />
         </include>
 
+        <!-- HUD -->
+        <node pkg="hud" type="hud" name="hud">
+            <remap from="odom" to="/mavros/global_position/local" />
+        </node>
+
         <!-- Start up a dashboard perspective -->
         <group if="$(arg show_dashboard)">
             <node pkg="rqt_gui" type="rqt_gui" name="review_dashboard" args="--perspective-file '$(find nasa_s2d)/rqt/review.perspective'" />
