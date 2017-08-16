@@ -24,7 +24,7 @@ alias roskill='killall -2 rosbag && killall roslaunch'
 function rosreview {
 	BAG=$1
 	set -x
-	roslaunch nasa_s2d review.launch bagname:=${BAG} show_dashboard:=false tuning:=false hide_bag:=true bagroot:=/media/nvidia/sullydata/nasa
+	roslaunch nasa_s2d review.launch show_dashboard:=false tuning:=false hide_bag:=true bagroot:=/media/nvidia/sullydata/nasa bagname:=${BAG}
 	{ set +x; } 2> /dev/null
 }
 
