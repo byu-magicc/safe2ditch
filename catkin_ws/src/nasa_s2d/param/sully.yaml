@@ -12,7 +12,7 @@ visual_frontend/published_video_scale: 1.0
 # feature manager
 visual_frontend/feature_type:    "GFTT"
 visual_frontend/matching_method: "LK"
-visual_frontend/points_max:      1500
+visual_frontend/points_max:      1000
 visual_frontend/corner_quality:  0.03 # NOT DYNAMICALLLY RECONFIGURABLE
 visual_frontend/pyramid_size:    21   # NOT DYNAMICALLLY RECONFIGURABLE
 

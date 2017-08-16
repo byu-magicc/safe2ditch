@@ -48,11 +48,12 @@ class AdaptiveParams:
         # Visual Measurement Frontent (vmtt) Parameters
 
         min_vel = 0.024 # m/s
-        max_vel = 0.5 # m/s
+        max_vel = 0.75 # m/s
 
         params = {
                     'minimum_pixel_velocity': min_vel/z,
-                    'maximum_pixel_velocity': max_vel/z
+                    'maximum_pixel_velocity': max_vel/z,
+                    # 'downsize_scale': self.get_downsize_scale(z),
                  }
         
         self.update_params('visual_frontend', params)
@@ -64,6 +65,31 @@ class AdaptiveParams:
 
         # Update the parameters
         config = client.update_configuration(params)
+
+
+    def get_downsize_scale(self, h):
+        """
+        Gain scheduling approach to the downsize scale, based on altitude.
+
+        This helps get tracks at high altitudes, but the values of the
+        measurements jump around in the measurement space -- therefore
+        it hurts data association and track continuity.
+        """
+
+        if h < 20:
+            scale = 0.6
+
+        elif h < 60:
+            scale = 0.7
+
+        elif h < 100:
+            scale = 0.8
+
+        elif h < 140:
+            scale = 1.0
+
+        return scale
+
         
 
 if __name__ == '__main__':
