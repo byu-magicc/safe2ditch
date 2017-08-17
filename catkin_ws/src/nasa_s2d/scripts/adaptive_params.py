@@ -47,8 +47,8 @@ class AdaptiveParams:
         # =====================================================================
         # Visual Measurement Frontent (vmtt) Parameters
 
-        min_vel = 0.024 # m/s
-        max_vel = 0.75 # m/s
+        min_vel = 0.025 # m/s
+        max_vel = 0.6 # m/s
 
         params = {
                     'minimum_pixel_velocity': min_vel/z,
