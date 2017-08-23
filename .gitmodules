@@ -13,3 +13,6 @@
 [submodule "catkin_ws/src/rviz_satellite"]
 	path = catkin_ws/src/rviz_satellite
 	url = https://github.com/gareth-cross/rviz_satellite
+[submodule "rransac"]
+	path = rransac
+	url = ssh://git@magiccvs.byu.edu:290/robust_tracking/rransac.git
