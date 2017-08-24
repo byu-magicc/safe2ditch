@@ -8,6 +8,7 @@
 visual_frontend/frame_stride: 3
 visual_frontend/downsize_scale: 0.85
 visual_frontend/published_video_scale: 1.0
+visual_frontend/text_scale: 1.0
 
 # feature manager
 visual_frontend/feature_type:    "GFTT"
