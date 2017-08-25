@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot name="sully" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find ardupilot_sim)/agents/iris/iris.xacro" />
+
+  <xacro:include filename="$(find ardupilot_sim)/xacro/camera.xacro" />
+  <xacro:simple_camera ns="${ns}"
+    frame_rate="30"
+    hfov="${33.99*3.14159/180}"
+    wpix="800"
+    hpix="600"
+    image_topic="/camera/image_raw"
+    cinfo_topic="/camera/camera_info"
+    parent_link="${ns}/base_link"
+    debug="true">
+      <origin xyz="0 0 0" rpy="0 ${3.14159/4} 0" />
+  </xacro:simple_camera>
+</robot>

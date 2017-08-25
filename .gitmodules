@@ -16,3 +16,6 @@
 [submodule "rransac"]
 	path = rransac
 	url = ssh://git@magiccvs.byu.edu:290/robust_tracking/rransac.git
+[submodule "catkin_ws/src/ardupilot_sim"]
+	path = catkin_ws/src/ardupilot_sim
+	url = ssh://git@magiccvs.byu.edu:290/lab/ardupilot_sim.git
