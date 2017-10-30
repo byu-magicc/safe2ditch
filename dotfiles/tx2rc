@@ -16,7 +16,7 @@ source /opt/ros/kinetic/setup.bash
 source $MYPATH/../catkin_ws/devel/setup.bash
 
 # ROS Tools
-alias catkin_make_tx2='catkin_make -DVISUAL_MTT_CUDA=ON -DOpenCV_DIR=/usr/local/share/OpenCV -DCATKIN_BLACKLIST_PACKAGES="nasa_s2d2_sim;rviz_satellite"'
+alias catkin_make_tx2='catkin_make -DVISUAL_MTT_CUDA=ON -DOpenCV_DIR=/usr/local/share/OpenCV -DCATKIN_BLACKLIST_PACKAGES="nasa_s2d_sim;rviz_satellite"'
 alias bagrecord='rosbag record -a -x "/camera/(.*)|/tracks_video(.*)" /camera/image_raw/compressed /camera/camera_info /tracks_video/compressed'
 alias rosgo='roslaunch nasa_s2d hardware.launch'
 alias roskill='killall -2 rosbag && killall roslaunch'

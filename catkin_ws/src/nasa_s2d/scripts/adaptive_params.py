@@ -51,8 +51,8 @@ class AdaptiveParams:
         max_vel = 0.6 # m/s
 
         params = {
-                    'minimum_pixel_velocity': min_vel/z,
-                    'maximum_pixel_velocity': max_vel/z,
+                    'minimum_feature_velocity': min_vel/z,
+                    'maximum_feature_velocity': max_vel/z,
                     # 'downsize_scale': self.get_downsize_scale(z),
                  }
         

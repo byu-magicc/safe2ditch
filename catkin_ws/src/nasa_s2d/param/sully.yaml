@@ -6,23 +6,22 @@
 
 # general processing
 visual_frontend/frame_stride: 3
-visual_frontend/downsize_scale: 0.85
+visual_frontend/resize_scale: 1.0 #0.85
 visual_frontend/published_video_scale: 1.0
 visual_frontend/text_scale: 1.0
 
 # feature manager
-visual_frontend/feature_type:    "GFTT"
-visual_frontend/matching_method: "LK"
+visual_frontend/feature_type:    0
 visual_frontend/points_max:      1000
 visual_frontend/corner_quality:  0.03 # NOT DYNAMICALLLY RECONFIGURABLE
 visual_frontend/pyramid_size:    21   # NOT DYNAMICALLLY RECONFIGURABLE
 
-# feature_outliers
-visual_frontend/feature_outliers_enabled: true
-visual_frontend/feature_outliers_sigmaR_pos: 0.007
-visual_frontend/feature_outliers_sigmaR_vel: 0.0014
-visual_frontend/minimum_pixel_velocity: 0.0001
-visual_frontend/maximum_pixel_velocity: 0.03
+# feature motion
+visual_frontend/feature_motion_enabled: true
+visual_frontend/feature_motion_sigmaR_pos: 0.007
+visual_frontend/feature_motion_sigmaR_vel: 0.0014
+visual_frontend/minimum_feature_velocity: 0.0001
+visual_frontend/maximum_feature_velocity: 0.03
 
 # difference_image
 visual_frontend/difference_image_enabled: false
@@ -35,6 +34,10 @@ visual_frontend/morph_size: 1
 visual_frontend/morph_iterations: 2
 visual_frontend/min_complexity: 10
 visual_frontend/max_complexity: 100
+
+# recognition manager
+visual_frontend/recognition_type: 0
+visual_frontend/crop_width: 120
 
 ###############################################################################
 #### R-RANSAC Node

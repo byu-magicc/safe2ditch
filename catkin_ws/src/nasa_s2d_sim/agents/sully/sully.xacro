@@ -10,8 +10,7 @@
     hpix="600"
     image_topic="/camera/image_raw"
     cinfo_topic="/camera/camera_info"
-    parent_link="${ns}/base_link"
-    debug="true">
+    parent_link="${ns}/base_link">
       <origin xyz="0 0 0" rpy="0 ${3.14159/4} 0" />
   </xacro:simple_camera>
 </robot>

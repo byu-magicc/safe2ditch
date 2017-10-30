@@ -5,7 +5,7 @@
 
     <!-- Start Gazebo -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name" value="$(find ardupilot_sim)/worlds/iris_ardupilot.world"/>
+        <arg name="world_name" value="$(find nasa_s2d_sim)/worlds/park.world"/>
         <arg name="debug" value="false"/>
         <arg name="gui" value="true"/>
         <arg name="paused" value="false"/>
@@ -20,8 +20,28 @@
         <arg name="model"               value="$(find nasa_s2d_sim)/agents/sully/sully.xacro" />
         <arg name="x"                   value="0"/>
         <arg name="y"                   value="0"/>
-        <arg name="z"                   value="0"/>
+        <arg name="z"                   value="0.2"/>
         <arg name="yaw"                 value="0"/>
         <arg name="color"               value="Black"/>
+    </include>
+
+    <!-- Start mavros and connect to a SITL Pixhawk running APM:Copter -->
+    <include file="$(find mavros)/launch/apm.launch">
+        <arg name="fcu_url"  value="udp://127.0.0.1:14550@" />
+    </include>
+
+    <node name="gcs_bridge" pkg="mavros" type="gcs_bridge">
+    <!-- You can connect locally using localhost on port 14550 -->
+        <param name="gcs_url" value="udp://@127.0.0.1:14555" />
+    </node>
+
+    <!-- Run a series of mavros mavsys commands to increase sensor pub rate -->
+    <node name="gofast" pkg="nasa_s2d" type="gofast.sh" output="screen" />
+
+    <!-- launch visual_mtt -->
+    <include file="$(find visual_mtt)/launch/visual_mtt.launch">
+        <arg name="params" value="$(find nasa_s2d)/param/sully.yaml" />
+        <arg name="tuning" value="false" />
+        <arg name="imgtopic" value="/camera/image_raw" />
     </include>
 </launch>
