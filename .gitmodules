@@ -1,6 +1,9 @@
 [submodule "catkin_ws/src/ueye_cam"]
 	path = catkin_ws/src/ueye_cam
 	url = https://github.com/anqixu/ueye_cam
+[submodule "catkin_ws/src/moving_targets"]
+	path = catkin_ws/src/moving_targets
+	url = ssh://git@magiccvs.byu.edu/robust_tracking/moving_targets.git
 [submodule "catkin_ws/src/vision_opencv"]
 	path = catkin_ws/src/vision_opencv
 	url = https://github.com/ros-perception/vision_opencv
