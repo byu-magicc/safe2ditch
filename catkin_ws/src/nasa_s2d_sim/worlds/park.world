@@ -133,7 +133,7 @@
       </distribution>
     </population>
 
-    <population name="sequoia_population">
+<!--     <population name="sequoia_population">
       <model name="sequoia">
         <include>
           <static>true</static>
@@ -166,6 +166,6 @@
         <type>random</type>
       </distribution>
     </population>
-
+ -->
   </world>
 </sdf>

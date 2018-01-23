@@ -25,6 +25,9 @@
         <arg name="color"               value="Black"/>
     </include>
 
+    <!-- Spawn moving agents -->
+    <include file="$(find nasa_s2d_sim)/launch/movers.launch" />
+
     <!-- Start mavros and connect to a SITL Pixhawk running APM:Copter -->
     <include file="$(find mavros)/launch/apm.launch">
         <arg name="fcu_url"  value="udp://127.0.0.1:14550@" />

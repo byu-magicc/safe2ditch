@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <!-- Spawn in Gazebo -->
+    <include file="$(find moving_targets)/launch/spawn_mover.launch">
+        <arg name="name"    value="parker" />
+        <arg name="model"   value="$(find moving_targets)/models/moving_person_walking/model.sdf" />
+        <arg name="x"       value="20"/>
+        <arg name="y"       value="0"/>
+        <arg name="z"       value="0"/>
+        <arg name="yaw"     value="0"/>
+    </include>
+    <!-- Set parameters for the mover -->
+    <group ns="parker">
+        <!-- Trajectory type: waypoints -->
+        <param name="trajectory_type" type="int" value="1" />
+        <param name="x" type="double" value="20" />
+        <param name="y" type="double" value="0" />
+        <param name="vx" type="double" value="2" />
+        <param name="vy" type="double" value="2" />
+        <rosparam param="waypoints_x">[0, 5, 5, 0, 0]</rosparam>
+        <rosparam param="waypoints_y">[0, 0, 5, 5, 0]</rosparam>
+    </group>
+
+
+    <!-- Spawn in Gazebo -->
+    <include file="$(find moving_targets)/launch/spawn_mover.launch">
+        <arg name="name"    value="trish" />
+        <arg name="model"   value="$(find moving_targets)/models/moving_person_walking/model.sdf" />
+        <arg name="x"       value="10"/>
+        <arg name="y"       value="0"/>
+        <arg name="z"       value="0"/>
+        <arg name="yaw"     value="0"/>
+    </include>
+    <!-- Set parameters for the mover -->
+    <group ns="trish">
+        <!-- Trajectory type: waypoints -->
+        <param name="trajectory_type" type="int" value="1" />
+        <param name="x" type="double" value="10" />
+        <param name="y" type="double" value="0" />
+        <param name="vx" type="double" value="3" />
+        <param name="vy" type="double" value="3" />
+        <rosparam param="waypoints_x">[0, -4, -6, -6, -4, 0]</rosparam>
+        <rosparam param="waypoints_y">[0, -1, -3,  3,  1, 0]</rosparam>
+    </group>
+</launch>
