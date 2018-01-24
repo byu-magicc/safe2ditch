@@ -5,7 +5,7 @@
 
     <!-- Start Gazebo -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name" value="$(find nasa_s2d_sim)/worlds/park.world"/>
+        <arg name="world_name" value="$(find nasa_s2d_sim)/worlds/simple_targets.world"/>
         <arg name="debug" value="false"/>
         <arg name="gui" value="true"/>
         <arg name="paused" value="false"/>
@@ -18,7 +18,7 @@
     <include file="$(find ardupilot_sim)/launch/spawn_mav.launch">
         <arg name="mav_name"            value="sully" />
         <arg name="model"               value="$(find nasa_s2d_sim)/agents/sully/sully.xacro" />
-        <arg name="x"                   value="-60"/>
+        <arg name="x"                   value="-120"/>
         <arg name="y"                   value="0"/>
         <arg name="z"                   value="0.2"/>
         <arg name="yaw"                 value="0"/>
@@ -33,10 +33,10 @@
         <arg name="fcu_url"  value="udp://127.0.0.1:14550@" />
     </include>
 
-    <node name="gcs_bridge" pkg="mavros" type="gcs_bridge">
+    <!-- <node name="gcs_bridge" pkg="mavros" type="gcs_bridge"> -->
         <!-- You can connect locally using localhost on port 14550 -->
-        <param name="gcs_url" value="udp://@127.0.0.1:14555" />
-    </node>
+        <!-- <param name="gcs_url" value="udp://@127.0.0.1:14555" /> -->
+    <!-- </node> -->
 
     <!-- Run a series of mavros mavsys commands to increase sensor pub rate -->
     <node name="gofast" pkg="nasa_s2d" type="gofast.sh" output="screen" />
