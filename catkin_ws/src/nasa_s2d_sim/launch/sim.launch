@@ -18,7 +18,7 @@
     <include file="$(find ardupilot_sim)/launch/spawn_mav.launch">
         <arg name="mav_name"            value="sully" />
         <arg name="model"               value="$(find nasa_s2d_sim)/agents/sully/sully.xacro" />
-        <arg name="x"                   value="0"/>
+        <arg name="x"                   value="-60"/>
         <arg name="y"                   value="0"/>
         <arg name="z"                   value="0.2"/>
         <arg name="yaw"                 value="0"/>
@@ -34,7 +34,7 @@
     </include>
 
     <node name="gcs_bridge" pkg="mavros" type="gcs_bridge">
-    <!-- You can connect locally using localhost on port 14550 -->
+        <!-- You can connect locally using localhost on port 14550 -->
         <param name="gcs_url" value="udp://@127.0.0.1:14555" />
     </node>
 

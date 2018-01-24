@@ -12,7 +12,7 @@ material grass_dry
       texture_unit
       {
         texture grass_dry.png
-        filtering anistropic
+        filtering anisotropic
         max_anisotropy 16
       }
     }
