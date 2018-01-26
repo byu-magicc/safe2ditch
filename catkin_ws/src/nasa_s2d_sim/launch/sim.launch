@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <!-- Run the APM provided `sim_vehicle.py` SITL command -->
-    <node pkg="ardupilot_sim" type="copter_sitl.sh" name="copter_sitl" />
+    <node pkg="ardupilot_sim" type="copter_sitl.sh" name="copter_sitl" args="40.267987,-111.635558" />
 
     <!-- Start Gazebo -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name" value="$(find nasa_s2d_sim)/worlds/simple_targets.world"/>
+        <arg name="world_name" value="$(find nasa_s2d_sim)/worlds/rock_canyon_park.world"/>
         <arg name="debug" value="false"/>
         <arg name="gui" value="true"/>
         <arg name="paused" value="false"/>

@@ -5,6 +5,7 @@
   <xacro:include filename="$(find ardupilot_sim)/xacro/camera.xacro" />
   <xacro:simple_camera ns="${ns}"
     frame_rate="30"
+    visualize="false"
     hfov="${33.99*3.14159/180}"
     wpix="800"
     hpix="600"
