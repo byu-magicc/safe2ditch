@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <!-- Run the APM provided `sim_vehicle.py` SITL command -->
-    <node pkg="ardupilot_sim" type="copter_sitl.sh" name="copter_sitl" args="40.267987,-111.635558" />
+    <!-- Choose between `rockcanyon` or `nasa -->
+    <arg name="world" default="rockcanyon" />
 
-    <!-- Start Gazebo -->
-    <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name" value="$(find nasa_s2d_sim)/worlds/rock_canyon_park.world"/>
-        <arg name="debug" value="false"/>
-        <arg name="gui" value="true"/>
-        <arg name="paused" value="false"/>
-        <arg name="use_sim_time" value="true"/>
-        <arg name="headless" value="false"/>
-        <arg name="verbose" value="true"/>
-    </include>
+    <group if="$(eval arg('world') == 'rockcanyon')">
+        <include file="$(find nasa_s2d_sim)/launch/sitl.launch">
+            <!-- Rock Canyon Park, Provo, UT -->
+            <arg name="latlon" value="40.267987,-111.635558" />
+            <arg name="world" value="rock_canyon_park" />
 
-    <!-- Spawn in Gazebo -->
-    <include file="$(find ardupilot_sim)/launch/spawn_mav.launch">
-        <arg name="mav_name"            value="sully" />
-        <arg name="model"               value="$(find nasa_s2d_sim)/agents/sully/sully.xacro" />
-        <arg name="x"                   value="-120"/>
-        <arg name="y"                   value="0"/>
-        <arg name="z"                   value="0.2"/>
-        <arg name="yaw"                 value="0"/>
-        <arg name="color"               value="Black"/>
-    </include>
+            <!-- MAV Location -->
+            <arg name="x" value="-120" />
+            <arg name="y" value="0" />
+            <arg name="Y" value="0" />
+        </include>
+    </group>
+
+    <group if="$(eval arg('world') == 'nasa')">
+        <include file="$(find nasa_s2d_sim)/launch/sitl.launch">
+            <!-- NASA LaRC Back 40, VA -->
+            <arg name="latlon" value="37.102250,-76.387290" />
+            <arg name="world" value="nasa_back40" />
+
+            <!-- MAV Location -->
+            <arg name="x" value="0" />
+            <arg name="y" value="-120" />
+            <arg name="Y" value="1.5708" />
+        </include>
+    </group>
 
     <!-- Spawn moving agents -->
     <include file="$(find nasa_s2d_sim)/launch/movers.launch" />

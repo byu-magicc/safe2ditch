@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <!-- Rock Canyon Park, Provo, UT -->
+    <arg name="latlon" default="40.267987,-111.635558" />
+    <arg name="world" default="rock_canyon_park" />
+
+    <!-- MAV Location -->
+    <arg name="x" default="-120" />
+    <arg name="y" default="0" />
+    <arg name="Y" default="0" />
+
+    <!-- Run the APM provided `sim_vehicle.py` SITL command -->
+    <node pkg="ardupilot_sim" type="copter_sitl.sh" name="copter_sitl" args="$(arg latlon)" />
+
+    <!-- Start Gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find nasa_s2d_sim)/worlds/$(arg world).world"/>
+        <arg name="debug" value="false"/>
+        <arg name="gui" value="true"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="verbose" value="true"/>
+    </include>
+
+    <!-- Spawn in Gazebo -->
+    <include file="$(find ardupilot_sim)/launch/spawn_mav.launch">
+        <arg name="mav_name"            value="sully" />
+        <arg name="model"               value="$(find nasa_s2d_sim)/agents/sully/sully.xacro" />
+        <arg name="x"                   value="$(arg x)"/>
+        <arg name="y"                   value="$(arg y)"/>
+        <arg name="z"                   value="0.2"/>
+        <arg name="yaw"                 value="$(arg Y)"/>
+        <arg name="color"               value="Black"/>
+    </include>
+
+</launch>
