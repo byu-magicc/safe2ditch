@@ -48,6 +48,26 @@
       <cast_shadows>false</cast_shadows>
     </light>
 
+    <include>
+      <uri>model://grass_plane</uri>
+      <pose>-20 -10 -0.4 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://grass_plane</uri>
+      <pose>100 -10 -0.4 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://grass_plane</uri>
+      <pose>60 50 -0.6 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://grass_plane</uri>
+      <pose>60 -70 -0.6 0 0 0</pose>
+    </include>
+
     <!-- The ground plane -->
     <model name="grass_plane">
       <static>true</static>
@@ -181,175 +201,175 @@
 
           <!-- center of the strip -->
           <visual name="vv1">
-            <pose>0 0 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>0 0 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv2">
-            <pose>-10 0 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-10 0 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv3">
-            <pose>-20 0 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-20 0 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv4">
-            <pose>-30 0 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-30 0 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv5">
-            <pose>-40 0 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-40 0 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv6">
-            <pose>-50 0 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-50 0 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv7">
-            <pose>-60 0 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-60 0 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv8">
-            <pose>-70 0 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-70 0 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv9">
-            <pose>-80 0 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-80 0 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv10">
-            <pose>-90 0 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-90 0 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv11">
-            <pose>-100 0 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-100 0 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv12">
-            <pose>-110 0 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-110 0 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv13">
-            <pose>-120 0 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-120 0 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv14">
-            <pose>-130 0 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-130 0 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
 
           <!-- center+y of the strip -->
           <visual name="vv1_1">
-            <pose>0 10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>0 10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv1_2">
-            <pose>-10 10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-10 10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv1_3">
-            <pose>-20 10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-20 10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv1_4">
-            <pose>-30 10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-30 10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv1_5">
-            <pose>-40 10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-40 10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv1_6">
-            <pose>-50 10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-50 10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv1_7">
-            <pose>-60 10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-60 10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv1_8">
-            <pose>-70 10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-70 10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv1_9">
-            <pose>-80 10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-80 10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv1_10">
-            <pose>-90 10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-90 10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv1_11">
-            <pose>-100 10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-100 10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv1_12">
-            <pose>-110 10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-110 10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv1_13">
-            <pose>-120 10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-120 10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv1_14">
-            <pose>-130 10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-130 10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
 
           <!-- center-y of the strip -->
           <visual name="vv2_1">
-            <pose>0 -10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>0 -10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv2_2">
-            <pose>-10 -10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-10 -10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv2_3">
-            <pose>-20 -10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-20 -10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv2_4">
-            <pose>-30 -10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-30 -10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv2_5">
-            <pose>-40 -10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-40 -10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv2_6">
-            <pose>-50 -10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-50 -10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv2_7">
-            <pose>-60 -10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-60 -10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv2_8">
-            <pose>-70 -10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-70 -10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv2_9">
-            <pose>-80 -10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-80 -10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv2_10">
-            <pose>-90 -10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-90 -10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv2_11">
-            <pose>-100 -10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-100 -10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv2_12">
-            <pose>-110 -10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-110 -10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv2_13">
-            <pose>-120 -10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-120 -10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
           <visual name="vv2_14">
-            <pose>-130 -10 0 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
+            <pose>-130 -10 -0.20 0 0 0</pose><geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry><cast_shadows>false</cast_shadows>
             <material><script><uri>model://grass_plane/materials/scripts/</uri><uri>model://grass_plane/materials/textures/</uri><name>grass_dry</name></script></material>
           </visual>
 
