@@ -54,6 +54,99 @@
       <pose>63 146 0 0 0 0</pose>
     </include>
 
+    <!-- Trees for 3D structure and parallax -->
+    <model name='tall_pine'>
+      <pose frame=''>-29.5587 42.137 0 0 -0 0</pose>
+      <include>
+        <uri>model://tall_pine</uri>
+      </include>
+    </model>
+    <model name='tall_pine_0'>
+      <pose frame=''>-38.0614 36.2933 0 0 -0 0</pose>
+      <include>
+        <uri>model://tall_pine</uri>
+      </include>
+    </model>
+    <model name='tall_pine_1'>
+      <pose frame=''>-22.1543 61.892 0 0 -0 0</pose>
+      <include>
+        <uri>model://tall_pine</uri>
+      </include>
+    </model>
+    <model name='tall_pine_2'>
+      <pose frame=''>-49.8032 -23.6082 0 0 -0 0</pose>
+      <include>
+        <uri>model://tall_pine</uri>
+      </include>
+    </model>
+    <model name='tall_pine_3'>
+      <pose frame=''>-36.0355 -39.4061 0 0 -0 0</pose>
+      <include>
+        <uri>model://tall_pine</uri>
+      </include>
+    </model>
+    <model name='tall_pine_4'>
+      <pose frame=''>-45.2689 27.2457 0 0 -0 0</pose>
+      <include>
+        <uri>model://tall_pine</uri>
+      </include>
+    </model>
+    <model name='tall_pine_5'>
+      <pose frame=''>-48.5355 -0.279318 0 0 -0 0</pose>
+      <include>
+        <uri>model://tall_pine</uri>
+      </include>
+    </model>
+    <model name='sequoia'>
+      <pose frame=''>-42.995 -20.4455 0 0 -0 0</pose>
+      <include>
+        <uri>model://sequoia</uri>
+      </include>
+    </model>
+    <model name='sequoia_0'>
+      <pose frame=''>-41.2574 28.6001 0 0 -0 0</pose>
+      <include>
+        <uri>model://sequoia</uri>
+      </include>
+    </model>
+    <model name='sequoia_1'>
+      <pose frame=''>-46.6377 -40.2993 0 0 -0 0</pose>
+      <include>
+        <uri>model://sequoia</uri>
+      </include>
+    </model>
+    <model name='sequoia_2'>
+      <pose frame=''>-51.2812 -55.4727 0 0 -0 0</pose>
+      <include>
+        <uri>model://sequoia</uri>
+      </include>
+    </model>
+    <model name='sequoia_3'>
+      <pose frame=''>-56.5656 -41.4919 0 0 -0 0</pose>
+      <include>
+        <uri>model://sequoia</uri>
+      </include>
+    </model>
+
+    <!-- Grey Wall -->
+    <model name='grey_wall'>
+      <pose frame=''>39.6086 10.4261 0 0 -0 0</pose>
+      <include>
+        <uri>model://grey_wall</uri>
+      </include>
+    </model>
+    <model name='grey_wall_0'>
+      <pose frame=''>47.0916 10.4349 0 0 -0 0</pose>
+      <include>
+        <uri>model://grey_wall</uri>
+      </include>
+    </model>
+    <model name='grey_wall_1'>
+      <pose frame=''>54.5964 10.4378 0 0 -0 0</pose>
+      <include>
+        <uri>model://grey_wall</uri>
+      </include>
+    </model>
    
   </world>
 </sdf>
