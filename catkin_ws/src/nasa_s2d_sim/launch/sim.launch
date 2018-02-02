@@ -51,4 +51,21 @@
         <arg name="tuning" value="false" />
         <arg name="imgtopic" value="/camera/image_raw" />
     </include>
+
+    <!-- launch geolocation components -->
+    <group if="true">
+        <include file="$(find nasa_s2d)/launch/geolocate.launch">
+            <arg name="show3d" value="true" />
+        </include>
+    </group>
+
+    <!-- HUD -->
+    <node pkg="hud" type="hud" name="hud">
+        <remap from="odom" to="/mavros/global_position/local" />
+    </node>
+
+    <!-- Adaptive Parameter Tuning -->
+    <node pkg="nasa_s2d" type="adaptive_params.py" name="adaptive_params">
+        <remap from="odom" to="/mavros/global_position/local" />
+    </node>
 </launch>
