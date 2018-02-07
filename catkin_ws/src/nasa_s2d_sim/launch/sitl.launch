@@ -9,6 +9,10 @@
     <arg name="y" default="0" />
     <arg name="Y" default="0" />
 
+    <!-- Gazebo parameters -->
+    <arg name="gui" default="true" />
+    <arg name="paused" default="false" />
+
     <!-- Run the APM provided `sim_vehicle.py` SITL command -->
     <node pkg="ardupilot_sim" type="copter_sitl.sh" name="copter_sitl" args="$(arg latlon)" />
 

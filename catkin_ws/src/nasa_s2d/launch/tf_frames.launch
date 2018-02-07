@@ -7,9 +7,14 @@
 
         <!-- The next two entities are used to create the TF  -->
         <!-- link between the fcu and base_link frames in the -->
-        <!-- event that local_position/odom is not published  --> 
-        <remap from="uav_odom" to="mavros/global_position/local" />
-        <param name="localize" value="true" />
+        <!-- event that local_position/odom is not published  -->
+        <!-- <remap from="uav_odom" to="mavros/global_position/local" /> -->
+        <!-- <param name="localize" value="true" /> -->
+
+        <!-- The problem with this 'localize' thing is that (at least in SITL) -->
+        <!-- the first few GPS messages are bogus, so the UTM origin is in the -->
+        <!-- middle of nowhere and then geolocation and visualization -->
+        <!-- is all messed up. -->
     </node>
 
     <!-- Create an NED inertial map -->

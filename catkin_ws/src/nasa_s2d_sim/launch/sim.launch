@@ -26,6 +26,10 @@
             <arg name="x" value="0" />
             <arg name="y" value="-120" />
             <arg name="Y" value="1.5708" />
+
+            <!-- Gazebo parameters -->
+            <arg name="gui" value="false" />
+            <arg name="paused" value="false" />
         </include>
     </group>
 
