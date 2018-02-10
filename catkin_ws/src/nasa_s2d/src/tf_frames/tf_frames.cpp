@@ -94,7 +94,7 @@ void TFFrames::send_transform(tf::Vector3& origin, tf::Quaternion& attitude)
     tf::Transform transform;
     transform.setOrigin(origin);
     transform.setRotation(attitude);
-    tf_br_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "fcu", "base_link")); // base_link is in ROS Body (REP 103) -- body NWU
+    // tf_br_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "fcu", "base_link")); // base_link is in ROS Body (REP 103) -- body NWU
 }
 
 // ----------------------------------------------------------------------------
@@ -115,7 +115,7 @@ void TFFrames::cb_uav_fix(const sensor_msgs::NavSatFix& msg)
 
     // Link the fcu/map origin to the origin of this UTM zone.
     transform.setOrigin(tf::Vector3(-utm_pt.easting, -utm_pt.northing, 0));
-    tf_br_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "fcu", "utm_origin_" + std::to_string(utm_pt.zone) + utm_pt.band));
+    tf_br_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", "utm_origin_" + std::to_string(utm_pt.zone) + utm_pt.band));
 }
 
 }

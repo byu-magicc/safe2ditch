@@ -11,7 +11,7 @@
         <arg name="yaw"     value="0"/>
     </include>
     <!-- Set parameters for the mover -->
-    <group ns="parker">
+    <group ns="targets/parker">
         <!-- Trajectory type: waypoints -->
         <param name="trajectory_type" type="int" value="1" />
         <param name="x" type="double" value="2" />
@@ -33,7 +33,7 @@
         <arg name="yaw"     value="0"/>
     </include>
     <!-- Set parameters for the mover -->
-    <group ns="trish">
+    <group ns="targets/trish">
         <!-- Trajectory type: waypoints -->
         <param name="trajectory_type" type="int" value="1" />
         <param name="x" type="double" value="-6" />
@@ -54,7 +54,7 @@
         <arg name="yaw"     value="0"/>
     </include>
     <!-- Set parameters for the mover -->
-    <group ns="nerissa">
+    <group ns="targets/nerissa">
         <!-- Trajectory type: circle -->
         <param name="trajectory_type" type="int" value="2" />
         <param name="radius" type="double" value="2" />

@@ -17,13 +17,17 @@
         <!-- is all messed up. -->
     </node>
 
-    <!-- Create an NED inertial map -->
+    <!-- Nothing is creating the `map` frame - it is simply the parent of a number of -->
+    <!-- other child frames. Therefore, the `map` frame is the inertial frame and is -->
+    <!-- at (0,0,0). It is a fixed frame. It is ENU. -->
+
+    <!-- Create an NED inertial map: Note that args are (x y z Y P R) -->
     <node pkg="tf" type="static_transform_publisher" name="static_tf0" args="0 0 0 1.5708 0 3.14159 map map_ned 10" />
 
     <!-- Relate the inertial map (ENU) to the fcu (ENU) inertial frame -->
-    <node pkg="tf" type="static_transform_publisher" name="static_tf1" args="0 0 0 0 0 0 map fcu 10" />
+    <!-- <node pkg="tf" type="static_transform_publisher" name="static_tf1" args="0 0 0 0 0 0 map fcu 10" /> -->
 
-    <!-- Transform NWU base_link (ROS body frame) to body NED (UAV book) -->
+    <!-- Transform FLU base_link (ROS body frame) to body NED (UAV book) -->
     <node pkg="tf" type="static_transform_publisher" name="static_tf2" args="0 0 0 0 0 3.14159 base_link base_link_ned 10" />
 
     <!-- Transform from body NED frame into the gimbal frame. For Sully, it's a static 45 deg camera -->
