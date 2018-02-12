@@ -6,12 +6,18 @@
     <group if="$(eval arg('world') == 'rockcanyon')">
         <include file="$(find nasa_s2d_sim)/launch/sitl.launch">
             <!-- Rock Canyon Park, Provo, UT -->
-            <arg name="latlon" value="40.267987,-111.635558" />
-            <arg name="world" value="rock_canyon_park" />
+            <arg name="name" value="Rock Canyon Park" />
+            <arg name="lat" value="40.267987" />
+            <arg name="lon" value="-111.635558" />
+            <arg name="zoom" value="21" />
+            <arg name="width" value="300" />
+            <arg name="height" value="300" />
+            <arg name="shift_ns" value="0" />
+            <arg name="shift_ew" value="0" />
 
-            <!-- MAV Location -->
-            <arg name="x" value="-120" />
-            <arg name="y" value="0" />
+            <!-- MAV ENU Location -->
+            <arg name="x" value="0" />
+            <arg name="y" value="-120" />
             <arg name="Y" value="0" />
         </include>
     </group>

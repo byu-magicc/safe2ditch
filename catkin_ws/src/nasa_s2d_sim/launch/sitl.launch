@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <!-- Rock Canyon Park, Provo, UT -->
-    <arg name="latlon" default="40.267987,-111.635558" />
-    <arg name="world" default="rock_canyon_park" />
+    <arg name="name"        default="Rock Canyon Park" />
+    <arg name="lat"         default="40.267987" />
+    <arg name="lon"         default="-111.635558" />
+    <arg name="zoom"        default="21" />
+    <arg name="width"       default="300" />
+    <arg name="height"      default="300" />
+    <arg name="shift_ns"    default="-0.20" />
+    <arg name="shift_ew"    default="0" />
 
-    <!-- MAV Location -->
-    <arg name="x" default="-120" />
+    <!-- MAV ENU Location -->
+    <arg name="x" default="0" />
     <arg name="y" default="0" />
     <arg name="Y" default="0" />
 
@@ -14,11 +20,24 @@
     <arg name="paused" default="false" />
 
     <!-- Run the APM provided `sim_vehicle.py` SITL command -->
-    <node pkg="ardupilot_sim" type="copter_sitl.sh" name="copter_sitl" args="$(arg latlon)" />
+    <node pkg="ardupilot_sim" type="copter_sitl.sh" name="copter_sitl" args="$(arg lat),$(arg lon)" />
+
+    <group ns="/gzsatellite">
+        <param name="name" type="string" value="$(arg name)" />
+        <param name="jpg_quality" type="double" value="60" />
+        <param name="tileserver"  type="string" value="http://mt1.google.com/vt/lyrs=s&amp;x={x}&amp;y={y}&amp;z={z}" />
+        <param name="latitude"    type="double" value="$(arg lat)" />
+        <param name="longitude"   type="double" value="$(arg lon)" />
+        <param name="zoom"        type="double" value="$(arg zoom)" />
+        <param name="width"       type="double" value="$(arg width)" />
+        <param name="height"      type="double" value="$(arg height)" />
+        <param name="shift_ns"    type="double" value="$(arg shift_ns)" />
+        <param name="shift_ew"    type="double" value="$(arg shift_ew)" />
+    </group>
 
     <!-- Start Gazebo -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name" value="$(find nasa_s2d_sim)/worlds/$(arg world).world"/>
+        <arg name="world_name" value="$(find gzsatellite)/worlds/satellite.world"/>
         <arg name="debug" value="false"/>
         <arg name="gui" value="true"/>
         <arg name="paused" value="false"/>
