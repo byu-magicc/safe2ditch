@@ -7,31 +7,41 @@
         <include file="$(find nasa_s2d_sim)/launch/sitl.launch">
             <!-- Rock Canyon Park, Provo, UT -->
             <arg name="name" value="Rock Canyon Park" />
-            <arg name="lat" value="40.267987" />
-            <arg name="lon" value="-111.635558" />
-            <arg name="zoom" value="21" />
-            <arg name="width" value="300" />
-            <arg name="height" value="300" />
+            <arg name="lat" value="40.268041" />
+            <arg name="lon" value="-111.635624" />
+            <arg name="zoom" value="22" />
+            <arg name="width" value="400" />
+            <arg name="height" value="400" />
             <arg name="shift_ns" value="0" />
             <arg name="shift_ew" value="0" />
 
             <!-- MAV ENU Location -->
             <arg name="x" value="0" />
             <arg name="y" value="-120" />
-            <arg name="Y" value="0" />
+            <arg name="Y" value="1.5708" />
+
+            <!-- Gazebo parameters -->
+            <arg name="gui" value="false" />
+            <arg name="paused" value="false" />
         </include>
     </group>
 
     <group if="$(eval arg('world') == 'nasa')">
         <include file="$(find nasa_s2d_sim)/launch/sitl.launch">
             <!-- NASA LaRC Back 40, VA -->
-            <arg name="latlon" value="37.102250,-76.387290" />
-            <arg name="world" value="nasa_back40" />
+            <arg name="name" value="NASA LaRC Back 40" />
+            <arg name="lat" value="37.102250" />
+            <arg name="lon" value="-76.387290" />
+            <arg name="zoom" value="22" />
+            <arg name="width" value="300" />
+            <arg name="height" value="200" />
+            <arg name="shift_ns" value="0" />
+            <arg name="shift_ew" value="0" />
 
-            <!-- MAV Location -->
-            <arg name="x" value="0" />
-            <arg name="y" value="-120" />
-            <arg name="Y" value="1.5708" />
+            <!-- MAV ENU Location -->
+            <arg name="x" value="120" />
+            <arg name="y" value="0" />
+            <arg name="Y" value="3.14159" />
 
             <!-- Gazebo parameters -->
             <arg name="gui" value="false" />
