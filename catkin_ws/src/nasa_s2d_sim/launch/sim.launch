@@ -10,8 +10,8 @@
             <arg name="lat" value="40.268041" />
             <arg name="lon" value="-111.635624" />
             <arg name="zoom" value="22" />
-            <arg name="width" value="400" />
-            <arg name="height" value="400" />
+            <arg name="width" value="200" />
+            <arg name="height" value="280" />
             <arg name="shift_ns" value="0" />
             <arg name="shift_ew" value="0" />
 
