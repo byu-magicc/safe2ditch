@@ -79,6 +79,12 @@
         </include>
     </group>
 
+    <!-- Visual Obstacle Detection -->
+    <node name="obstacle_detection" pkg="nasa_s2d" type="obstacle_detection.py" />
+
+    <!-- DSS Communications -->
+    <node name="dss_comms" pkg="nasa_s2d" type="dss_comms.py" />
+
     <!-- HUD -->
     <node pkg="hud" type="hud" name="hud">
         <remap from="odom" to="/mavros/global_position/local" />

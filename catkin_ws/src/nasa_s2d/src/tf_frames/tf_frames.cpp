@@ -12,7 +12,9 @@ TFFrames::TFFrames() :
 
     // Set up Publishers and Subscribers based on parameters
     sub_uav_fix_ = nh_.subscribe("uav_gps_fix", 1, &TFFrames::cb_uav_fix, this);
-    sub_uav_odom_ = nh_.subscribe("uav_odom", 1, &TFFrames::cb_uav_odom, this);
+
+    // Instead of manually converting topics to the tf tree, just tell mavros to
+    // sub_uav_odom_ = nh_.subscribe("uav_odom", 1, &TFFrames::cb_uav_odom, this);
 
     // ROS Services
     srv_uavpose_ = nh_private.advertiseService("set_uav_pose", &TFFrames::srv_set_pose, this);
@@ -115,7 +117,8 @@ void TFFrames::cb_uav_fix(const sensor_msgs::NavSatFix& msg)
 
     // Link the fcu/map origin to the origin of this UTM zone.
     transform.setOrigin(tf::Vector3(-utm_pt.easting, -utm_pt.northing, 0));
-    tf_br_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", "utm_origin_" + std::to_string(utm_pt.zone) + utm_pt.band));
+    // tf_br_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", "utm_origin_" + std::to_string(utm_pt.zone) + utm_pt.band));
+    tf_br_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "base_link", "utm_origin"));
 }
 
 }
