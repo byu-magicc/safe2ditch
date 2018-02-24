@@ -80,10 +80,12 @@
     </group>
 
     <!-- Visual Obstacle Detection -->
-    <node name="obstacle_detection" pkg="nasa_s2d" type="obstacle_detection.py" />
+    <node name="obstacle_detection" pkg="nasa_s2d" type="obstacle_detection.py" output="screen">
+        <remap from="uav_gps_fix" to="/mavros/global_position/global" />
+    </node>
 
     <!-- DSS Communications -->
-    <node name="dss_comms" pkg="nasa_s2d" type="dss_comms.py" />
+    <node name="dss_comms" pkg="nasa_s2d" type="dss_comms.py" output="screen" />
 
     <!-- HUD -->
     <node pkg="hud" type="hud" name="hud">

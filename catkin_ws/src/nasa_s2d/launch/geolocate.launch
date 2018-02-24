@@ -27,6 +27,10 @@
         <arg name="show3d" value="$(arg show3d)" />
         <arg name="camera_name" value="$(arg camera_name)" />
         <arg name="tracks_topic" value="$(arg tracks_topic)" />
+
+        <!-- tf frames -->
+        <arg name="result_frame" value="map" />
+        <arg name="camera_frame" value="camera" />
     </include>
 
 
