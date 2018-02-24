@@ -4,8 +4,9 @@ from builtins import range
 import rospy
 
 import numpy as np
-
 import zmq
+
+from visual_mtt.msg import Tracks
 
 class DSSComms:
     """
@@ -18,18 +19,27 @@ class DSSComms:
     def __init__(self, port):
 
         self.port = port
+
+        # Create ZeroMQ socket connection
         self.socket = zmq.Context().socket(zmq.PUB)
         self.socket.bind("tcp://*:{}".format(self.port))
-        print("Socket on port {} bind complete".format(self.port))
 
 
-    def send_intruders(self, lat, lon):
+    def send_intruders(self, intruders):
+        """
+        send_intruders(intruders)
+
+        :param: intruders
+                List of tuples with lat/lon of each intruder.
+                e.g., intruders=[(lat,lon), (lat,lon), ...]
+        """
+
         # message contains number of intruders followed by lat/lon for each
         message = ""
-        # for i in range(len(self.intruder_lat)):
-        #     message = message + "," + str(self.intruder_lat[i]) + "," + str(self.intruder_lon[i])
+        for intruder in intruders:
+            message = "{},{},{}".format(message, intruder[0], intruder[1])
 
-        self.socket.send("{},{}".format(TOPIC_INTRUDER, message))
+        self.socket.send("{}{}".format(DSSComms.TOPIC_INTRUDER, message))
 
 
 class Node:
@@ -42,11 +52,22 @@ class Node:
         self.comms = DSSComms(5556)
 
         # ROS subscribers
-        # self.sub0 = rospy.Subscriber('tracks3d', Tracks, self.tracks_cb)
+        self.sub0 = rospy.Subscriber('obstacles', Tracks, self.obstacles_cb)
 
         
-    def tracks_cb(self, msg):
-        pass
+    def obstacles_cb(self, msg):
+        # If there are no tracks to process, just bail!
+        if not msg.tracks:
+            return
+
+        intruders = []
+
+        # Extract lat/lon from tracks
+        for track in msg.tracks:
+            intruder = (track.position.y, track.position.x)
+            intruders.append(intruder)
+
+        self.comms.send_intruders(intruders)
         
 
 if __name__ == '__main__':
