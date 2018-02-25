@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <!-- Start mavros connected to a Pixhawk running APM:Copter -->
-    <include file="$(find mavros)/launch/apm.launch">
+    <!-- Start mavros and connect to a Pixhawk running APM:Copter -->
+    <include file="$(find nasa_s2d)/launch/mavros.launch">
         <!-- Pixhawk is on TX2 UART 1 -->
-	<!-- Baud is set by SERIAL2_BUAD param in APM:Copter -->
+        <!-- Baud is set by SERIAL2_BUAD param in APM:Copter -->
         <arg name="fcu_url"  value="/dev/ttyTHS2:921600" />
     </include>
 
     <node name="gcs_bridge" pkg="mavros" type="gcs_bridge">
-	<!-- You can connect locally using localhost on port 14550 -->
+    <!-- You can connect locally using localhost on port 14550 -->
         <param name="gcs_url" value="udp://@localhost" />
     </node>
 
