@@ -24,7 +24,7 @@
     <!-- connect the geolocator to the output of visual_mtt -->
     <remap from="pose"  to="mavros/local_position/pose" />
     <include file="$(find flat_earth_geolocation)/launch/geolocate.launch">
-        <arg name="show3d" value="$(arg show3d)" />
+        <arg name="show3d" value="false" />
         <arg name="camera_name" value="$(arg camera_name)" />
         <arg name="tracks_topic" value="$(arg tracks_topic)" />
 
@@ -32,6 +32,16 @@
         <arg name="result_frame" value="map" />
         <arg name="camera_frame" value="camera" />
     </include>
+
+    <!-- rviz 3d visualization of geolocated tracks -->
+    <group if="$(arg show3d)">
+
+        <node pkg="flat_earth_geolocation" type="plotter" name="plotter" output="screen">
+            <remap from="tracks" to="tracks3d" />
+        </node>
+
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find nasa_s2d)/rviz/s2d_geolocation.rviz" />
+    </group>
 
 
     <!-- Call ROS Service to set UAV position offsets and heading override -->
