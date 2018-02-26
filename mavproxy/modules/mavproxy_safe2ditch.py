@@ -46,7 +46,7 @@ class Safe2ditchModule(mp_module.MPModule):
                          'altitude': 10.0}
 
         # Specify the flight data directory
-        data_dir = '/home/plusk01/dev/safe2ditch/s2d_config/'
+        data_dir = '/home/nvidia/dev/safe2ditch/s2d_config/'
 
         self.s2d_log_file = open(os.path.join(data_dir, 's2dEvents.txt'), mode='a')
         self.s2d_log_file.write("\n\n!! New Log !!\n\n")
@@ -73,7 +73,7 @@ class Safe2ditchModule(mp_module.MPModule):
         self.meters_tolerance = 1.0
         self.arrived = False
         self.time_mode_change_max = 3.0
-        self.s2d_engage_wait = 10
+        self.s2d_engage_wait = 25
         self.simulated_meters_2_go = 500.0
         self.land_requested = False
         self.time_land_req = 3502400366.0
