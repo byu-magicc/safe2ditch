@@ -1,0 +1,13 @@
+[Unit]
+Description="Safe2Ditch Flight System: DSS MAVProxy and VAL ROS"
+After=network.target
+
+[Service]
+Type=simple
+User=nvidia
+Group=nvidia
+WorkingDirectory=/home/nvidia/dev/safe2ditch/startup
+ExecStart=/home/nvidia/dev/safe2ditch/startup/rosboot.sh
+
+[Install]
+WantedBy=default.target
