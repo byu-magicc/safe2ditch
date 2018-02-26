@@ -6,7 +6,7 @@ import time
 import os
 import thread
 import math
-from waypoint import Waypoint
+from site_selection.waypoint import Waypoint
 
 class VisionDataReceiver:
 

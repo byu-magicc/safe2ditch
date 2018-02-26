@@ -1,7 +1,7 @@
 import os
 import math
 from waypoint import Waypoint
-from visionDataReceiver import VisionDataReceiver
+from ..visionDataReceiver import VisionDataReceiver
 
 class TriageLogic:
 

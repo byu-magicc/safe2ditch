@@ -45,10 +45,13 @@ class Safe2ditchModule(mp_module.MPModule):
                          'longitude': -76.385285,
                          'altitude': 10.0}
 
-        self.s2d_log_file = open('/home/nvidia/dev/MyCopter/s2dEvents.txt', mode='a')
+        # Specify the flight data directory
+        data_dir = '/home/plusk01/dev/safe2ditch/s2d_config/'
+
+        self.s2d_log_file = open(os.path.join(data_dir, 's2dEvents.txt'), mode='a')
         self.s2d_log_file.write("\n\n!! New Log !!\n\n")
-        self.parser = ConfigFileParser("/home/nvidia/dev/MyCopter/config_file.json")
-        self.triage = TriageLogic(self.parser.ditch_site_package, "/home/nvidia/dev/MyCopter/path.txt")
+        self.parser = ConfigFileParser(os.path.join(data_dir, 'config_file.json'))
+        self.triage = TriageLogic(self.parser.ditch_site_package, os.path.join(data_dir, 'path.txt'))
         self.navigation = Navigation()
         self.reset_safe2ditch()
 

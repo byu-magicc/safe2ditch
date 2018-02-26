@@ -1,0 +1,44 @@
+{"routes": {
+   "route_def": [
+        {  
+           "longitude": "-76.387542",
+           "latitude": "37.102148",
+	   "altitude": "0.0"
+        },
+        {
+           "longitude": "-76.38712",
+           "latitude": "37.102193",
+	   "altitude": "30.0"
+        },
+        {
+           "longitude": "-76.387051",
+           "latitude": "37.10294",
+	   "altitude": "73.0"
+        },
+        {
+           "longitude": "-76.386991",
+           "latitude": "37.103491",
+	   "altitude": "100.0"
+        },
+        {
+           "longitude": "-76.385574",
+           "latitude": "37.103075",
+	   "altitude": "100.0"
+        },
+	{
+           "longitude": "-76.386989",
+           "latitude": "37.102561",
+	   "altitude": "100.0"
+        }
+   ]
+}}
+
+
+
+
+
+
+
+
+
+
