@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <!-- Choose between `rockcanyon` or `nasa -->
-    <arg name="world" default="rockcanyon" />
+    <arg name="world" default="nasa127.0.0.1" />
 
     <group if="$(eval arg('world') == 'rockcanyon')">
         <include file="$(find nasa_s2d_sim)/launch/sitl.launch">
@@ -57,43 +57,15 @@
         <arg name="fcu_url"  value="udp://127.0.0.1:14550@" />
     </include>
 
-    <!-- <node name="gcs_bridge" pkg="mavros" type="gcs_bridge"> -->
-        <!-- You can connect locally using localhost on port 14550 -->
-        <!-- <param name="gcs_url" value="udp://@127.0.0.1:14555" /> -->
-    <!-- </node> -->
-
-    <!-- Run a series of mavros mavsys commands to increase sensor pub rate -->
-    <node name="gofast" pkg="nasa_s2d" type="gofast.sh" output="screen" />
-
-    <!-- launch visual_mtt -->
-    <include file="$(find visual_mtt)/launch/visual_mtt.launch">
-        <arg name="params" value="$(find nasa_s2d)/param/sully.yaml" />
-        <arg name="tuning" value="false" />
-        <arg name="imgtopic" value="/camera/image_raw" />
-    </include>
-
-    <!-- launch geolocation components -->
-    <group if="true">
-        <include file="$(find nasa_s2d)/launch/geolocate.launch">
-            <arg name="show3d" value="true" />
-        </include>
-    </group>
-
-    <!-- Visual Obstacle Detection -->
-    <node name="obstacle_detection" pkg="nasa_s2d" type="obstacle_detection.py" output="screen">
-        <remap from="uav_gps_fix" to="/mavros/global_position/global" />
-    </node>
-
-    <!-- DSS Communications -->
-    <node name="dss_comms" pkg="nasa_s2d" type="dss_comms.py" output="screen" />
-
     <!-- HUD -->
     <node pkg="hud" type="hud" name="hud">
         <remap from="odom" to="/mavros/global_position/local" />
     </node>
 
-    <!-- Adaptive Parameter Tuning -->
-    <node pkg="nasa_s2d" type="adaptive_params.py" name="adaptive_params">
-        <remap from="odom" to="/mavros/global_position/local" />
-    </node>
+    <!-- Launch Safe2Ditch core system -->
+    <include file="$(find nasa_s2d)/launch/safe2ditch.launch">
+        <arg name="vmtt_tuning" value="false" />
+        <arg name="show3d" value="true" />
+    </include>
+
 </launch>
