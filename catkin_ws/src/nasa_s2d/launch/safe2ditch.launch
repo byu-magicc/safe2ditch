@@ -10,6 +10,12 @@
         <!-- <param name="gcs_url" value="udp://@127.0.0.1:14555" /> -->
     <!-- </node> -->
 
+    <!-- Start mavros and connect to the Pixhawk running APM:Copter -->
+    <include file="$(find nasa_s2d)/launch/mavros.launch">
+        <!-- Connect via a MAVProxy GCS output -->
+        <arg name="fcu_url"  value="udp://127.0.0.1:14550@" />
+    </include>
+
     <!-- Run a series of mavros mavsys commands to increase sensor pub rate -->
     <node name="gofast" pkg="nasa_s2d" type="gofast.sh" output="screen" />
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <!-- Choose between `rockcanyon` or `nasa -->
-    <arg name="world" default="nasa127.0.0.1" />
+    <arg name="world" default="nasa" />
 
     <group if="$(eval arg('world') == 'rockcanyon')">
         <include file="$(find nasa_s2d_sim)/launch/sitl.launch">
@@ -51,11 +51,6 @@
 
     <!-- Spawn moving agents -->
     <include file="$(find nasa_s2d_sim)/launch/movers.launch" />
-
-    <!-- Start mavros and connect to a SITL Pixhawk running APM:Copter -->
-    <include file="$(find nasa_s2d)/launch/mavros.launch">
-        <arg name="fcu_url"  value="udp://127.0.0.1:14550@" />
-    </include>
 
     <!-- HUD -->
     <node pkg="hud" type="hud" name="hud">
