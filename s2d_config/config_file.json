@@ -1,9 +1,9 @@
 {
     "config": {
         "files": {
-            "route_file_name": "/home/plusk01/dev/safe2ditch/s2d_config/N40_Route_V2.json",
-            "ditch_sites_file_name": "/home/plusk01/dev/safe2ditch/s2d_config/N40_two_DitchSites.json",
-            "vehicle_path_file": "/home/plusk01/dev/safe2ditch/s2d_config/path_output.txt"
+            "route_file_name": "/home/nvidia/dev/safe2ditch/s2d_config/N40_Route_V2.json",
+            "ditch_sites_file_name": "/home/nvidia/dev/safe2ditch/s2d_config/N40_two_DitchSites.json",
+            "vehicle_path_file": "/home/nvidia/dev/safe2ditch/s2d_config/path_output.txt"
         },
         "perf_def": {
             "max_climb_rate_FPS": "10.0",

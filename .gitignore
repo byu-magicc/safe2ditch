@@ -1,5 +1,13 @@
 *.pyc
 __pycache__
 *.*~
+*.swp
 
+# APM logs (from MAVProxy)
+mav.tlog
+mav.tlog.raw
+
+# ROS bags
+*.bag
+*.bag.active
 .bagnum
