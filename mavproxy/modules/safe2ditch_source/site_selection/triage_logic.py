@@ -61,7 +61,7 @@ class TriageLogic:
         maxBestRadius = 60 # no extra weight for radius beyond this
         radiusWeightFactor = 0.2
         reliabilityWeightFactor = 3.0
-        intruderWeightFactor = -100.0
+        intruderWeightFactor = -10000.0
         # lat/lon estimator site: http://www.csgnetwork.com/degreelenllavcalc.html)
         latFtPerDegLangley = 364107.19 
         lonFtPerDegLangley = 291526.76 

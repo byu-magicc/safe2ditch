@@ -17,7 +17,7 @@
     </include>
 
     <!-- Run a series of mavros mavsys commands to increase sensor pub rate -->
-    <node name="gofast" pkg="nasa_s2d" type="gofast.sh" output="screen" />
+    <!-- <node name="gofast" pkg="nasa_s2d" type="gofast.sh" output="screen" /> -->
 
     <!-- launch visual_mtt -->
     <include file="$(find visual_mtt)/launch/visual_mtt.launch">

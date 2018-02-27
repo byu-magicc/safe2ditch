@@ -73,7 +73,7 @@ class Safe2ditchModule(mp_module.MPModule):
         self.meters_tolerance = 1.0
         self.arrived = False
         self.time_mode_change_max = 3.0
-        self.s2d_engage_wait = 25
+        self.s2d_engage_wait = 30
         self.simulated_meters_2_go = 500.0
         self.land_requested = False
         self.time_land_req = 3502400366.0
