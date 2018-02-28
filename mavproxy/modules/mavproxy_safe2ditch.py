@@ -160,6 +160,7 @@ class Safe2ditchModule(mp_module.MPModule):
                             self.guidance_waypoint = self.navigation.get_guidance_waypoint(self.path_to_site, 
                                                                                            self.veh_cur_wp)
                             
+                            print "mp_s2d: this name = " + self.guidance_waypoint.name + ", old name = " + self.guid_wp_past_name
                             if (self.guidance_waypoint.name == self.guid_wp_past_name):
                                 # same guidance point as last pass, no need to update to copter
                                 self.guidance_wpt_set = True
@@ -249,7 +250,7 @@ class Safe2ditchModule(mp_module.MPModule):
        
     def pick_ditch_site(self):
         print("picking_ditch_site")
-        time_left_sec = 200    # need to update to take in time to crash
+        time_left_sec = 20000    # need to update to take in time to crash
         #self.triage = TriageLogic(self.parser.ditch_site_package, "/home/nvidia/dev/MyCopter/path.txt")
 
         #triage.output_best_site_for_ralley(time_left_sec, 

@@ -77,8 +77,6 @@ class VisionDataReceiver:
 
             self.file.write(str(time.time()) + " ")
             for i in range(len(self.intruders)):
-                #print "VDR: intruder at " + str(math.degrees(self.intruders[i].lat)),
-                print "/" + str(math.degrees(self.intruders[i].lon))
                 self.file.write("{:0.6f} {:1.6f} {:2.6f} ".format(math.degrees(self.intruders[i].lat),
                                                                  math.degrees(self.intruders[i].lon), 
                                                                  self.intruders[i].alt))

@@ -102,9 +102,7 @@ class TriageLogic:
             siteRangeSquared = siteRangeX * siteRangeX + siteRangeY * siteRangeY
 
             siteRange = math.sqrt(siteRangeSquared)
-
-            print "TL: veh rng= " + str(vehicleRange) + ", rng to " + self.ditch_site_data[line].name + " is " + str(siteRange)
-            
+      
             if (siteRangeSquared <= vehicleRangeSquared):
                 rangeToSite = math.sqrt(siteRangeSquared)
                 self.ditch_site_data[line].range = rangeToSite
@@ -166,6 +164,9 @@ class TriageLogic:
                                                        + usableSites[siteOption].reliability
                                                        * reliabilityWeightFactor)
 
+               print usableSites[siteOption].name + "intruders:" + str(usableSites[siteOption].intruder_factor),
+               print ", desirability: " + str(usableSites[siteOption].desirability)
+
                # compare this site's desirability, and save as best site if it exceeds
                # the desirability of previous best site
 
@@ -193,12 +194,13 @@ class TriageLogic:
         """ This function returns one waypoint from select_site 
         for the simulator """    
         site_selected = self.select_site(time_left_sec, veh_speed, veh_wp)
-        best_site = Waypoint(veh_wp.lat, veh_wp.lon, veh_wp.alt)
+        best_site = Waypoint(veh_wp.lat, veh_wp.lon, veh_wp.alt, "veh_loc")
         
         if len(site_selected) == 2:
             best_site = Waypoint(site_selected[1].lat, 
                                  site_selected[1].lon, 
-                                 site_selected[1].alt)
+                                 site_selected[1].alt,
+		         	 site_selected[1].name)
         
         return best_site
     
@@ -224,8 +226,8 @@ class TriageLogic:
         new_path_options.append(best_site)
         
         "******************** For Debugging ******************************"
-        """print('Point of Descent:', math.degrees(new_waypoint_option.lat), math.degrees(new_waypoint_option.lon), new_waypoint_option.alt)
-           print('Ditch site:', math.degrees(best_site.lat), math.degrees(best_site.lon), best_site.alt)"""
+        print('Point of Descent:', math.degrees(new_waypoint_option.lat), math.degrees(new_waypoint_option.lon), new_waypoint_option.alt)
+        print('Ditch site:', math.degrees(best_site.lat), math.degrees(best_site.lon), best_site.alt, best_site.name)
         "*****************************************************************"
         
         return new_path_options
