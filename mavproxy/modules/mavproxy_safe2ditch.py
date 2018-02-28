@@ -31,6 +31,9 @@ class Safe2ditchModule(mp_module.MPModule):
         self.simulated_meters_2_go = 500.0
         self.this_mode = "unset"
         self.path_to_site = []
+        self.path_to_site_last = []
+        self.num_site_changes = 0
+        self.num_site_changes_max = 1
         self.meters_to_feet = 3.28084
         self.feet_to_meters = 1.0/self.meters_to_feet
 
@@ -73,7 +76,7 @@ class Safe2ditchModule(mp_module.MPModule):
         self.meters_tolerance = 1.0
         self.arrived = False
         self.time_mode_change_max = 3.0
-        self.s2d_engage_wait = 30
+        self.s2d_engage_wait = 45
         self.simulated_meters_2_go = 500.0
         self.land_requested = False
         self.time_land_req = 3502400366.0
@@ -271,9 +274,21 @@ class Safe2ditchModule(mp_module.MPModule):
 
         # get navigation path from triage logic
         max_veh_speed = 10.0        # feet/sec, should really come from perf data
+        self.path_to_site_last = self.path_to_site
         self.path_to_site = self.triage.select_new_waypoint(time_left_sec, 
                                                             max_veh_speed,
                                                             self.veh_cur_wp)
+
+        if (len(self.path_to_site) == 2) and (len(self.path_to_site_last) == 2):
+	    # don't count if first path, known by 'unset'
+	    if self.path_to_site[self.navigation.dsIndex].name != self.path_to_site_last[self.navigation.dsIndex].name:
+                # switching ditch sites, increment counter
+	        self.num_site_changes = self.num_site_changes + 1
+
+            print("mav_s2d: num_site_changes = {}".format(self.num_site_changes))
+            if self.num_site_changes > self.num_site_changes_max:
+               self.path_to_site = self.path_to_site_last
+
     def simulate_site_arrival(self):
         # asymptotic decay
         sim_gain = 0.2
