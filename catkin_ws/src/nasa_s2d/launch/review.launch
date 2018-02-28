@@ -5,11 +5,10 @@
     <arg name="bagname"             default="run3.bag" />
     <arg name="bagpath"             default="$(arg bagroot)/$(arg bagname)" />
     <arg name="hide_bag"            default="false" />
-    <arg name="do_geolocation"      default="true" />
-    <arg name="show_geolocation"    default="false" />
-    <arg name="show_dashboard"      default="true" />
-    <arg name="tuning"              default="true" />
-    <arg name="ns"                  default="review" />
+    <arg name="show3d"              default="true" />
+    <!-- <arg name="show_dashboard"      default="true" /> -->
+    <!-- <arg name="tuning"              default="true" /> -->
+    <!-- <arg name="ns"                  default="review" /> -->
 
     <!-- ###################################################################### -->
 
@@ -21,45 +20,29 @@
     <arg unless="$(arg hide_bag)" name="prefix" value="xterm -hold -geometry 100x20 -e" />
 
     <!-- The video in the rosbag is compressed - this decompresses it for visual_mtt -->
-    <node pkg="image_transport" type="republish" name="decompress" output="log" args="compressed in:=camera/image_raw out:=$(arg ns)/camera/image_raw" />
+<!--     <node pkg="image_transport" type="republish" name="decompress" output="log" args="compressed in:=camera/image_raw out:=$(arg ns)/camera/image_raw" /> -->
 
     <!-- Play the selected rosbag. Also, remap the camera_info topic into the review namespace -->
     <node pkg="rosbag" type="play" name="player" args="--pause $(arg bagpath) --clock" launch-prefix="$(arg prefix)">
-      <remap from="camera/camera_info" to="$(arg ns)/camera/camera_info" />
-      <remap from="/tf" to="/tf_old" />
+      <!-- <remap `from="camera/camera_info" to="$(arg ns)/camera/camera_info" /> -->
+      <!-- <rem`ap from="/tf" to="/tf_old" /> -->
     </node>
 
-    <!-- launch visual_mtt in a namespace to avoid collision with recorded topics -->
-    <group ns="$(arg ns)">
-        <include file="$(find visual_mtt)/launch/visual_mtt.launch">
-          <arg name="params"    value="$(find nasa_s2d)/param/sully.yaml" />
-          <arg name="tuning"    value="$(arg tuning)" />
-          <arg name="imgtopic"  value="camera/image_raw" />
-        </include>
+    <!-- HUD -->
+    <node pkg="hud" type="hud" name="hud">
+        <remap from="odom" to="/mavros/local_position/odom" />
+        <param name="image_transport" value="compressed" />
+    </node>
 
-        <!-- HUD -->
-        <node pkg="hud" type="hud" name="hud">
-            <remap from="odom" to="/mavros/global_position/local" />
+
+    <!-- rviz 3d visualization of geolocated tracks -->
+    <group if="$(arg show3d)">
+        <node pkg="flat_earth_geolocation" type="plotter" name="plotter" output="screen">
+            <remap from="tracks" to="tracks3d" />
         </node>
 
-        <!-- Adaptive Parameter Tuning -->
-        <node pkg="nasa_s2d" type="adaptive_params.py" name="adaptive_params">
-            <remap from="odom" to="/mavros/global_position/local" />
-        </node>
-
-        <!-- Start up a dashboard perspective -->
-        <group if="$(arg show_dashboard)">
-            <node pkg="rqt_gui" type="rqt_gui" name="review_dashboard" args="--perspective-file '$(find nasa_s2d)/rqt/review.perspective'" />
-        </group>
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find nasa_s2d)/rviz/s2d_geolocation.rviz" />
     </group>
 
-    <!-- launch geolocation components -->
-    <group if="$(arg do_geolocation)">
-        <include file="$(find nasa_s2d)/launch/geolocate.launch">
-            <arg name="camera_name" value="$(arg ns)/camera" />
-            <arg name="show3d" value="$(arg show_geolocation)" />
-            <arg name="tracks_topic" value="$(arg ns)/tracks" />
-        </include>
-    </group>
 
 </launch>
