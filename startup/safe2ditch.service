@@ -8,6 +8,7 @@ User=nvidia
 Group=nvidia
 WorkingDirectory=/home/nvidia/dev/safe2ditch/startup
 ExecStart=/home/nvidia/dev/safe2ditch/startup/rosboot.sh
+ExecSignal=INT
 
 [Install]
 WantedBy=default.target

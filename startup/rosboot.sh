@@ -26,7 +26,7 @@ sleep 15
 BAGNUM=$((BAGNUM+1))
 echo ${BAGNUM} > ${BAGNUM_FILE}
 
-bagrecord -O "~/run${BAGNUM}.bag"  # this is where you can change the bag path
+bagrecord -O "$HOME/run${BAGNUM}.bag"  # this is where you can change the bag path
 
 ## Increment the BAGNUM and save to `~/bagnum`
 #BAGNUM=$((BAGNUM+1))
