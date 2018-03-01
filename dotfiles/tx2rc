@@ -56,3 +56,9 @@ function bagcut {
         { set +x; } 2>/dev/null
 }
 
+
+# Setup a test environment
+function testname {
+	NAME=$1
+	echo $NAME > $MYPATH/../startup/.testname
+}

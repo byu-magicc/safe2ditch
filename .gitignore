@@ -13,3 +13,4 @@ mav.parm
 *.bag
 *.bag.active
 .bagnum
+.testname
