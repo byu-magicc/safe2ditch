@@ -48,6 +48,31 @@ else
 	export S2DBAGS=$HOME
 fi
 
+# Current flight test name
+if [ -f "$S2DENV/testname" ];
+then
+	export S2DTESTNAME=$(cat $S2DENV/testname)
+
+	# If this test already exists, append a counter
+	if [ -f "$S2DBAGS/$S2DTESTNAME.bag" ];
+	then
+		# Read which test num we are on
+		if [ -f "$S2DENV/testnum" ];
+		then
+			TESTNUM=$(cat $S2DENV/testnum)
+		else
+			TESTNUM=1
+		fi
+
+		export S2DTESTNAME="$S2DTESTNAME-$TESTNUM"
+	else
+		# reset the TESTNUM file
+		echo 1 > "$S2DENV/testnum"
+	fi
+else
+	export S2DTESTNAME="noname"
+fi
+
 ###############################################################################
 #                                  ROS Setup                                  #
 ###############################################################################

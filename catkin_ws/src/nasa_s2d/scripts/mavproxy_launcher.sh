@@ -3,11 +3,23 @@
 #
 #
 
-echo -e "\n\n\n" >> ~/mavproxy.log
-echo -e "`date`" >> ~/mavproxy.log
+LOGNAME="mavproxy_$S2DTESTNAME.log"
+LOG="$S2DBAGS/$LOGNAME"
+QUIET=false
 
-# MFT90O2C16C16C16F8.A8C16C16C16F8.A4P16P8
+echo -e "`date`" >> $LOG
+echo -e "$S2DTESTNAME" >> $LOG
 
-mavproxy.py --mav20 --master=/dev/ttyTHS2 --baudrate=921600 --cmd="playtune A"
+# add or remove the tones based on the QUIET variable
+if [ "$QUIET" = true ];
+then
+	TONE1=
+	TONE2=
+else
+	TONE1="playtune A"
+	TONE2="playtune MFT90O2C16C16C16F8.A8C16C16C16F8.A4P16P8"
+fi
 
-mavproxy.py --mav20 --master=/dev/ttyTHS2 --baudrate=921600 --moddebug=3 --source-system=250 --out=127.0.0.1:14550 --cmd="set streamrate 20; module load safe2ditch; playtune MFT90O2C16C16C16F8.A8C16C16C16F8.A4P16P8" --daemon >> ~/mavproxy.log
+mavproxy.py --mav20 --master=/dev/ttyTHS2 --baudrate=921600 --cmd="set requireexit True; ${TONE1}; exit"
+
+mavproxy.py --mav20 --master=/dev/ttyTHS2 --baudrate=921600 --moddebug=3 --source-system=250 --out=127.0.0.1:14550 --cmd="set streamrate 20; module load safe2ditch; ${TONE2};" --daemon >> $LOG
