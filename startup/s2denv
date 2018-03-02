@@ -1,0 +1,88 @@
+# Properly setup the Safe2Ditch environment.
+#
+#
+
+# Get path to the directory of this file, no matter where it is sourced from
+MYPATH=$(dirname ${BASH_SOURCE[0]})
+
+###############################################################################
+#                   Safe2Ditch Environment Variables                          #
+###############################################################################
+
+# Tell the environment where the root of the Safe2Ditch code lives
+export S2DROOT=$(realpath $MYPATH/..)
+
+# The .env directory is used to store environment-specific configurations
+export S2DENV=$(realpath $S2DROOT/.env)
+
+# Make sure the S2DENV directory exists
+mkdir -p $S2DENV
+
+# The name of this aircraft (used for MAVProxy)
+if [ -f "$S2DENV/aircraft" ];
+then
+	export S2DAIRCRAFT=$(cat $S2DENV/aircraft)
+else
+	export S2DAIRCRAFT=sully
+fi
+
+# ROS networking information
+if [ -f "$S2DENV/rosmaster" ];
+then
+	export ROS_MASTER_URI=$(cat $S2DENV/rosmaster)
+else
+	export ROS_MASTER_URI=http://localhost:11311
+fi
+if [ -f "$S2DENV/rosip" ];
+then
+	export ROS_IP=$(cat $S2DENV/rosip)
+else
+	export ROS_IP=127.0.0.1
+fi
+
+# Location of the recorded ROS bags
+if [ -f "$S2DENV/bagpath" ];
+then
+	export S2DBAGS=$(cat $S2DENV/bagpath)
+else
+	export S2DBAGS=$HOME
+fi
+
+###############################################################################
+#                                  ROS Setup                                  #
+###############################################################################
+
+# ROS Kinetic and Safe2Ditch ROS catkin_ws
+source /opt/ros/kinetic/setup.bash
+source $S2DROOT/catkin_ws/devel/setup.bash
+
+# ROS Tools
+alias catkin_make_tx2='catkin_make -DVISUAL_MTT_CUDA=ON -DOpenCV_DIR=/usr/local/share/OpenCV -DCATKIN_BLACKLIST_PACKAGES="nasa_s2d_sim;ardupilot_sim;gzsatellite;moving_targets"'
+alias bagrecord='rosbag record -a -x "/camera/(.*)|/tracks_video(.*)" /camera/image_raw/compressed /camera/camera_info /tracks_video/compressed'
+
+###############################################################################
+#                           MAVProxy Safe2Ditch Setup                         #
+###############################################################################
+
+# Python Path
+export PYTHONPATH="$PYTHONPATH:$S2DROOT/dss/mavproxy/modules"
+
+###############################################################################
+#                         Helper Environment Functions                        #
+###############################################################################
+
+# Setup the Safe2Ditch environment
+function setup_s2denv {
+	AIRCRAFT=$1
+	MASTER=$2
+	MYIP=$3
+
+	source $S2DROOT/startup/s2denv
+}
+
+# Give a name for the bag/logs of the next flight that
+# will be run after the companion computer reboots
+function testname {
+        NAME=$1
+        echo $NAME > $S2DENV/testname
+}
