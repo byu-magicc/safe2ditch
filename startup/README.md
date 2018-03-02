@@ -1,4 +1,13 @@
-Safe2Ditch Startup
-==================
+Safe2Ditch Startup Files
+========================
 
-This directory contains the necessary scripts and configuration for starting the Safe2Ditch system on startup. This is a convenience for flight tests.
+A collection of shell scripts and aliases.
+
+## `.bash_profile` ##
+
+Environment setup. Place the following at the bottom of `~/.bashrc`:
+
+```bash
+# Include .bash_profile
+source ~/.bash_profile
+```

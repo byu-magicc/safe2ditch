@@ -2,8 +2,11 @@
 #
 # This script gets run via systemctl on boot (if installed)
 
+# Get path to the directory of this file, no matter where it is sourced from
+MYDIR=$(dirname ${BASH_SOURCE[0]})
+
 shopt -s expand_aliases
-source /home/nvidia/dev/safe2ditch/dotfiles/tx2rc
+source "$MYDIR/tx2rc"
 
 # Reset ROS Networking -- NASA doesn't use wifi connection during flight
 ROS_IP=127.0.0.1
