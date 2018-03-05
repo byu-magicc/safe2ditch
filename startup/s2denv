@@ -18,13 +18,11 @@ export S2DENV=$(realpath $S2DROOT/.env)
 # Make sure the S2DENV directory exists
 mkdir -p $S2DENV
 
-# The name of this aircraft (used for MAVProxy)
-if [ -f "$S2DENV/aircraft" ];
-then
-	export S2DAIRCRAFT=$(cat $S2DENV/aircraft)
-else
-	export S2DAIRCRAFT=sully
-fi
+# The location of the MAVProxy Safe2Ditch module (DSS)
+export S2DDSS=$S2DROOT/dss
+
+# The name of the aircraft directory (used for MAVProxy Safe2Ditch module)
+export S2DAIRCRAFT=aircraft
 
 # ROS networking information
 if [ -f "$S2DENV/rosmaster" ];
@@ -90,7 +88,7 @@ alias bagrecord='rosbag record -a -x "/camera/(.*)|/tracks_video(.*)" /camera/im
 ###############################################################################
 
 # Python Path
-export PYTHONPATH="$PYTHONPATH:$S2DROOT/dss/mavproxy/modules"
+# export PYTHONPATH="$PYTHONPATH:$S2DDSS/mavproxy/modules"
 
 ###############################################################################
 #                         Helper Environment Functions                        #

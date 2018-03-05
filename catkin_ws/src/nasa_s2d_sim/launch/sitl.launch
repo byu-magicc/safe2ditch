@@ -20,7 +20,7 @@
     <arg name="paused" default="false" />
 
     <!-- Run the APM provided `sim_vehicle.py` SITL command -->
-    <node pkg="ardupilot_sim" type="copter_sitl.sh" name="copter_sitl" args="$(arg lat),$(arg lon)" />
+    <node pkg="nasa_s2d_sim" type="copter_sitl.sh" name="copter_sitl" args="$(arg lat),$(arg lon)" />
 
     <group ns="/gzsatellite">
         <param name="name" type="string" value="$(arg name)" />
