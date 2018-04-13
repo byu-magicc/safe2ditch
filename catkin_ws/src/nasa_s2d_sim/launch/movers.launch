@@ -14,10 +14,7 @@
     <group ns="targets/parker">
         <!-- Trajectory type: waypoints -->
         <param name="trajectory_type" type="int" value="1" />
-        <param name="x" type="double" value="2" />
-        <param name="y" type="double" value="0" />
-        <param name="vx" type="double" value="2.0" />
-        <param name="vy" type="double" value="2.0" />
+        <param name="v" type="double" value="1.0" />
         <rosparam param="waypoints_x">[0, 2.5, 2.5, 0, 0]</rosparam>
         <rosparam param="waypoints_y">[0, 0, 2.5, 2.5, 0]</rosparam>
     </group>
@@ -36,10 +33,7 @@
     <group ns="targets/trish">
         <!-- Trajectory type: waypoints -->
         <param name="trajectory_type" type="int" value="1" />
-        <param name="x" type="double" value="-6" />
-        <param name="y" type="double" value="0" />
-        <param name="vx" type="double" value="0.75" />
-        <param name="vy" type="double" value="0.75" />
+        <param name="v" type="double" value="0.75" />
         <rosparam param="waypoints_x">[0, -2, -4, -4, -2, 0]</rosparam>
         <rosparam param="waypoints_y">[0, -0.5, -1.5,  1.5,  0.5, 0]</rosparam>
     </group>
@@ -57,8 +51,8 @@
     <group ns="targets/nerissa">
         <!-- Trajectory type: circle -->
         <param name="trajectory_type" type="int" value="2" />
+        <param name="v" type="double" value="1.25" />
         <param name="radius" type="double" value="2" />
-        <param name="x" type="double" value="0" />
-        <param name="y" type="double" value="8" />
+        <param name="lambda" type="double" value="-1" />
     </group>
 </launch>
