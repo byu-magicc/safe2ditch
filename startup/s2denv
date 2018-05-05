@@ -90,6 +90,9 @@ alias bagrecord='rosbag record -a -x "/camera/(.*)|/tracks_video(.*)" /camera/im
 # Python Path
 # export PYTHONPATH="$PYTHONPATH:$S2DDSS/mavproxy/modules"
 
+# Change the default MAVProxy map service
+export MAP_SERVICE=MicrosoftSat
+
 ###############################################################################
 #                         Helper Environment Functions                        #
 ###############################################################################
