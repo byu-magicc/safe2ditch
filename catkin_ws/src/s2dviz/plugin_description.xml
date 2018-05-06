@@ -1,30 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- <library path="lib/libwhirlybird_description">
-  <class name="whirlybird_description/Whirlybird"
-         type="whirlybird_description::WhirlybirdPanel"
-         base_class_type="rviz::Panel">
-    <description>
-      A panel widget for interacting with the Whirlybird
-    </description>
-  </class>
-
-  <class name="whirlybird_description/WhirlybirdPWM"
-         type="whirlybird_description::WhirlybirdPanelPWM"
-         base_class_type="rviz::Panel">
-    <description>
-        A panel widget for interacting with the Whirlybird and
-        sending PWM commands directly
-    </description>
-  </class>
+<library path="lib/libs2dviz">
+ <class name="s2dviz/Waypoints"
+        type="s2dviz::WPDisplay"
+        base_class_type="rviz::Display">
+   <description>
+     Display mavros waypoints
+   </description>
+ </class>
 </library>
- -->
-
- <library path="lib/libs2dviz">
-   <class name="s2dviz/WPDisplay"
-          type="s2dviz::WPDisplay"
-          base_class_type="rviz::Display">
-     <description>
-       Display mavros waypoints
-     </description>
-   </class>
- </library>

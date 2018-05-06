@@ -146,9 +146,16 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(include ${catkin_INCLUDE_DIRS})
 
+## Here we specify which header files need to be run through "moc",
+## Qt's meta-object compiler. Note that these MOC_FILES need to be
+## compiled as C++ sources, so we add them with add_library()
+set(MOC_FILES include/s2dviz/wp_display.h)
+
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
   src/wp_display.cpp
+  src/wp_visual.cpp
+  ${MOC_FILES}
 )
 
 ## Add cmake target dependencies of the library

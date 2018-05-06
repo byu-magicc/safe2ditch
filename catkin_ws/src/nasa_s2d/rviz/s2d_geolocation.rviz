@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /Waypoints1
       Splitter Ratio: 0.5
     Tree Height: 249
   - Class: rviz/Selection
@@ -117,6 +118,11 @@ Visualization Manager:
       Radius: 0.100000001
       Reference Frame: camera
       Value: false
+    - Class: s2dviz/Waypoints
+      Enabled: true
+      Name: Waypoints
+      Value: true
+      Waypoint Topic: /mavros/mission/waypoints
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -181,4 +187,4 @@ Window Geometry:
     collapsed: true
   Width: 1672
   X: 1990
-  Y: 92
+  Y: 62

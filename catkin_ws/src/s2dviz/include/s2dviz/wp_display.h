@@ -1,17 +1,17 @@
 #pragma once
 
-// NOTE: workaround for issue: https://bugreports.qt.io/browse/QTBUG-22829
-#ifndef Q_MOC_RUN
-#endif
-
+#include <iostream>
 #include <memory>
 
-#include <ros/ros.h>
+#include <QObject>
 
 #include <rviz/display.h>
 #include <rviz/properties/ros_topic_property.h>
 
-#include <QObject>
+#include <ros/ros.h>
+#include <mavros_msgs/WaypointList.h>
+
+#include "s2dviz/wp_visual.h"
 
 namespace s2dviz {
 
@@ -19,9 +19,7 @@ namespace s2dviz {
   {
   Q_OBJECT
   public:
-    WPDisplay();
-    ~WPDisplay();
-  
+    WPDisplay();  
 
   // Overrides of protected virtual functions from Display.  As much
   // as possible, when Displays are not enabled, they should not be
@@ -34,10 +32,25 @@ namespace s2dviz {
     // A helper to clear this display back to the initial state.
     void reset() override;
 
+    void onEnable() override;
+    void onDisable() override;
+
+  private Q_SLOTS:
+    void updateTopic();
 
   private:
-    // Function to handle an incoming ROS message.
- 
+    // ROS stuff
+    ros::Subscriber sub_wp_;
+
+    // collection of waypoint visuals
+    std::vector<std::unique_ptr<WPVisual>> visuals_;
+
+    // Method to handle an incoming ROS message.
+    void processMessage(const mavros_msgs::WaypointListConstPtr& msg);
+
+    // Helper functions
+    void subscribe();
+    void unsubscribe();
 
     // User-editable property variables.
     std::unique_ptr<rviz::RosTopicProperty> wp_topic_prop_;
