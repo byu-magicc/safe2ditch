@@ -34,7 +34,39 @@ void WPDisplay::reset()
 
 void WPDisplay::onEnable()
 {
-  subscribe();
+  // subscribe();
+
+  // markers_.push_back(createMarker(message->type, this, context_, scene_node_));
+  rviz::MarkerBasePtr marker;
+  marker.reset(new rviz::ShapeMarker(nullptr, context_, scene_node_));
+  markers_.push_back(marker);
+
+
+  visualization_msgs::Marker msg;
+
+  msg.type = visualization_msgs::Marker::SPHERE;
+  msg.action = visualization_msgs::Marker::ADD;
+  msg.id = 1;
+  msg.pose.position.x = 5;
+  msg.pose.position.y = 1;
+  msg.pose.position.z = 1;
+  msg.pose.orientation.w = 1;
+  msg.scale.x = 10;
+  msg.scale.y = 10;
+  msg.scale.z = 10;
+  msg.color.r = 1.0;
+  msg.color.g = 1.0;
+  msg.color.b = 1.0;
+  msg.color.a = 1.0;
+
+
+  marker->setMessage(msg);
+  marker->setMessage(msg);
+
+  context_->queueRender();
+
+  ROS_ERROR("sent a messag");
+  setStatus(rviz::StatusProperty::Ok, "Message", QString("sent"));
 }
 
 // ----------------------------------------------------------------------------

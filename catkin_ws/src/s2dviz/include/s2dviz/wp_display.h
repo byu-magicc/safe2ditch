@@ -13,6 +13,15 @@
 
 #include "s2dviz/wp_visual.h"
 
+#include <OgreMeshManager.h>
+
+#include <rviz/display_context.h>
+
+#include <rviz/default_plugin/markers/marker_base.h>
+#include <rviz/default_plugin/markers/shape_marker.h>
+
+#include <visualization_msgs/Marker.h>
+
 namespace s2dviz {
 
   class WPDisplay : public rviz::Display
@@ -44,6 +53,8 @@ namespace s2dviz {
 
     // collection of waypoint visuals
     std::vector<std::unique_ptr<WPVisual>> visuals_;
+
+    std::vector<rviz::MarkerBasePtr> markers_;
 
     // Method to handle an incoming ROS message.
     void processMessage(const mavros_msgs::WaypointListConstPtr& msg);
