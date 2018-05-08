@@ -47,6 +47,8 @@ namespace s2dviz {
     // A helper to clear this display back to the initial state.
     void reset() override;
 
+    void update(float wall_dt, float ros_dt) override;
+
     void onEnable() override;
     void onDisable() override;
 
@@ -56,6 +58,7 @@ namespace s2dviz {
   private:
     // ROS stuff
     ros::Subscriber sub_wp_;
+    ros::Subscriber sub_gwp_;
 
     std::vector<rviz::MarkerBasePtr> markers_;
 

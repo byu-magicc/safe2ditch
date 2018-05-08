@@ -44,6 +44,15 @@ void WPDisplay::reset()
 
 // ----------------------------------------------------------------------------
 
+void WPDisplay::update(float wall_dt, float ros_dt)
+{
+  // Update on the rviz vizualization manager loop
+  for (auto&& marker : markers_)
+    marker->updateFrameLocked();
+}
+
+// ----------------------------------------------------------------------------
+
 void WPDisplay::onEnable()
 {
   subscribe();
@@ -140,12 +149,31 @@ void WPDisplay::processMessage(const mavros_msgs::WaypointListConstPtr& msg)
     marker_msg.pose.position.y = northing;
     marker_msg.pose.position.z = wp.z_alt;
     marker_msg.pose.orientation.w = 1;
-    marker_msg.scale.x = 1;
-    marker_msg.scale.y = 1;
-    marker_msg.scale.z = 1;
-    marker_msg.color.r = 1.0;
-    marker_msg.color.g = 1.0;
-    marker_msg.color.b = 0.0;
+    marker_msg.scale.x = 3;
+    marker_msg.scale.y = 3;
+    marker_msg.scale.z = 3;
+
+    if (msg->current_seq > i)
+    {
+      // past waypoint
+      marker_msg.color.r = 0.0;
+      marker_msg.color.g = 0.0;
+      marker_msg.color.b = 1.0;
+    }
+    else if (msg->current_seq == i)
+    {
+      // current waypoint
+      marker_msg.color.r = 0.0;
+      marker_msg.color.g = 1.0;
+      marker_msg.color.b = 0.0;
+    }
+    else
+    {
+      // next waypoint
+      marker_msg.color.r = 1.0;
+      marker_msg.color.g = 1.0;
+      marker_msg.color.b = 0.0;
+    }
     marker_msg.color.a = 1.0;
     marker_msg.frame_locked = true;
 
