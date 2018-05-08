@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /Waypoints1
       Splitter Ratio: 0.5
     Tree Height: 249
   - Class: rviz/Selection
@@ -73,15 +72,23 @@ Visualization Manager:
       Blocks: 8
       Class: rviz_plugins/AerialMapDisplay
       Draw Behind: true
-      Dynamically reload: false
+      Dynamically reload: true
       Enabled: true
       Frame Convention: XYZ -> ENU
       Name: AerialMapDisplay
       Object URI: http://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}
       Robot frame: map
-      Topic: /mavros/global_position/global
+      Topic: /visualization/home
       Value: true
       Zoom: 18
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /visualization/mission
+      Name: Mission Waypoints
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
     - Alpha: 1
       Axes Length: 2
       Axes Radius: 0.5
@@ -118,11 +125,6 @@ Visualization Manager:
       Radius: 0.100000001
       Reference Frame: camera
       Value: false
-    - Class: s2dviz/Waypoints
-      Enabled: true
-      Name: Waypoints
-      Value: true
-      Waypoint Topic: /mavros/mission/waypoints
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -148,7 +150,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 285.121826
+      Distance: 341.50119
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
@@ -163,10 +165,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.10479617
+      Pitch: 0.759796023
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.68422794
+      Yaw: 4.62922764
     Saved: ~
 Window Geometry:
   Displays:

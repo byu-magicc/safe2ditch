@@ -41,6 +41,8 @@
         </node>
 
         <node pkg="rviz" type="rviz" name="rviz" args="-d $(find nasa_s2d)/rviz/s2d_geolocation.rviz" />
+
+        <node pkg="nasa_s2d" type="s2dviz.py" name="s2dviz" />
     </group>
 
 
