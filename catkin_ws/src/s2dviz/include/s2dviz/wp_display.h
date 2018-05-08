@@ -5,13 +5,16 @@
 
 #include <QObject>
 
+#include <geographic_msgs/GeoPoint.h>
+#include <geodesy/utm.h>
+
 #include <rviz/display.h>
 #include <rviz/properties/ros_topic_property.h>
+#include <rviz/properties/tf_frame_property.h>
 
 #include <ros/ros.h>
 #include <mavros_msgs/WaypointList.h>
-
-#include "s2dviz/wp_visual.h"
+#include <mavros_msgs/CommandCode.h>
 
 #include <OgreMeshManager.h>
 
@@ -19,6 +22,9 @@
 
 #include <rviz/default_plugin/markers/marker_base.h>
 #include <rviz/default_plugin/markers/shape_marker.h>
+
+#include <tf/transform_listener.h>
+#include "rviz/frame_manager.h"
 
 #include <visualization_msgs/Marker.h>
 
@@ -51,9 +57,6 @@ namespace s2dviz {
     // ROS stuff
     ros::Subscriber sub_wp_;
 
-    // collection of waypoint visuals
-    std::vector<std::unique_ptr<WPVisual>> visuals_;
-
     std::vector<rviz::MarkerBasePtr> markers_;
 
     // Method to handle an incoming ROS message.
@@ -63,8 +66,13 @@ namespace s2dviz {
     void subscribe();
     void unsubscribe();
 
+    // convert from LLA to UTM
+    void convertLLAtoUTM(double lat, double lon, double& easting, double& northing);
+
     // User-editable property variables.
-    std::unique_ptr<rviz::RosTopicProperty> wp_topic_prop_;
+    std::unique_ptr<rviz::RosTopicProperty> wp_topic_prop_;  // mavros/WaypointList topic
+    std::unique_ptr<rviz::RosTopicProperty> gwp_topic_prop_; // mavros/Waypoint topic
+    std::unique_ptr<rviz::TfFrameProperty> tf_frame_prop_;   // TF frame for UTM origin
 
   };
 

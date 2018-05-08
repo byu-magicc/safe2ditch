@@ -14,6 +14,9 @@ endif()
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
     rviz
+    message_filters
+    geodesy
+    geometry_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -154,7 +157,6 @@ set(MOC_FILES include/s2dviz/wp_display.h)
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
   src/wp_display.cpp
-  src/wp_visual.cpp
   ${MOC_FILES}
 )
 
