@@ -7,17 +7,26 @@ TFFrames::TFFrames() :
 {
     ros::NodeHandle nh_private("~");
 
+    /**
+     * This node doesn't really do anything anymore. It was used to
+     * convert ROS messages into TF frames, but then I found that
+     * mavros can do that automatically.
+     *
+     * For a while, I also used this to create a utm_origin frame
+     * for local ECEF coordinates based on LLA. But now I don't.
+     */
+
     // Get ROS params
     localize_ = nh_private.param<bool>("localize", false);
 
     // Set up Publishers and Subscribers based on parameters
-    sub_uav_fix_ = nh_.subscribe("uav_gps_fix", 1, &TFFrames::cb_uav_fix, this);
+    // sub_uav_fix_ = nh_.subscribe("uav_gps_fix", 1, &TFFrames::cb_uav_fix, this);
 
     // Instead of manually converting topics to the tf tree, just tell mavros to
     // sub_uav_odom_ = nh_.subscribe("uav_odom", 1, &TFFrames::cb_uav_odom, this);
 
     // ROS Services
-    srv_uavpose_ = nh_private.advertiseService("set_uav_pose", &TFFrames::srv_set_pose, this);
+    // srv_uavpose_ = nh_private.advertiseService("set_uav_pose", &TFFrames::srv_set_pose, this);
 }
 
 // ----------------------------------------------------------------------------
