@@ -10,7 +10,7 @@ from geodesy import utm
 import numpy as np
 
 from visualization_msgs.msg import Marker, MarkerArray
-from mavros_msgs.msg import HomePosition, Waypoint, WaypointList, CommandCode
+from mavros_msgs.msg import HomePosition, Waypoint, WaypointList, CommandCode, State
 from sensor_msgs.msg import NavSatFix
 
 class S2DVIZ:
@@ -26,6 +26,9 @@ class S2DVIZ:
         # Connect to tf tree
         self.listener = tf.TransformListener()
 
+        # current vehicle status
+        self.status = None
+
         # Keep track of the vehicle's home position
         self.home_position = None
 
@@ -39,10 +42,15 @@ class S2DVIZ:
         self.sub0 = rospy.Subscriber('mavros/home_position/home', HomePosition, self.home_cb)
         self.sub1 = rospy.Subscriber('mavros/global_position/global', NavSatFix, self.globalpos_cb)
         self.sub2 = rospy.Subscriber('mavros/mission/waypoints', WaypointList, self.wp_cb)
+        self.sub3 = rospy.Subscriber('mavros/state', State, self.state_cb)
 
         # ROS publishers
         self.pub_home = rospy.Publisher('visualization/home', NavSatFix, queue_size=1, latch=True)
         self.pub_mission = rospy.Publisher('visualization/mission', MarkerArray, queue_size=1, latch=True)
+
+
+    def state_cb(self, msg):
+        self.status = msg
 
 
     def globalpos_cb(self, msg):
@@ -142,7 +150,11 @@ class S2DVIZ:
             marker.color.r = r
             marker.color.g = g
             marker.color.b = b
-            marker.color.a = 1.0
+
+            if self.status.mode is "GUIDED":
+                marker.color.a = 0.5
+            else:
+                marker.color.a = 1.0
 
 
             markers.markers.append(marker)
