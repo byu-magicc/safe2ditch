@@ -28,6 +28,6 @@
 [submodule "catkin_ws/src/gzsatellite"]
 	path = catkin_ws/src/gzsatellite
 	url = https://github.com/plusk01/gzsatellite
-[submodule "dss"]
-	path = dss
-	url = ssh://git@github.com/nasa/Safe2Ditch.git
+[submodule "catkin_ws/src/dss/src"]
+	path = catkin_ws/src/dss/src
+	url = git@github.com:nasa/Safe2Ditch.git
