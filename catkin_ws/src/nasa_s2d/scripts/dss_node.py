@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+import os, sys
+import argparse
+
 import rospy
 
 import dss
@@ -81,38 +84,43 @@ class ROSInterface(dss.core.AbstractInterface):
         return (self.data['vx'], self.data['vy'], self.data['vz'])
 
 
-    def run(self):
-        """
-
-        """
-
-        while True:
-            pass
-
 
 def main():
+
+    # Create an argument parser to get the desired CWD for this node
+    parser = argparse.ArgumentParser(description='Ditch Site Selection Node')
+    parser.add_argument('--dir', dest='dir', default='.', help='working directory to use')
+    args = parser.parse_args()
+
+    # Change CWD to what the user gave as input
+    os.chdir(os.path.abspath(args.dir))
+
+    # We assume that there is a file in the CWD called `config.json`
+    config_file = 'config.json'
+
+    # Load the configuration parameters for the DSS
+    parser = dss.parsers.JSONConfig(config_file)
+    params = dss.parameters.HW(parser)
+
     # Setup the ROS DSS Interface
     intf = ROSInterface()
 
     # Create a DSS manager that uses the ROS interface
-    manager = dss.core.Manager(intf)
+    manager = dss.core.Manager(params, intf)
 
-    # Hand the wheel to the manager (blocking call)
-    manager.run()
+    try:
+        rate = rospy.Rate(2)
+        while not rospy.is_shutdown():
+
+            # Run the DSS manager to check if Safe2Ditch is engaged
+            manager.run(blocking=False)
+
+            rate.sleep()
+
+    except rospy.ROSInterruptException:
+        pass
+
+
 
 if __name__ == '__main__':
     main()
-
-
-# if __name__ == '__main__':
-#     rospy.init_node('dss', anonymous=False)
-
-#     try:
-#         obj = Node()
-
-#         rate = rospy.Rate(1)
-#         while not rospy.is_shutdown():
-#             rate.sleep()
-
-#     except rospy.ROSInterruptException:
-#         pass
