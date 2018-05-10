@@ -41,6 +41,9 @@
         <remap from="uav_gps_fix" to="/mavros/global_position/global" />
     </node>
 
+    <!-- Ditch Site Selection: Pass in the configuration file directory (mavproxy aircraft dir) -->
+    <node name="dss_node" pkg="nasa_s2d" type="dss_node.py" args="$(eval '--dir ' + env('S2DDSS') + '/' + env('S2DAIRCRAFT'))" output="screen" />
+
     <!-- DSS Communications -->
     <node name="dss_comms" pkg="nasa_s2d" type="dss_comms.py" output="screen" />
 </launch>

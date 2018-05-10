@@ -18,10 +18,10 @@ export S2DENV=$(realpath $S2DROOT/.env)
 # Make sure the S2DENV directory exists
 mkdir -p $S2DENV
 
-# The location of the MAVProxy Safe2Ditch module (DSS)
-export S2DDSS=$S2DROOT/dss
+# The location of the MAVProxy Safe2Ditch module (Safe2Ditch/DSS repo)
+export S2DDSS=$S2DROOT/catkin_ws/src/dss/src
 
-# The name of the aircraft directory (used for MAVProxy Safe2Ditch module)
+# The name of the aircraft directory (which houses configuration files)
 export S2DAIRCRAFT=aircraft
 
 # ROS networking information

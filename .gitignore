@@ -11,6 +11,8 @@ mav.tlog
 mav.tlog.raw
 intruder_history.txt
 mav.parm
+eeprom.bin
+terrain
 
 # ROS bags
 *.bag

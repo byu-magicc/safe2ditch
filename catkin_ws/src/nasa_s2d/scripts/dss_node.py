@@ -90,7 +90,7 @@ def main():
     # Create an argument parser to get the desired CWD for this node
     parser = argparse.ArgumentParser(description='Ditch Site Selection Node')
     parser.add_argument('--dir', dest='dir', default='.', help='working directory to use')
-    args = parser.parse_args()
+    args, unknown = parser.parse_known_args() # ignores unrecognized args
 
     # Change CWD to what the user gave as input
     os.chdir(os.path.abspath(args.dir))
