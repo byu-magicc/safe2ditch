@@ -7,9 +7,11 @@ LATLON=$1
 # Catch CTRL+C and do SITL cleanup.
 trap '{ echo "Cleaning up copter_sitl.sh"; killall xterm && killall mavproxy.py; }' INT
 
-# Navigate to the aircraft directory where
-# all of the configuration files can be found.
-cd $S2DDSS/$S2DAIRCRAFT
+## This is no longer necessary since mavproxy is just for comms relay.
+## However, this mechanism could be used for additional MAVProxy initialization
+# # Navigate to the aircraft directory where
+# # all of the configuration files can be found.
+# cd $S2DDSS/$S2DAIRCRAFT
 
 # simulation setup command
 SIM_CMD="sim_vehicle.py -v ArduCopter -f gazebo-iris -l $LATLON,0,0 --no-mavproxy"
