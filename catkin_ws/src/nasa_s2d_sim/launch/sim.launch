@@ -50,18 +50,21 @@
         </include>
     </group>
 
+
+
     <!-- Spawn moving agents -->
     <include file="$(find nasa_s2d_sim)/launch/movers.launch" />
 
-    <!-- HUD -->
-    <node pkg="hud" type="hud" name="hud">
-        <remap from="odom" to="/mavros/global_position/local" />
-    </node>
+
 
     <!-- Launch Safe2Ditch core system -->
     <include file="$(find nasa_s2d)/launch/safe2ditch.launch">
         <arg name="vmtt_tuning" value="false" />
-        <arg name="show3d" value="true" />
     </include>
+
+
+
+    <!-- Safe2Ditch Visualization in rviz -->
+    <include file="$(find nasa_s2d)/launch/visualization.launch" />
 
 </launch>

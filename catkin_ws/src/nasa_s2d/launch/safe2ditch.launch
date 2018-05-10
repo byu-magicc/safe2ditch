@@ -2,7 +2,9 @@
 <launch>
     <!-- Arguments to be passed in -->
     <arg name="vmtt_tuning" default="false" />
-    <arg name="show3d" default="false" />
+    <arg name="dss_working_dir" default="$(eval env('S2DDSS') + '/' + env('S2DAIRCRAFT'))" />
+
+
 
     <!-- <node name="gcs_bridge" pkg="mavros" type="gcs_bridge"> -->
         <!-- You can connect locally using localhost on port 14550 -->
@@ -10,14 +12,15 @@
         <!-- <param name="gcs_url" value="udp://@127.0.0.1:14555" /> -->
     <!-- </node> -->
 
-    <!-- Start mavros and connect to the Pixhawk running APM:Copter -->
+
+
+    <!-- Start mavros and connect to the Pixhawk running APM:Copter through MAVProxy layer -->
     <include file="$(find nasa_s2d)/launch/mavros.launch">
         <!-- Connect via a MAVProxy GCS output -->
         <arg name="fcu_url"  value="udp://127.0.0.1:14550@" />
     </include>
 
-    <!-- Run a series of mavros mavsys commands to increase sensor pub rate -->
-    <!-- <node name="gofast" pkg="nasa_s2d" type="gofast.sh" output="screen" /> -->
+
 
     <!-- launch visual_mtt -->
     <include file="$(find visual_mtt)/launch/visual_mtt.launch">
@@ -26,24 +29,47 @@
         <arg name="imgtopic" value="/camera/image_raw" />
     </include>
 
+
+
+    <!-- Broadcast coordinate transformations specific to Sully -->
+    <!-- Needed for geolocation, useful for RVIZ visualization -->
+    <include file="$(find nasa_s2d)/launch/tf_frames.launch" />
+
+
+
+    <!-- connect the geolocator to the output of visual_mtt -->
+    <remap from="pose"  to="mavros/local_position/pose" />
+    <include file="$(find flat_earth_geolocation)/launch/geolocate.launch">
+        <arg name="show3d" value="false" />
+        <arg name="camera_name" value="camera" />
+        <arg name="tracks_topic" value="tracks" />
+
+        <!-- tf frames -->
+        <arg name="result_frame" value="map" />
+        <arg name="camera_frame" value="camera" />
+    </include>
+
+
+
+    <!-- Ditch Site Selection: Pass in the configuration file directory (mavproxy aircraft dir) -->
+    <node name="dss_node" pkg="nasa_s2d" type="dss_node.py" args="$(eval '--dir ' + arg('dss_working_dir'))" output="screen" />
+
+
+
     <!-- Adaptive Parameter Tuning -->
     <node pkg="nasa_s2d" type="adaptive_params.py" name="adaptive_params">
         <remap from="odom" to="/mavros/global_position/local" />
     </node>
 
-    <!-- launch geolocation -->
-    <include file="$(find nasa_s2d)/launch/geolocate.launch">
-        <arg name="show3d" value="$(arg show3d)" />
-    </include>
+
 
     <!-- Visual Obstacle Detection -->
     <node name="obstacle_detection" pkg="nasa_s2d" type="obstacle_detection.py" output="screen">
         <remap from="uav_gps_fix" to="/mavros/global_position/global" />
     </node>
 
-    <!-- Ditch Site Selection: Pass in the configuration file directory (mavproxy aircraft dir) -->
-    <node name="dss_node" pkg="nasa_s2d" type="dss_node.py" args="$(eval '--dir ' + env('S2DDSS') + '/' + env('S2DAIRCRAFT'))" output="screen" />
+
 
     <!-- DSS Communications -->
-    <node name="dss_comms" pkg="nasa_s2d" type="dss_comms.py" output="screen" />
+    <!-- <node name="dss_comms" pkg="nasa_s2d" type="dss_comms.py" output="screen" /> -->
 </launch>

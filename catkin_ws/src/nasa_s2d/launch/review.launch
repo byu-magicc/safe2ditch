@@ -5,7 +5,6 @@
     <arg name="bagname"             default="run3.bag" />
     <arg name="bagpath"             default="$(arg bagroot)/$(arg bagname)" />
     <arg name="hide_bag"            default="false" />
-    <arg name="show3d"              default="true" />
     <!-- <arg name="show_dashboard"      default="true" /> -->
     <!-- <arg name="tuning"              default="true" /> -->
     <!-- <arg name="ns"                  default="review" /> -->
@@ -28,23 +27,9 @@
       <!-- <rem`ap from="/tf" to="/tf_old" /> -->
     </node>
 
-    <!-- HUD -->
-    <node pkg="hud" type="hud" name="hud">
-        <remap from="odom" to="/mavros/local_position/odom" />
-        <param name="image_transport" value="compressed" />
-    </node>
 
 
-    <!-- rviz 3d visualization of geolocated tracks -->
-    <group if="$(arg show3d)">
-        <node pkg="flat_earth_geolocation" type="plotter" name="plotter" output="screen">
-            <remap from="tracks" to="tracks3d" />
-        </node>
-
-        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find nasa_s2d)/rviz/s2d_geolocation.rviz" />
-
-        <node pkg="nasa_s2d" type="s2dviz.py" name="s2dviz" />
-    </group>
-
+    <!-- Safe2Ditch Visualization in rviz -->
+    <include file="$(find nasa_s2d)/launch/visualization.launch" />
 
 </launch>

@@ -45,17 +45,4 @@
         <node pkg="nasa_s2d" type="s2dviz.py" name="s2dviz" />
     </group>
 
-
-    <!-- Call ROS Service to set UAV position offsets and heading override -->
-    <group if="$(eval str(arg('heading')) is not '' or str(arg('altitude')) is not '')">
-
-        <arg     if="$(eval str(arg('heading')) is not '')" name="hdg" value="$(arg heading)" />
-        <arg unless="$(eval str(arg('heading')) is not '')" name="hdg" value="360" /> <!-- 360 prevents overriding -->
-
-        <arg     if="$(eval str(arg('altitude')) is not '')" name="alt" value="$(arg altitude)" />
-        <arg unless="$(eval str(arg('altitude')) is not '')" name="alt" value="0" />
-
-        <node pkg="rosservice" type="rosservice" name="srv_uav_pose"
-            args="call --wait /sully_tf_frames/set_uav_pose '{ heading_enu: $(arg hdg), offset_enu: { x: 0, y: 0, z: $(arg alt)} }'" />
-    </group>
 </launch>

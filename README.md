@@ -24,9 +24,26 @@ $ catkin_make
 For now, [ueye_cam](https://github.com/anqixu/ueye_cam) does not have a Jenkins job for `armhf` in the ROS buildfarm. Until that gets resolved, I have added `ueye_cam` as a git submodule. This package depends on having the IDS Software Suite and SDK installed on this machine, see [here](https://magiccvs.byu.edu/gitlab/robust_tracking/nasa-s2d2/wikis/software-setup).
 **Update:** You can now install armhf version of `ueye_cam` through `sudo apt install ros-kinetic-ueye-cam`
 
+
+## Launch File Structure ##
+
+There are three main launch files to work with in Safe2Ditch: `hardware.launch`, `sim.launch`, and `review.launch`. The utility of each of these launch top-level launch files are shown pictorially below.
+
+<p style="text-align: center">
+  <img src="https://magiccvs.byu.edu/gitlab/robust_tracking/safe2ditch/wikis/assets/s2d_roslaunch.svg" width="80%" />
+</p>
+
+## Consistent Hardware/Simulation Communications ##
+
+To achieve a consistent interface across simulation and hardware testing of Safe2Ditch, the following communication architecture is followed.
+
+<p style="text-align: center">
+  <img src="https://magiccvs.byu.edu/gitlab/robust_tracking/safe2ditch/wikis/assets/s2d_comms.svg" width="50%" />
+</p>
+
 ## Ditch Site Selector (DSS) ##
 
-One of the core pieces of the Safe2Ditch project is choosing viable *ditch sites* or landing zones. The Ditch Site Selector (DSS) component is currently written in Python and is actively being worked on by Trish Glaab.
+One of the core pieces of the Safe2Ditch project is choosing viable *ditch sites* or landing zones. The Ditch Site Selector (DSS) component (`catkin_ws/src/dss/src`) is currently written in Python and is actively being worked on by Trish Glaab.
 
 ## Mission Planner ##
 
