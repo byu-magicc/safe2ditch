@@ -14,3 +14,6 @@ int32 type
 
 # How reliable is this site (prioritization)
 float64 reliability
+
+# is this is the selected ditch site?
+bool selected

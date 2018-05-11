@@ -50,6 +50,7 @@ class S2DVIZ:
 
         # current mission marker array message
         self.mission_markers = None
+        self.mission_wplist = None
 
         # current ditch sites marker array message
         self.ds_markers = None
@@ -93,7 +94,12 @@ class S2DVIZ:
 
 
     def state_cb(self, msg):
+        old = self.status
+
         self.status = msg
+
+        if old is not None and self.mission_wplist is not None and msg.mode != old.mode:
+            self.wp_cb(self.mission_wplist)
 
 
     def globalpos_cb(self, msg):
@@ -184,7 +190,7 @@ class S2DVIZ:
             marker.color.r = r
             marker.color.g = g
             marker.color.b = b
-            marker.color.a = 0.3
+            marker.color.a = 0.6 if site.selected else 0.3
 
             markers.markers.append(marker)
 
@@ -197,12 +203,13 @@ class S2DVIZ:
             txt.type = Marker.TEXT_VIEW_FACING
 
             txt.text = site.name
+            txt.pose.position.z += txt.scale.z
             txt.scale.z = 2
 
             txt.color.r = 1
             txt.color.g = 1
             txt.color.b = 1
-            txt.color.a = 0.5
+            txt.color.a = 1 if site.selected else 0.5
 
             markers.markers.append(txt)
 
@@ -269,11 +276,7 @@ class S2DVIZ:
             marker.color.r = r
             marker.color.g = g
             marker.color.b = b
-
-            if self.status.mode is "GUIDED":
-                marker.color.a = 0.5
-            else:
-                marker.color.a = 1.0
+            marker.color.a = 1 if self.status.mode == "AUTO" else 0.5
 
 
             markers.markers.append(marker)
@@ -281,6 +284,7 @@ class S2DVIZ:
         self.pub_mission.publish(markers)
 
         self.mission_markers = markers
+        self.mission_wplist = msg
 
 
     def calculate_lla_diff(self, lat, lon):

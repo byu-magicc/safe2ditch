@@ -124,7 +124,7 @@ class ROSInterface(dss.core.AbstractInterface):
             rospy.logerr("change mode failed: %s", e)
 
 
-    def publish_ditch_sites(self, sites):
+    def publish_ditch_sites(self, sites, selected_ds=None):
 
         msg = DitchSiteList()
 
@@ -137,6 +137,9 @@ class ROSInterface(dss.core.AbstractInterface):
             ds.radius = site.radius
             ds.type = site.type
             ds.reliability = site.reliability
+
+            if selected_ds is not None and selected_ds.name == site.name:
+                ds.selected = True
 
             msg.ditch_sites.append(ds)
 
@@ -154,7 +157,8 @@ class ROSInterface(dss.core.AbstractInterface):
 
 
     def set_path(self, path):
-        pass
+
+        self.publish_ditch_sites(self.params.ditch_site_package, path[-1])
 
 
     def set_guidance_waypoint(self, wp):

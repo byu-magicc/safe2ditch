@@ -29,6 +29,10 @@
         <arg name="imgtopic" value="/camera/image_raw" />
     </include>
 
+    <!-- raise the logger level to warnings and above -->
+    <node pkg="rosservice" type="rosservice" name="vmtt_log_srv" args="call --wait visual_frontend/set_logger_level ros.visual_mtt warn" />
+    <node pkg="rosservice" type="rosservice" name="rransac_log_srv" args="call --wait rransac/set_logger_level ros.visual_mtt warn" />
+
 
 
     <!-- Broadcast coordinate transformations specific to Sully -->
