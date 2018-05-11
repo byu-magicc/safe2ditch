@@ -11,6 +11,7 @@ from mavros_msgs.srv import SetMode
 from sensor_msgs.msg import NavSatFix
 from geometry_msgs.msg import TwistStamped
 from std_msgs.msg import Float64
+from nasa_s2d.msg import DitchSiteList, DitchSite
 
 
 class ConnectPythonLoggingToROS(logging.Handler):
@@ -45,7 +46,7 @@ logging.getLogger('dss').setLevel(logging.DEBUG)
 class ROSInterface(dss.core.AbstractInterface):
     """ROS Interface for DSS to Autopilot Communications
     """
-    def __init__(self):
+    def __init__(self, params):
         super(ROSInterface, self).__init__()
         
         # Create a ROS node
@@ -60,7 +61,13 @@ class ROSInterface(dss.core.AbstractInterface):
 
         # ROS publishers
         self.pub_setpos = rospy.Publisher('mavros/setpoint_raw/global', GlobalPositionTarget, queue_size=1, latch=True)
-        # self.pub_mission = rospy.Publisher('visualization/mission', MarkerArray, queue_size=1, latch=True)
+        self.pub_ditchsite = rospy.Publisher('ditch_sites', DitchSiteList, queue_size=1, latch=True)
+
+        # store configuration parameters
+        self.params = params
+
+        # let the ROS network know about the potential ditch sites
+        self.publish_ditch_sites(self.params.ditch_site_package)
 
         self.reset()
 
@@ -81,6 +88,8 @@ class ROSInterface(dss.core.AbstractInterface):
 
     def state_cb(self, msg):
         """Receive heartbeat/status messages
+
+        Published with a rate of 1 Hz
         """
         self.state = msg
 
@@ -114,6 +123,25 @@ class ROSInterface(dss.core.AbstractInterface):
         except rospy.ServiceException as e:
             rospy.logerr("change mode failed: %s", e)
 
+
+    def publish_ditch_sites(self, sites):
+
+        msg = DitchSiteList()
+
+        for site in sites:
+            ds = DitchSite()
+            ds.name = site.name
+            ds.position.latitude = site.lat
+            ds.position.longitude = site.lon
+            ds.position.altitude = site.alt
+            ds.radius = site.radius
+            ds.type = site.type
+            ds.reliability = site.reliability
+
+            msg.ditch_sites.append(ds)
+
+        self.pub_ditchsite.publish(msg)
+
     ###########################################################################
     ##                   Interface Methods to be Overridden                  ##
     ###########################################################################
@@ -121,8 +149,12 @@ class ROSInterface(dss.core.AbstractInterface):
     def reset(self):
         super(ROSInterface, self).reset()
 
-        # store the latest vehicle status message from mavros
+        # a place to store the latest vehicle status message from mavros
         self.state = State()
+
+
+    def set_path(self, path):
+        pass
 
 
     def set_guidance_waypoint(self, wp):
@@ -169,7 +201,7 @@ def main():
     params = dss.parameters.HW(parser)
 
     # Setup the ROS DSS Interface
-    intf = ROSInterface()
+    intf = ROSInterface(params)
 
     # Create a DSS manager that uses the ROS interface
     manager = dss.core.Manager(params, intf)

@@ -10,8 +10,21 @@ from geodesy import utm
 import numpy as np
 
 from visualization_msgs.msg import Marker, MarkerArray
-from mavros_msgs.msg import HomePosition, Waypoint, WaypointList, CommandCode, State
+from mavros_msgs.msg import HomePosition, Waypoint, WaypointList, CommandCode, State, GlobalPositionTarget
 from sensor_msgs.msg import NavSatFix
+from nasa_s2d.msg import DitchSiteList
+
+
+def blended_color(x):
+    """Create an RGB triplet for a blended Red to Green color
+    :param x: value from [0 1], 0 is red, 1 is green
+    :return: (r, g, b)
+    """
+    r = 2*(1-x)
+    g = 2*x
+    b = 0
+    return (r, g, b)
+
 
 class S2DVIZ:
     """
@@ -36,17 +49,47 @@ class S2DVIZ:
         self.fixed_frame = 'map'
 
         # current mission marker array message
-        self.markers = None
+        self.mission_markers = None
+
+        # current ditch sites marker array message
+        self.ds_markers = None
+
+        # List of objects ({'handler': None, 'msg': None}) to be handled once home position is set
+        self.msg_queue = []
 
         # ROS subscribers
         self.sub0 = rospy.Subscriber('mavros/home_position/home', HomePosition, self.home_cb)
         self.sub1 = rospy.Subscriber('mavros/global_position/global', NavSatFix, self.globalpos_cb)
         self.sub2 = rospy.Subscriber('mavros/mission/waypoints', WaypointList, self.wp_cb)
         self.sub3 = rospy.Subscriber('mavros/state', State, self.state_cb)
+        # self.sub4 = rospy.Subscriber('mavros/setpoint_raw/global', GlobalPositionTarget, self.spg_cb)
+        self.sub5 = rospy.Subscriber('ditch_sites', DitchSiteList, self.ditchsites_cb)
 
         # ROS publishers
         self.pub_home = rospy.Publisher('visualization/home', NavSatFix, queue_size=1, latch=True)
         self.pub_mission = rospy.Publisher('visualization/mission', MarkerArray, queue_size=1, latch=True)
+        self.pub_ditchsites = rospy.Publisher('visualization/ditch_sites', MarkerArray, queue_size=1, latch=True)
+
+
+    def publish_home(self, msg):
+        """Publish Home
+
+        relay function that uses the publisher to send msg. Let's us 
+        service the message queue if necessary.
+        """
+
+        # save home NavSatFix
+        self.home_position = msg
+
+        # Are there any messages to service?
+        if self.msg_queue:
+            for q in self.msg_queue:
+                q['handler'](q['msg'])
+
+            # clear the message queue
+            self.msg_queue = []
+
+        self.pub_home.publish(msg)
 
 
     def state_cb(self, msg):
@@ -68,9 +111,8 @@ class S2DVIZ:
             return
 
         # Send a temporary home position and unsubscribe
-        self.pub_home.publish(msg)
+        self.publish_home(msg)
         self.sub1.unregister()
-        self.home_position = msg
 
 
 
@@ -88,21 +130,98 @@ class S2DVIZ:
         home.latitude = msg.geo.latitude
         home.longitude = msg.geo.longitude
 
-        self.pub_home.publish(home)
+        self.publish_home(home)
 
-        # save home NavSatFix
-        self.home_position = home
 
+    def ditchsites_cb(self, msg):
+
+        if self.should_wait(self.ditchsites_cb, msg):
+            return
+
+        # Remove old ditch site markers so that we can update below
+        if self.ds_markers is not None:
+            for marker in self.ds_markers.markers:
+                marker.action = Marker.DELETE
+
+            self.pub_mission.publish(self.ds_markers)
         
+
+        markers = MarkerArray()
+
+        for idx, site in enumerate(msg.ditch_sites):
+
+            idx += 1
+
+            # Convert LLA offset from center of ditch site to home position to meters
+            (x, y) = self.calculate_lla_diff(site.position.latitude, site.position.longitude)
+
+            #
+            # Create circle for ditch site
+            #
+
+            marker = Marker()
+            marker.header.stamp = rospy.Time.now()
+            marker.header.frame_id = self.fixed_frame
+
+            marker.id = idx
+            marker.type = Marker.CYLINDER
+            marker.action = Marker.ADD
+
+            marker.pose.position.x = x
+            marker.pose.position.y = y
+            marker.pose.position.z = site.position.altitude
+
+            marker.pose.orientation.x = 0
+            marker.pose.orientation.y = 0
+            marker.pose.orientation.z = 0
+            marker.pose.orientation.w = 1
+
+            marker.scale.x = site.radius*2
+            marker.scale.y = site.radius*2
+            marker.scale.z = 0.05
+
+            r, g, b = blended_color(site.reliability/100.0)
+            marker.color.r = r
+            marker.color.g = g
+            marker.color.b = b
+            marker.color.a = 0.3
+
+            markers.markers.append(marker)
+
+            #
+            # Create text with name of ditch site
+            #
+
+            txt = copy.deepcopy(marker)
+            txt.id = idx*100
+            txt.type = Marker.TEXT_VIEW_FACING
+
+            txt.text = site.name
+            txt.scale.z = 2
+
+            txt.color.r = 1
+            txt.color.g = 1
+            txt.color.b = 1
+            txt.color.a = 0.5
+
+            markers.markers.append(txt)
+
+        print("Number of markers: {}".format(len(markers.markers)))
+
+        self.pub_ditchsites.publish(markers)
+
+        self.ds_markers = markers
+
+
     def wp_cb(self, msg):
 
         # Remove old mission markers so that we can update below
-        if self.markers is not None:
-            for marker in self.markers.markers:
+        if self.mission_markers is not None:
+            for marker in self.mission_markers.markers:
                 marker.action = Marker.DELETE
 
-            self.pub_mission.publish(self.markers)
-        
+            self.pub_mission.publish(self.mission_markers)
+
 
         markers = MarkerArray()
 
@@ -161,7 +280,7 @@ class S2DVIZ:
 
         self.pub_mission.publish(markers)
 
-        self.markers = markers
+        self.mission_markers = markers
 
 
     def calculate_lla_diff(self, lat, lon):
@@ -188,6 +307,34 @@ class S2DVIZ:
         y = utm_wp.northing - utm_home.northing
 
         return (x, y)
+
+
+    def should_wait(self, handler, msg):
+        """Check to see if this msg should be processed
+
+        Since we are relying on the home position to position everyhing,
+        if the home position has not yet been set, then this msg should
+        be processed later. Put it on the queue!
+
+        :param handler: function callback to handle message
+        :param msg: message to be handled
+        :return: boolean
+        """
+
+        if self.home_position is None:
+
+            q = {
+                'handler': handler,
+                'msg': msg
+            }
+
+            self.msg_queue.append(q)
+
+            return True
+
+
+        # No need to wait!
+        return False
         
 
 if __name__ == '__main__':

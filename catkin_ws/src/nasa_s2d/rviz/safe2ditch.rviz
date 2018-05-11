@@ -86,7 +86,7 @@ Visualization Manager:
       Marker Topic: /visualization/mission
       Name: Mission Waypoints
       Namespaces:
-        {}
+        "": true
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -125,6 +125,14 @@ Visualization Manager:
       Radius: 0.100000001
       Reference Frame: camera
       Value: false
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /visualization/ditch_sites
+      Name: Ditch Sites
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -157,18 +165,18 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 38.5577393
-        Y: 32.2001572
-        Z: -7.20631409
+        X: 35.3315163
+        Y: 21.452961
+        Z: -18.7613678
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.759796023
+      Pitch: 0.664797246
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.62922764
+      Yaw: 4.7092309
     Saved: ~
 Window Geometry:
   Displays:
@@ -188,5 +196,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1672
-  X: 1990
-  Y: 62
+  X: 428
+  Y: 83
