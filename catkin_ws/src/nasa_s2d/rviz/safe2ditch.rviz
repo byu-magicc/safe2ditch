@@ -133,6 +133,14 @@ Visualization Manager:
         "": true
       Queue Size: 100
       Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /visualization/path
+      Name: Guided Path
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -173,10 +181,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.664797246
+      Pitch: 0.669797301
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.7092309
+      Yaw: 4.66422129
     Saved: ~
 Window Geometry:
   Displays:
@@ -196,5 +204,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1672
-  X: 428
-  Y: 83
+  X: 211
+  Y: 47

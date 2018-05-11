@@ -10,7 +10,7 @@ from geodesy import utm
 import numpy as np
 
 from visualization_msgs.msg import Marker, MarkerArray
-from mavros_msgs.msg import HomePosition, Waypoint, WaypointList, CommandCode, State, GlobalPositionTarget
+from mavros_msgs.msg import HomePosition, Waypoint, WaypointList, CommandCode, State
 from sensor_msgs.msg import NavSatFix
 from nasa_s2d.msg import DitchSiteList
 
@@ -55,6 +55,10 @@ class S2DVIZ:
         # current ditch sites marker array message
         self.ds_markers = None
 
+        # current path marker array message
+        self.path_markers = None
+        self.path_wplist = None
+
         # List of objects ({'handler': None, 'msg': None}) to be handled once home position is set
         self.msg_queue = []
 
@@ -63,13 +67,14 @@ class S2DVIZ:
         self.sub1 = rospy.Subscriber('mavros/global_position/global', NavSatFix, self.globalpos_cb)
         self.sub2 = rospy.Subscriber('mavros/mission/waypoints', WaypointList, self.wp_cb)
         self.sub3 = rospy.Subscriber('mavros/state', State, self.state_cb)
-        # self.sub4 = rospy.Subscriber('mavros/setpoint_raw/global', GlobalPositionTarget, self.spg_cb)
-        self.sub5 = rospy.Subscriber('ditch_sites', DitchSiteList, self.ditchsites_cb)
+        self.sub4 = rospy.Subscriber('dss/path', WaypointList, self.path_cb)
+        self.sub5 = rospy.Subscriber('dss/ditch_sites', DitchSiteList, self.ditchsites_cb)
 
         # ROS publishers
         self.pub_home = rospy.Publisher('visualization/home', NavSatFix, queue_size=1, latch=True)
         self.pub_mission = rospy.Publisher('visualization/mission', MarkerArray, queue_size=1, latch=True)
         self.pub_ditchsites = rospy.Publisher('visualization/ditch_sites', MarkerArray, queue_size=1, latch=True)
+        self.pub_path = rospy.Publisher('visualization/path', MarkerArray, queue_size=1, latch=True)
 
 
     def publish_home(self, msg):
@@ -98,8 +103,12 @@ class S2DVIZ:
 
         self.status = msg
 
-        if old is not None and self.mission_wplist is not None and msg.mode != old.mode:
-            self.wp_cb(self.mission_wplist)
+        if old is not None and msg.mode != old.mode:
+            if self.mission_wplist is not None:
+                self.wp_cb(self.mission_wplist)
+
+            if self.path_wplist is not None:
+                self.path_cb(self.path_wplist)
 
 
     def globalpos_cb(self, msg):
@@ -139,6 +148,67 @@ class S2DVIZ:
         self.publish_home(home)
 
 
+    def path_cb(self, msg):
+
+        if self.should_wait(self.path_cb, msg):
+            return
+
+        # Remove old path markers so that we can update below
+        if self.path_markers is not None:
+            for marker in self.path_markers.markers:
+                marker.action = Marker.DELETE
+
+            self.pub_path.publish(self.path_markers)
+        
+
+        markers = MarkerArray()
+
+        for idx, wp in enumerate(msg.waypoints):
+
+            # Convert LLA offset from center of ditch site to home position to meters
+            (x, y) = self.calculate_lla_diff(wp.x_lat, wp.y_long)
+
+            marker = Marker()
+            marker.header.stamp = rospy.Time.now()
+            marker.header.frame_id = self.fixed_frame
+
+            marker.id = idx
+            marker.type = Marker.SPHERE
+            marker.action = Marker.ADD
+
+            marker.pose.position.x = x
+            marker.pose.position.y = y
+            marker.pose.position.z = wp.z_alt
+
+            marker.pose.orientation.x = 0
+            marker.pose.orientation.y = 0
+            marker.pose.orientation.z = 0
+            marker.pose.orientation.w = 1
+
+            marker.scale.x = 3
+            marker.scale.y = 3
+            marker.scale.z = 3
+
+            if msg.current_seq > idx:
+                (r, g, b) = 0, 0, 1
+            elif msg.current_seq == idx:
+                (r, g, b) = 0, 1, 0
+            else:
+                (r, g, b) = 1, 1, 0
+
+            marker.color.r = r
+            marker.color.g = g
+            marker.color.b = b
+            marker.color.a = 1 if self.status.mode == "GUIDED" else 0.5
+
+            markers.markers.append(marker)
+
+        self.pub_path.publish(markers)
+
+        self.path_markers = markers
+        self.path_wplist = msg
+
+
     def ditchsites_cb(self, msg):
 
         if self.should_wait(self.ditchsites_cb, msg):
@@ -149,7 +219,7 @@ class S2DVIZ:
             for marker in self.ds_markers.markers:
                 marker.action = Marker.DELETE
 
-            self.pub_mission.publish(self.ds_markers)
+            self.pub_ditchsites.publish(self.ds_markers)
         
 
         markers = MarkerArray()
@@ -213,14 +283,15 @@ class S2DVIZ:
 
             markers.markers.append(txt)
 
-        print("Number of markers: {}".format(len(markers.markers)))
-
         self.pub_ditchsites.publish(markers)
 
         self.ds_markers = markers
 
 
     def wp_cb(self, msg):
+
+        if self.should_wait(self.wp_cb, msg):
+            return
 
         # Remove old mission markers so that we can update below
         if self.mission_markers is not None:

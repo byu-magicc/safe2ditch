@@ -6,7 +6,7 @@ import rospy
 
 import dss
 
-from mavros_msgs.msg import RCIn, State, GlobalPositionTarget
+from mavros_msgs.msg import RCIn, State, GlobalPositionTarget, WaypointList, Waypoint
 from mavros_msgs.srv import SetMode
 from sensor_msgs.msg import NavSatFix
 from geometry_msgs.msg import TwistStamped
@@ -61,7 +61,8 @@ class ROSInterface(dss.core.AbstractInterface):
 
         # ROS publishers
         self.pub_setpos = rospy.Publisher('mavros/setpoint_raw/global', GlobalPositionTarget, queue_size=1, latch=True)
-        self.pub_ditchsite = rospy.Publisher('ditch_sites', DitchSiteList, queue_size=1, latch=True)
+        self.pub_ditchsite = rospy.Publisher('dss/ditch_sites', DitchSiteList, queue_size=1, latch=True)
+        self.pub_path = rospy.Publisher('dss/path', WaypointList, queue_size=1, latch=True)
 
         # store configuration parameters
         self.params = params
@@ -156,9 +157,52 @@ class ROSInterface(dss.core.AbstractInterface):
         self.state = State()
 
 
-    def set_path(self, path):
+    def ditch_aborted(self):
+        # Clear the path and the selected ditch site
+        self.set_path([], None)
 
-        self.publish_ditch_sites(self.params.ditch_site_package, path[-1])
+        # Command the vehicle to hold its current position
+        wp = dss.helpers.Waypoint(*self.position_lla())
+        self.set_guidance_waypoint(wp)
+
+        # msg = GlobalPositionTarget()
+
+        # msg.header.stamp = rospy.Time.now()
+
+        # # Use LLA with altitude being above the home position (assumes flat earth!)
+        # msg.coordinate_frame = GlobalPositionTarget.FRAME_GLOBAL_REL_ALT
+        
+        # # Ignore everything but LLA (4088)
+        # msg.type_mask = 0b0000111111000111
+
+        # # Set zero velocity to stop moving
+        # msg.velocity.x = 0
+        # msg.velocity.y = 0
+        # msg.velocity.z = 0
+
+        # self.pub_setpos.publish(msg)
+
+
+    def set_path(self, path, current):
+        selected_ds = path[-1] if path else None
+        self.publish_ditch_sites(self.params.ditch_site_package, selected_ds)
+
+        msg = WaypointList()
+
+        for idx, waypoint in enumerate(path):
+
+            wp = Waypoint()
+            wp.x_lat = waypoint.lat
+            wp.y_long = waypoint.lon
+            wp.z_alt = waypoint.alt
+
+            wp.is_current = waypoint.name == current.name
+            if wp.is_current:
+                msg.current_seq = idx
+
+            msg.waypoints.append(wp)
+
+        self.pub_path.publish(msg)
 
 
     def set_guidance_waypoint(self, wp):

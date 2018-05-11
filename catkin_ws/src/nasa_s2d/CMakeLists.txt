@@ -15,6 +15,9 @@ endif()
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   geometry_msgs
+  mavros_msgs
+  sensor_msgs
+  mavros
   message_generation
   tf
   geodesy
