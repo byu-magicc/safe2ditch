@@ -185,9 +185,9 @@ class S2DVIZ:
             marker.pose.orientation.z = 0
             marker.pose.orientation.w = 1
 
-            marker.scale.x = 3
-            marker.scale.y = 3
-            marker.scale.z = 3
+            marker.scale.x = 2
+            marker.scale.y = 2
+            marker.scale.z = 2
 
             if msg.current_seq > idx:
                 (r, g, b) = 0, 0, 1
@@ -260,7 +260,7 @@ class S2DVIZ:
             marker.color.r = r
             marker.color.g = g
             marker.color.b = b
-            marker.color.a = 0.6 if site.selected else 0.3
+            marker.color.a = 0.7 if site.selected else 0.3
 
             markers.markers.append(marker)
 
@@ -347,7 +347,7 @@ class S2DVIZ:
             marker.color.r = r
             marker.color.g = g
             marker.color.b = b
-            marker.color.a = 1 if self.status.mode == "AUTO" else 0.5
+            marker.color.a = 1 if self.status.mode == "AUTO" else 0.3
 
 
             markers.markers.append(marker)

@@ -6,8 +6,9 @@ import rospy
 
 import dss
 
+from visual_mtt.msg import Tracks
 from mavros_msgs.msg import RCIn, State, GlobalPositionTarget, WaypointList, Waypoint
-from mavros_msgs.srv import SetMode
+from mavros_msgs.srv import SetMode, CommandLong, CommandLongRequest
 from sensor_msgs.msg import NavSatFix
 from geometry_msgs.msg import TwistStamped
 from std_msgs.msg import Float64
@@ -43,7 +44,7 @@ logging.getLogger('dss').setLevel(logging.DEBUG)
 
 
 
-class ROSInterface(dss.core.AbstractInterface):
+class ROSInterface(dss.interfaces.AbstractInterface):
     """ROS Interface for DSS to Autopilot Communications
     """
     def __init__(self, params):
@@ -76,15 +77,19 @@ class ROSInterface(dss.core.AbstractInterface):
     def globalpos_cb(self, msg):
         """Receive vehicle GPS information
         """
+        self._lock.acquire()
         self._data['lat'] = msg.latitude
         self._data['lon'] = msg.longitude
         self._data['alt'] = msg.altitude # [m] absolute, above sea level (ASL)
+        self._lock.release()
 
 
     def relalt_cb(self, msg):
         """Receive relative altitude above vehicle home message
         """
+        self._lock.acquire()
         self._data['rel_alt'] = msg.data
+        self._lock.release()
 
 
     def state_cb(self, msg):
@@ -98,9 +103,11 @@ class ROSInterface(dss.core.AbstractInterface):
     def velocity_cb(self, msg):
         """Receive velocity information in the body frame (FLU)
         """
+        self._lock.acquire()
         self._data['vx'] = msg.twist.linear.x
         self._data['vy'] = msg.twist.linear.y
         self._data['vz'] = msg.twist.linear.z
+        self._lock.release()
 
 
     def rcin_cb(self, msg):
@@ -108,11 +115,14 @@ class ROSInterface(dss.core.AbstractInterface):
         Expressed in raw microseconds.
         """
 
-        # TODO: Determine if S2D is engaged or not.
+        self._lock.acquire()
+
         if msg.channels[5] > 1500:
             self._s2d_engaged = True
         else:
             self._s2d_engaged = False
+
+        self._lock.release()
 
 
     def change_mode(self, mode):
@@ -184,6 +194,8 @@ class ROSInterface(dss.core.AbstractInterface):
 
 
     def set_path(self, path, current):
+        # We are assuming that the selected ditch site is
+        # always the last waypoint in the path list.
         selected_ds = path[-1] if path else None
         self.publish_ditch_sites(self.params.ditch_site_package, selected_ds)
 
@@ -228,7 +240,51 @@ class ROSInterface(dss.core.AbstractInterface):
         self.pub_setpos.publish(msg)
 
 
+    def set_ditch_site(self, ditch_site):
 
+        if self.state.mode != 'GUIDED':
+            self.change_mode('GUIDED')
+
+        req = CommandLongRequest()
+        req.command = 201 # DO_SET_ROI, used in APM:copter
+        req.param5 = ditch_site.lat
+        req.param6 = ditch_site.lon
+        req.param7 = ditch_site.alt
+
+        rospy.wait_for_service('mavros/cmd/command')
+        try:
+            command_long = rospy.ServiceProxy('mavros/cmd/command', CommandLong)
+            resp = command_long(req)
+            return resp.success
+        except rospy.ServiceException as e:
+            rospy.logerr("change mode failed: %s", e)
+
+
+class ROSVisionInterface(dss.interfaces.AbstractVisionInterface):
+    """ROS Interface for vision communications
+    """
+    def __init__(self):
+        super(ROSVisionInterface, self).__init__()
+
+        # ROS subscribers
+        self.sub0 = rospy.Subscriber('obstacles', Tracks, self.obstacles_cb)
+
+
+    def obstacles_cb(self, msg):
+        # If there are no tracks to process, just bail!
+        if not msg.tracks:
+            return
+
+        intruders = []
+
+        # Extract lat/lon from tracks
+        for track in msg.tracks:
+            intruder = dss.helpers.Waypoint(track.position.y, track.position.x)
+            intruders.append(intruder)
+
+        self._lock.acquire()
+        self._intruders = intruders
+        self._lock.release()
 
 
 def main():
@@ -251,8 +307,11 @@ def main():
     # Setup the ROS DSS Interface
     intf = ROSInterface(params)
 
+    # Setup the vision interface
+    vintf = ROSVisionInterface()
+
     # Create a DSS manager that uses the ROS interface
-    manager = dss.core.Manager(params, intf)
+    manager = dss.core.Manager(params, intf, vintf)
 
     try:
         rate = rospy.Rate(2)
