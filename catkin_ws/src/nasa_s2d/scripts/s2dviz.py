@@ -71,10 +71,10 @@ class S2DVIZ:
         self.sub5 = rospy.Subscriber('dss/ditch_sites', DitchSiteList, self.ditchsites_cb)
 
         # ROS publishers
-        self.pub_home = rospy.Publisher('visualization/home', NavSatFix, queue_size=1, latch=True)
-        self.pub_mission = rospy.Publisher('visualization/mission', MarkerArray, queue_size=1, latch=True)
-        self.pub_ditchsites = rospy.Publisher('visualization/ditch_sites', MarkerArray, queue_size=1, latch=True)
-        self.pub_path = rospy.Publisher('visualization/path', MarkerArray, queue_size=1, latch=True)
+        self.pub_home = rospy.Publisher('visualization/home', NavSatFix, queue_size=5, latch=True)
+        self.pub_mission = rospy.Publisher('visualization/mission', MarkerArray, queue_size=5, latch=True)
+        self.pub_ditchsites = rospy.Publisher('visualization/ditch_sites', MarkerArray, queue_size=5, latch=True)
+        self.pub_path = rospy.Publisher('visualization/path', MarkerArray, queue_size=5, latch=True)
 
 
     def publish_home(self, msg):
