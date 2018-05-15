@@ -2,8 +2,8 @@
   {
     "name": "RC_1",
     "type": "1",
-    "longitude": "-111.635913",
-    "latitude": "40.266661",
+    "longitude": "-111.635885",
+    "latitude": "40.267761",
     "altitude": "0.0",
     "radius": "4.0", // meters
     "reliability": "90.0"

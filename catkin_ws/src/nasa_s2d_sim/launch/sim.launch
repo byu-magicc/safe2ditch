@@ -11,15 +11,15 @@
             <arg name="lat" value="40.268041" />
             <arg name="lon" value="-111.635624" />
             <arg name="zoom" value="22" />
-            <arg name="width" value="200" />
-            <arg name="height" value="280" />
+            <arg name="width" value="250" />
+            <arg name="height" value="250" />
             <arg name="shift_ns" value="0" />
             <arg name="shift_ew" value="0" />
 
             <!-- MAV ENU Location -->
             <arg name="x" value="0" />
-            <arg name="y" value="-120" />
-            <arg name="Y" value="1.5708" />
+            <arg name="y" value="0" />
+            <arg name="Y" value="-1.5708" />
 
             <!-- Gazebo parameters -->
             <arg name="gui" value="$(arg gui)" />
@@ -29,6 +29,9 @@
         <!-- Setup DSS Configuration Paths -->
         <param name="dss/config_dir" type="string" value="$(find dss)/param" />
         <param name="dss/config_file" type="string" value="rock_canyon_config.json" />
+
+        <!-- Spawn moving agents -->
+        <include file="$(find nasa_s2d_sim)/launch/movers_rockcanyon.launch" />
     </group>
 
     <group if="$(eval arg('world') == 'nasa')">
@@ -56,12 +59,11 @@
         <!-- Setup DSS Configuration Paths -->
         <param name="dss/config_dir" type="string" value="$(find dss)/param" />
         <param name="dss/config_file" type="string" value="n40_config.json" />
+
+        <!-- Spawn moving agents -->
+        <include file="$(find nasa_s2d_sim)/launch/movers_nasa.launch" />
     </group>
 
-
-
-    <!-- Spawn moving agents -->
-    <include file="$(find nasa_s2d_sim)/launch/movers.launch" />
 
 
 
