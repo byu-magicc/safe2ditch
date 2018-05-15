@@ -1,0 +1,38 @@
+[
+  {
+    "name": "RC_1",
+    "type": "1",
+    "longitude": "-111.635913",
+    "latitude": "40.266661",
+    "altitude": "0.0",
+    "radius": "4.0", // meters
+    "reliability": "90.0"
+  },
+  {
+    "name": "RC_2",
+    "type": "1",
+    "longitude": "-111.635907",
+    "latitude": "40.267207",
+    "altitude": "0.0",
+    "radius": "4.0", // meters
+    "reliability": "20.0"
+  },
+  {
+    "name": "RC_3",
+    "type": "1",
+    "longitude": "-111.635216",
+    "latitude": "40.267783",
+    "altitude": "0.0",
+    "radius": "4.0", // meters
+    "reliability": "50.0"
+  },
+    {
+      "name": "RC_4",
+      "type": "1",
+      "longitude": "-111.635153",
+      "latitude": "40.267375",
+      "altitude": "0.0",
+      "radius": "4.0", // meters
+      "reliability": "40.0"
+    }
+]

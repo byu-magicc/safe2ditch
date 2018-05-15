@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
+    <!-- Environment variables to be set as parameters -->
+    <param name="dss/config_dir" type="string" value="$(eval env('S2DDSS') + '/' + env('S2DAIRCRAFT'))" />
+    <param name="dss/config_file" type="string" value="config.json" />
+    
     <!-- Connect to HW using MAVProxy, expose UDP pipe to mavros -->
     <node name="mavproxy" pkg="nasa_s2d" type="mavproxy_launcher.sh" />
 

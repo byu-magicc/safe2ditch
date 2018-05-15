@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os, sys
-import logging, argparse
+import logging
 
 import rospy
 
@@ -289,16 +289,15 @@ class ROSVisionInterface(dss.interfaces.AbstractVisionInterface):
 
 def main():
 
-    # Create an argument parser to get the desired CWD for this node
-    parser = argparse.ArgumentParser(description='Ditch Site Selection Node')
-    parser.add_argument('--dir', dest='dir', default='.', help='working directory to use')
-    args, unknown = parser.parse_known_args() # ignores unrecognized args
+    # Use rosparam server to find where the CWD should be set to
+    # Note: it is not necessary to have a node already initialized
+    desired_cwd = rospy.get_param('dss/config_dir', '.')
 
-    # Change CWD to what the user gave as input
-    os.chdir(os.path.abspath(args.dir))
+    # Change CWD to what the user gave through rosparam
+    os.chdir(os.path.abspath(desired_cwd))
 
     # We assume that there is a file in the CWD called `config.json`
-    config_file = 'config.json'
+    config_file = rospy.get_param('dss/config_file', 'config.json')
 
     # Load the configuration parameters for the DSS
     parser = dss.parsers.JSONConfig(config_file)

@@ -2,7 +2,6 @@
 <launch>
     <!-- Arguments to be passed in -->
     <arg name="vmtt_tuning" default="false" />
-    <arg name="dss_working_dir" default="$(eval env('S2DDSS') + '/' + env('S2DAIRCRAFT'))" />
 
 
 
@@ -56,7 +55,7 @@
 
 
     <!-- Ditch Site Selection: Pass in the configuration file directory (mavproxy aircraft dir) -->
-    <node name="dss_node" pkg="nasa_s2d" type="dss_node.py" args="$(eval '--dir ' + arg('dss_working_dir'))" output="screen" />
+    <node name="dss_node" pkg="nasa_s2d" type="dss_node.py" output="screen" />
 
 
 

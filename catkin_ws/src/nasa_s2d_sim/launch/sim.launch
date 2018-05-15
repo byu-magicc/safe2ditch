@@ -25,6 +25,10 @@
             <arg name="gui" value="$(arg gui)" />
             <arg name="paused" value="false" />
         </include>
+
+        <!-- Setup DSS Configuration Paths -->
+        <param name="dss/config_dir" type="string" value="$(find dss)/param" />
+        <param name="dss/config_file" type="string" value="rock_canyon_config.json" />
     </group>
 
     <group if="$(eval arg('world') == 'nasa')">
@@ -48,6 +52,10 @@
             <arg name="gui" value="$(arg gui)" />
             <arg name="paused" value="false" />
         </include>
+
+        <!-- Setup DSS Configuration Paths -->
+        <param name="dss/config_dir" type="string" value="$(find dss)/param" />
+        <param name="dss/config_file" type="string" value="n40_config.json" />
     </group>
 
 
