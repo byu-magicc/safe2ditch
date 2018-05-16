@@ -12,11 +12,12 @@ LATLON=$2
 # Catch CTRL+C and do SITL cleanup.
 trap '{ echo "Cleaning up copter_sitl.sh"; killall xterm && killall mavproxy.py; }' INT
 
-## This is no longer necessary since mavproxy is just for comms relay.
-## However, this mechanism could be used for additional MAVProxy initialization
-# # Navigate to the aircraft directory where
-# # all of the configuration files can be found.
-# cd $S2DDSS/$S2DAIRCRAFT
+# Directory to call MAVProxy from (where eeprom.bin will be, i.e., waypoints)
+# and where the AIRCRAFT directory with SITL flight logs will be
+LAUNCH_DIR=$HOME/.ros/
+
+# Navigate to the launch directory where the eeprom.bin will be stored
+cd $LAUNCH_DIR/$AIRCRAFT
 
 # simulation setup command
 SIM_CMD="sim_vehicle.py -v ArduCopter -f gazebo-iris -l $LATLON,0,0 --no-mavproxy"
@@ -24,7 +25,7 @@ SIM_CMD="sim_vehicle.py -v ArduCopter -f gazebo-iris -l $LATLON,0,0 --no-mavprox
 # MAVProxy command (just for sitl)
 # Tell MAVProxy where the aircraft directory lives (--state-basedir) and what the aircraft is called (--aircraft)
 MP_CMD="mavproxy.py --master tcp:127.0.0.1:5760 --sitl 127.0.0.1:5501 --out 127.0.0.1:14550 --out 127.0.0.1:14551 "
-MP_CMD+="--map --console --state-basedir=$HOME/.ros/ --aircraft=$AIRCRAFT --cmd='set streamrate 20'"
+MP_CMD+="--map --console --state-basedir=$LAUNCH_DIR --aircraft=$AIRCRAFT --cmd='set streamrate 20'"
 
 # Combine the above commands, making SIM_CMD go to the bg and waiting before running the MP_CMD
 XTERM_CMD="$SIM_CMD & sleep 5 && $MP_CMD"
