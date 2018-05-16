@@ -102,6 +102,12 @@ function setup_s2denv {
 	AIRCRAFT=$1
 	MASTER=$2
 	MYIP=$3
+	BAGPATH=$4
+
+	echo $AIRCRAFT > "$S2DENV/aircraft"
+	echo $MASTER > "$S2DENV/rosmaster"
+	echo $MYIP > "$S2DENV/rosip"
+	echo $BAGPATH > "$S2DENV/bagpath"
 
 	source $S2DROOT/startup/s2denv
 }
@@ -110,5 +116,13 @@ function setup_s2denv {
 # will be run after the companion computer reboots
 function testname {
         NAME=$1
-        echo $NAME > $S2DENV/testname
+        echo $NAME > "$S2DENV/testname"
+
+	source "$S2DROOT/startup/s2denv"
+}
+
+# Show the S2D and ROS environment vars
+function s2denv {
+	env | grep S2D
+	env | grep ROS
 }
