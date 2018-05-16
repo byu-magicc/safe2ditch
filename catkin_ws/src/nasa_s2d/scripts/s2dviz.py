@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from builtins import range
 
-import copy
+import copy, threading
 
 import rospy
 import tf
@@ -12,6 +12,7 @@ import numpy as np
 from visualization_msgs.msg import Marker, MarkerArray
 from mavros_msgs.msg import HomePosition, Waypoint, WaypointList, CommandCode, State
 from sensor_msgs.msg import NavSatFix
+from nav_msgs.msg import Odometry
 from nasa_s2d.msg import DitchSiteList
 
 
@@ -24,6 +25,25 @@ def blended_color(x):
     g = 2*x
     b = 0
     return (r, g, b)
+
+
+def get_target_subs(ns="/", cb=None):
+    """Get Subscribers for Moving Targets
+
+    :param ns: namespace to find target topics in
+    :param cb: ROS callback for movers
+    :return: list of rospy subscribers
+    """
+
+    subs = []
+
+    for topic in rospy.get_published_topics(namespace=ns):
+        t, type = topic[0], topic[1]
+
+        if type == 'nav_msgs/Odometry':
+            subs.append(rospy.Subscriber(t, Odometry, cb, topic))
+
+    return subs
 
 
 class S2DVIZ:
@@ -59,6 +79,10 @@ class S2DVIZ:
         self.path_markers = None
         self.path_wplist = None
 
+        # mapping from topic name to marker msg
+        self.mover_markers = {}
+        self.sub_movers = [] # subscribers to movers, to be found after home position is set
+
         # List of objects ({'handler': None, 'msg': None}) to be handled once home position is set
         self.msg_queue = []
 
@@ -75,6 +99,7 @@ class S2DVIZ:
         self.pub_mission = rospy.Publisher('visualization/mission', MarkerArray, queue_size=5, latch=True)
         self.pub_ditchsites = rospy.Publisher('visualization/ditch_sites', MarkerArray, queue_size=5, latch=True)
         self.pub_path = rospy.Publisher('visualization/path', MarkerArray, queue_size=5, latch=True)
+        self.pub_movers = rospy.Publisher('visualization/movers', MarkerArray, queue_size=1)
 
 
     def publish_home(self, msg):
@@ -94,6 +119,10 @@ class S2DVIZ:
 
             # clear the message queue
             self.msg_queue = []
+
+        # Try to subscribe to any movers out there
+        if not self.sub_movers:
+            self.sub_movers = get_target_subs(ns="/targets", cb=self.movers_cb)
 
         self.pub_home.publish(msg)
 
@@ -356,6 +385,63 @@ class S2DVIZ:
 
         self.mission_markers = markers
         self.mission_wplist = msg
+
+
+    def movers_cb(self, msg, args):
+        """
+        """
+
+        # Extract the topic argument
+        topic = args[0]
+
+        # If this mover is not in the list of markers, make a new one
+        if topic not in self.mover_markers:
+            marker = Marker()
+
+            marker.header.frame_id = self.fixed_frame
+
+            marker.id = len(self.mover_markers)
+            # marker.ns = topic
+            marker.type = Marker.CUBE
+            marker.action = Marker.ADD
+
+            marker.pose.orientation.x = 0
+            marker.pose.orientation.y = 0
+            marker.pose.orientation.z = 0
+            marker.pose.orientation.w = 1
+
+            marker.scale.x = 2
+            marker.scale.y = 2
+            marker.scale.z = 0.025
+
+            marker.color.r = 1
+            marker.color.g = 0
+            marker.color.b = 0
+            marker.color.a = 0.7
+
+            # If we don't get an update in n second, delete me!
+            marker.lifetime = rospy.Duration.from_sec(2)
+
+            # Add it to the dict
+            self.mover_markers.update({topic: marker})
+
+
+        # Otherwise, update the marker time and position (including new ones!)
+        if topic in self.mover_markers:
+            self.mover_markers[topic].header.stamp = rospy.Time.now()
+
+            self.mover_markers[topic].pose.position.x = msg.pose.pose.position.x
+            self.mover_markers[topic].pose.position.y = msg.pose.pose.position.y
+            self.mover_markers[topic].pose.position.z = msg.pose.pose.position.z
+
+
+        # Publish the marker for this mover so that it's lifetime is extended
+        markers = MarkerArray()
+        markers.markers.append(self.mover_markers[topic])
+        try:
+            self.pub_movers.publish(markers)
+        except:
+            pass
 
 
     def calculate_lla_diff(self, lat, lon):
