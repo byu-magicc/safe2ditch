@@ -9,6 +9,18 @@ MYDIR=$(dirname ${BASH_SOURCE[0]})
 shopt -s expand_aliases
 source "$MYDIR/s2denv"
 
+# Wait a bit for networking
+sleep 5
+
+# If network still hasn't connected, then just force local IP
+# (i.e., if ROS_IP is not 127.0.0.1 and there is no network,
+#  then ROS will never actually start up)
+ping -c 1 $ROS_IP > /dev/null
+if [ $? -ne 0 ]; then
+	# Could not find $ROS_IP, force local
+	export ROS_IP=127.0.0.1
+fi
+
 # Start the system
 roslaunch nasa_s2d hardware.launch &
 
