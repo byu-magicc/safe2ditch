@@ -1,6 +1,6 @@
 [Unit]
 Description="Safe2Ditch Flight System: DSS MAVProxy and VAL ROS"
-After=network.target
+After=network-online.target
 
 [Service]
 Type=simple
