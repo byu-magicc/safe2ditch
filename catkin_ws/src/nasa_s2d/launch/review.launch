@@ -6,8 +6,8 @@
     <arg name="bagpath"             default="$(arg bagroot)/$(arg bagname)" />
     <arg name="hide_bag"            default="false" />
     <!-- <arg name="show_dashboard"      default="true" /> -->
-    <!-- <arg name="tuning"              default="true" /> -->
-    <!-- <arg name="ns"                  default="review" /> -->
+    <arg name="tuning"              default="false" />
+    <arg name="ns"                  default="review" />
 
     <!-- ###################################################################### -->
 
@@ -18,15 +18,32 @@
     <arg if="$(arg hide_bag)"     name="prefix" value="" />
     <arg unless="$(arg hide_bag)" name="prefix" value="xterm -hold -geometry 100x20 -e" />
 
-    <!-- The video in the rosbag is compressed - this decompresses it for visual_mtt -->
-<!--     <node pkg="image_transport" type="republish" name="decompress" output="log" args="compressed in:=camera/image_raw out:=$(arg ns)/camera/image_raw" /> -->
-
     <!-- Play the selected rosbag. Also, remap the camera_info topic into the review namespace -->
     <node pkg="rosbag" type="play" name="player" args="--pause $(arg bagpath) --clock" launch-prefix="$(arg prefix)">
-      <!-- <remap `from="camera/camera_info" to="$(arg ns)/camera/camera_info" /> -->
-      <!-- <rem`ap from="/tf" to="/tf_old" /> -->
+      <remap from="camera/camera_info" to="$(arg ns)/camera/camera_info" />
     </node>
 
+    <group if="$(arg tuning)" ns="$(arg ns)">
+
+        <!-- The video in the rosbag is compressed - this decompresses it for visual_mtt -->
+        <node pkg="image_transport" type="republish" name="decompress" output="log" args="compressed in:=/camera/image_raw out:=/$(arg ns)/camera/image_raw" />
+
+        <!-- Side-by-side tuning rqt perspective -->
+        <node pkg="rqt_gui" type="rqt_gui" name="dashboard" args="--perspective-file $(find nasa_s2d)/rqt/review.perspective" />
+
+        <!-- launch visual_mtt -->
+        <include file="$(find visual_mtt)/launch/visual_mtt.launch">
+            <arg name="params" value="$(find nasa_s2d)/param/sully.yaml" />
+            <arg name="tuning" value="true" />
+            <arg name="imgtopic" value="/$(arg ns)/camera/image_raw" />
+        </include>
+
+        <!-- Adaptive Parameter Tuning -->
+        <node pkg="nasa_s2d" type="adaptive_params.py" name="adaptive_params">
+            <remap from="odom" to="/mavros/global_position/local" />
+        </node>
+
+    </group>
 
 
     <!-- Safe2Ditch Visualization in rviz -->
