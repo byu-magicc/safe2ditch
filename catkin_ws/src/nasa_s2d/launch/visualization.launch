@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
+    <!-- Anonymous names are used to allow multiple machines to run this launch file -->
+
     <!-- Start the Safe2Ditch rviz environment -->
-    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find nasa_s2d)/rviz/safe2ditch.rviz" />
+    <node pkg="rviz" type="rviz" name="$(anon rviz)" args="-d $(find nasa_s2d)/rviz/safe2ditch.rviz" />
 
 
     <!-- Plotter for visualization of geolocated tracks in rviz -->
-    <node pkg="flat_earth_geolocation" type="plotter" name="plotter" output="screen">
+    <node pkg="flat_earth_geolocation" type="plotter" name="$(anon plotter)" output="screen">
         <remap from="tracks" to="tracks3d" />
     </node>
 
 
     <!-- Helper node to publish mission information -->
-    <node pkg="nasa_s2d" type="s2dviz.py" name="s2dviz" output="screen" />
+    <node pkg="nasa_s2d" type="s2dviz.py" name="$(anon s2dviz)" output="screen" />
 
 
     <!-- Heads-up Display -->
-    <node pkg="hud" type="hud" name="hud">
+    <node pkg="hud" type="hud" name="$(anon hud)">
         <remap from="odom" to="mavros/global_position/local" />
         <param name="image_transport" value="compressed" />
     </node>
