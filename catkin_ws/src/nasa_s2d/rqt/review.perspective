@@ -1,182 +1,190 @@
 {
-  "keys": {}, 
+  "keys": {},
   "groups": {
     "pluginmanager": {
       "keys": {
         "running-plugins": {
-          "type": "repr", 
+          "type": "repr",
           "repr": "{u'rqt_image_view/ImageView': [2, 1]}"
         }
-      }, 
+      },
       "groups": {
         "plugin__rqt_tf_tree__RosTfTree__1": {
-          "keys": {}, 
+          "keys": {},
           "groups": {
             "dock_widget__RosTfTreeUi": {
               "keys": {
                 "dockable": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "u'true'"
-                }, 
+                },
                 "parent": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "None"
-                }, 
+                },
                 "dock_widget_title": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "u'TF Tree'"
                 }
-              }, 
+              },
               "groups": {}
-            }, 
+            },
             "plugin": {
               "keys": {
                 "highlight_connections_check_box_state": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "u'true'"
-                }, 
+                },
                 "auto_fit_graph_check_box_state": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "u'true'"
                 }
-              }, 
+              },
               "groups": {}
             }
           }
-        }, 
+        },
         "plugin__rqt_image_view__ImageView__2": {
-          "keys": {}, 
+          "keys": {},
           "groups": {
             "dock_widget__ImageViewWidget": {
               "keys": {
                 "dockable": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "True"
-                }, 
+                },
                 "parent": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "None"
-                }, 
+                },
                 "dock_widget_title": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "u'Image View (2)'"
                 }
-              }, 
+              },
               "groups": {}
-            }, 
+            },
             "plugin": {
               "keys": {
                 "max_range": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "10.0"
-                }, 
+                },
                 "mouse_pub_topic": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "u'/review/tracks_video/compressed_mouse_left'"
-                }, 
+                },
+                "num_gridlines": {
+                  "type": "repr",
+                  "repr": "0"
+                },
                 "toolbar_hidden": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "False"
-                }, 
+                },
                 "zoom1": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "False"
-                }, 
+                },
                 "dynamic_range": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "False"
-                }, 
+                },
                 "topic": {
-                  "type": "repr", 
-                  "repr": "u'/review/hud/image_raw/compressed'"
-                }, 
+                  "type": "repr",
+                  "repr": "u'/review/tracks_video/compressed'"
+                },
                 "publish_click_location": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "False"
                 }
-              }, 
+              },
               "groups": {}
             }
           }
-        }, 
+        },
         "plugin__rqt_image_view__ImageView__1": {
-          "keys": {}, 
+          "keys": {},
           "groups": {
             "dock_widget__ImageViewWidget": {
               "keys": {
                 "dockable": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "True"
-                }, 
+                },
                 "parent": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "None"
-                }, 
+                },
                 "dock_widget_title": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "u'Image View'"
                 }
-              }, 
+              },
               "groups": {}
-            }, 
+            },
             "plugin": {
               "keys": {
                 "max_range": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "10.0"
-                }, 
+                },
                 "mouse_pub_topic": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "u'/tracks_video/compressed_mouse_left'"
-                }, 
+                },
+                "num_gridlines": {
+                  "type": "repr",
+                  "repr": "0"
+                },
                 "toolbar_hidden": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "False"
-                }, 
+                },
                 "zoom1": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "False"
-                }, 
+                },
                 "dynamic_range": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "False"
-                }, 
+                },
                 "topic": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "u'/tracks_video/compressed'"
-                }, 
+                },
                 "publish_click_location": {
-                  "type": "repr", 
+                  "type": "repr",
                   "repr": "False"
                 }
-              }, 
+              },
               "groups": {}
             }
           }
         }
       }
-    }, 
+    },
     "mainwindow": {
       "keys": {
         "geometry": {
-          "type": "repr(QByteArray.hex)", 
-          "repr(QByteArray.hex)": "QtCore.QByteArray('01d9d0cb000200000000017e000000bc000006d3000003540000017e000000d8000006d30000035400000000000000000780')", 
-          "pretty-print": "     ~     T ~     T     "
-        }, 
+          "type": "repr(QByteArray.hex)",
+          "repr(QByteArray.hex)": "QtCore.QByteArray('01d9d0cb00020000000008b5000000f300000e0a0000038b000008b50000010f00000e0a0000038b00000001000000000780')",
+          "pretty-print": "                         "
+        },
         "state": {
-          "type": "repr(QByteArray.hex)", 
-          "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff00000000fd000000020000000200000690000003ecfc0100000001fb00000034007200710074005f006200610067005f005f004200610067005f005f0031005f005f0042006100670057006900640067006500740100000000000006900000000000000000000000030000055600000267fc0100000005fb00000054007200710074005f006200610067005f005f004200610067005f005f0031005f005f002f00630061006d006500720061002f00630061006d006500720061005f0069006e0066006f005f005f0050006c006f007401000004ea000001a60000000000000000fb0000004c007200710074005f00740066005f0074007200650065005f005f0052006f0073005400660054007200650065005f005f0031005f005f0052006f0073005400660054007200650065005500690100000000000003ce0000000000000000fb00000030005f005f0044006f0063006b0057006900640067006500740043006f006e007400610069006e00650072005f005f003101000003330000009b0000000000000000fb0000005a007200710074005f0069006d006100670065005f0076006900650077005f005f0049006d0061006700650056006900650077005f005f0031005f005f0049006d0061006700650056006900650077005700690064006700650074010000000000000298000000c700fffffffb0000005a007200710074005f0069006d006100670065005f0076006900650077005f005f0049006d0061006700650056006900650077005f005f0032005f005f0049006d0061006700650056006900650077005700690064006700650074010000029e000002b8000000dd00ffffff000005560000000000000004000000040000000800000008fc00000001000000030000000100000036004d0069006e0069006d0069007a006500640044006f0063006b00570069006400670065007400730054006f006f006c0062006100720000000000ffffffff0000000000000000')", 
+          "type": "repr(QByteArray.hex)",
+          "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff00000000fd000000020000000200000690000003ecfc0100000001fb00000034007200710074005f006200610067005f005f004200610067005f005f0031005f005f0042006100670057006900640067006500740100000000000006900000000000000000000000030000055600000267fc0100000005fb00000054007200710074005f006200610067005f005f004200610067005f005f0031005f005f002f00630061006d006500720061002f00630061006d006500720061005f0069006e0066006f005f005f0050006c006f007401000004ea000001a60000000000000000fb0000004c007200710074005f00740066005f0074007200650065005f005f0052006f0073005400660054007200650065005f005f0031005f005f0052006f0073005400660054007200650065005500690100000000000003ce0000000000000000fb00000030005f005f0044006f0063006b0057006900640067006500740043006f006e007400610069006e00650072005f005f003101000003330000009b0000000000000000fb0000005a007200710074005f0069006d006100670065005f0076006900650077005f005f0049006d0061006700650056006900650077005f005f0031005f005f0049006d0061006700650056006900650077005700690064006700650074010000000000000298000000c700fffffffb0000005a007200710074005f0069006d006100670065005f0076006900650077005f005f0049006d0061006700650056006900650077005f005f0032005f005f0049006d0061006700650056006900650077005700690064006700650074010000029e000002b8000000dd00ffffff000005560000000000000004000000040000000800000008fc00000001000000030000000100000036004d0069006e0069006d0069007a006500640044006f0063006b00570069006400670065007400730054006f006f006c0062006100720000000000ffffffff0000000000000000')",
           "pretty-print": "                 4rqt_bag__Bag__1__BagWidget                   Trqt_bag__Bag__1__/camera/camera_info__Plot          Lrqt_tf_tree__RosTfTree__1__RosTfTreeUi          0__DockWidgetContainer__1          Zrqt_image_view__ImageView__1__ImageViewWidget          Zrqt_image_view__ImageView__2__ImageViewWidget                            6MinimizedDockWidgetsToolbar        "
         }
-      }, 
+      },
       "groups": {
         "toolbar_areas": {
           "keys": {
             "MinimizedDockWidgetsToolbar": {
-              "type": "repr", 
+              "type": "repr",
               "repr": "8"
             }
-          }, 
+          },
           "groups": {}
         }
       }
