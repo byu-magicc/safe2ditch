@@ -135,6 +135,25 @@ class ROSInterface(dss.interfaces.AbstractInterface):
             rospy.logerr("change mode failed: %s", e)
 
 
+    def do_set_roi(self, lat, lon, alt):
+        """Send DO_SET_ROI MAVLink Command
+        """
+        req = CommandLongRequest()
+        req.command = 201 # DO_SET_ROI, used in APM:copter
+        req.param5 = lat
+        req.param6 = lon
+        req.param7 = alt
+
+        rospy.wait_for_service('mavros/cmd/command')
+        try:
+            command_long = rospy.ServiceProxy('mavros/cmd/command', CommandLong)
+            resp = command_long(req)
+            rospy.loginfo("Ack: DO_SET_ROI: {}, {}, {}".format(lat, lon, alt))
+            return resp.success
+        except rospy.ServiceException as e:
+            rospy.logerr("DO_SET_ROI failed: %s", e)
+
+
     def publish_ditch_sites(self, sites, selected_ds=None):
 
         msg = DitchSiteList()
@@ -245,19 +264,8 @@ class ROSInterface(dss.interfaces.AbstractInterface):
         if self.state.mode != 'GUIDED':
             self.change_mode('GUIDED')
 
-        req = CommandLongRequest()
-        req.command = 201 # DO_SET_ROI, used in APM:copter
-        req.param5 = ditch_site.lat
-        req.param6 = ditch_site.lon
-        req.param7 = ditch_site.alt
-
-        rospy.wait_for_service('mavros/cmd/command')
-        try:
-            command_long = rospy.ServiceProxy('mavros/cmd/command', CommandLong)
-            resp = command_long(req)
-            return resp.success
-        except rospy.ServiceException as e:
-            rospy.logerr("change mode failed: %s", e)
+        rospy.loginfo("Attempting to DO_SET_ROI at: {}".format(ditch_site))
+        self.do_set_roi(ditch_site.lat, ditch_site.lon, ditch_site.alt)
 
 
 class ROSVisionInterface(dss.interfaces.AbstractVisionInterface):
