@@ -86,6 +86,13 @@ class S2DVIZ:
         # List of objects ({'handler': None, 'msg': None}) to be handled once home position is set
         self.msg_queue = []
 
+        # ROS publishers
+        self.pub_home = rospy.Publisher('visualization/home', NavSatFix, queue_size=5, latch=True)
+        self.pub_mission = rospy.Publisher('visualization/mission', MarkerArray, queue_size=5, latch=True)
+        self.pub_ditchsites = rospy.Publisher('visualization/ditch_sites', MarkerArray, queue_size=5, latch=True)
+        self.pub_path = rospy.Publisher('visualization/path', MarkerArray, queue_size=5, latch=True)
+        self.pub_movers = rospy.Publisher('visualization/movers', MarkerArray, queue_size=1)
+
         # ROS subscribers
         self.sub0 = rospy.Subscriber('mavros/home_position/home', HomePosition, self.home_cb)
         self.sub1 = rospy.Subscriber('mavros/global_position/global', NavSatFix, self.globalpos_cb)
@@ -93,13 +100,6 @@ class S2DVIZ:
         self.sub3 = rospy.Subscriber('mavros/state', State, self.state_cb)
         self.sub4 = rospy.Subscriber('dss/path', WaypointList, self.path_cb)
         self.sub5 = rospy.Subscriber('dss/ditch_sites', DitchSiteList, self.ditchsites_cb)
-
-        # ROS publishers
-        self.pub_home = rospy.Publisher('visualization/home', NavSatFix, queue_size=5, latch=True)
-        self.pub_mission = rospy.Publisher('visualization/mission', MarkerArray, queue_size=5, latch=True)
-        self.pub_ditchsites = rospy.Publisher('visualization/ditch_sites', MarkerArray, queue_size=5, latch=True)
-        self.pub_path = rospy.Publisher('visualization/path', MarkerArray, queue_size=5, latch=True)
-        self.pub_movers = rospy.Publisher('visualization/movers', MarkerArray, queue_size=1)
 
 
     def publish_home(self, msg):
