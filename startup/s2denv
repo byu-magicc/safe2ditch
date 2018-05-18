@@ -80,7 +80,7 @@ if [ -f "$S2DENV/dss_config_file" ];
 then
 	export S2D_DSS_CONFIG_FILE=$(cat $S2DENV/dss_config_file)
 else
-	export S2D_DSS_CONFIG_FILE="config.json"
+	export S2D_DSS_CONFIG_FILE="n40_config.json"
 fi
 
 ###############################################################################
