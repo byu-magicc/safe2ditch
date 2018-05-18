@@ -18,11 +18,8 @@ export S2DENV=$(realpath $S2DROOT/.env)
 # Make sure the S2DENV directory exists
 mkdir -p $S2DENV
 
-# The location of the MAVProxy Safe2Ditch module (Safe2Ditch/DSS repo)
+# The location of the dir that houses the Safe2Ditch Python package (Safe2Ditch/DSS repo)
 export S2DDSS=$S2DROOT/catkin_ws/src/dss/src
-
-# The name of the aircraft directory (which houses configuration files)
-export S2DAIRCRAFT=aircraft
 
 # ROS networking information
 if [ -f "$S2DENV/rosmaster" ];
@@ -71,6 +68,21 @@ else
 	export S2DTESTNAME="noname"
 fi
 
+# Default Safe2Ditch configuration settings
+if [ -f "$S2DENV/dss_config_dir" ];
+then
+	export S2D_DSS_CONFIG_DIR=$(cat $S2DENV/dss_config_dir)
+else
+	export S2D_DSS_CONFIG_DIR="$S2DDSS/../param"
+fi
+
+if [ -f "$S2DENV/dss_config_file" ];
+then
+	export S2D_DSS_CONFIG_FILE=$(cat $S2DENV/dss_config_file)
+else
+	export S2D_DSS_CONFIG_FILE="config.json"
+fi
+
 ###############################################################################
 #                                  ROS Setup                                  #
 ###############################################################################
@@ -110,6 +122,19 @@ function setup_s2denv {
 	echo $BAGPATH > "$S2DENV/bagpath"
 
 	source $S2DROOT/startup/s2denv
+}
+
+# Setup DSS configuration files
+#
+#	setup_dss_config FILENAME [CONFIG_DIR]
+function setup_dss_config {
+	FILE=$1
+	DIR=${2-"$S2DDSS/../param"}
+
+	echo $FILE > "$S2DENV/dss_config_file"
+	echo $DIR > "$S2DENV/dss_config_dir"
+
+	echo "DSS configuration will be read from $DIR/$FILE"
 }
 
 # Give a name for the bag/logs of the next flight that
