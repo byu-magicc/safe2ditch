@@ -8,9 +8,7 @@
 
 
     <!-- Plotter for visualization of geolocated tracks in rviz -->
-    <node pkg="flat_earth_geolocation" type="plotter" name="$(anon plotter)" output="screen">
-        <remap from="tracks" to="tracks3d" />
-    </node>
+    <node pkg="flat_earth_geolocation" type="plotter" name="$(anon plotter)" output="screen" />
 
 
     <!-- Helper node to publish mission information -->

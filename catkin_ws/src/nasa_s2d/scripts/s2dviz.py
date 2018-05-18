@@ -458,7 +458,7 @@ class S2DVIZ:
         utm_wp = utm.fromLatLong(lat, lon)
 
         if utm_home.zone is not utm_wp.zone or utm_home.band is not utm_wp.band:
-            raise NotImplementedError("Near edge of UTM zone -- should use haversine")
+            rospy.logwarn("Near edge of UTM zone -- should use haversine")
 
         # calculate difference in local coordinates -- meters
         x = utm_home.easting - utm_wp.easting
