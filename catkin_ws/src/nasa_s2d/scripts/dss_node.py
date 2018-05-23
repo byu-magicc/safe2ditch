@@ -283,16 +283,15 @@ class ROSVisionInterface(dss.interfaces.AbstractVisionInterface):
         if not msg.tracks:
             return
 
+        # list of dss.helpers.Intruder objects
         intruders = []
 
         # Extract lat/lon from tracks
         for track in msg.tracks:
-            intruder = dss.helpers.Waypoint(track.position.y, track.position.x)
+            intruder = dss.helpers.Intruder(track.id, track.position.y, track.position.x)
             intruders.append(intruder)
 
-        self._lock.acquire()
-        self._intruders = intruders
-        self._lock.release()
+        self._set_intruders(intruders)            
 
 
 def main():

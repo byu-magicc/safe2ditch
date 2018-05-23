@@ -60,7 +60,7 @@ class S2DVIZ:
         self.listener = tf.TransformListener()
 
         # current vehicle status
-        self.status = None
+        self.status = State()
 
         # Keep track of the vehicle's home position
         self.home_position = None
