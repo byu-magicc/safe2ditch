@@ -1,0 +1,22 @@
+{"ditch_sites": {
+   "sites": [
+         {
+           "name": "23681_60",
+           "type": "1",
+           "longitude": "-76.386933",
+           "latitude": "37.102317",
+           "altitude": "0.0",
+           "radius": "30.0",
+           "reliability": "90.0"
+         },
+         {
+           "name": "23681_65",
+           "type": "1",
+           "longitude": "-76.388443",
+           "latitude": "37.102502",
+           "altitude": "0.0",
+           "radius": "30.0",
+           "reliability": "60.0"
+         }
+     ]
+}}

@@ -1,7 +1,7 @@
 {
   "files": {
     // For hardware use
-    "ditch_sites": "n40.json",
+    "ditch_sites": "n40_tarmac.json",
     
     // For simulation use only
     "route": "N40_Route_V2.json",
