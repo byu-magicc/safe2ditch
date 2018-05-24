@@ -97,6 +97,12 @@ class ROSInterface(dss.interfaces.AbstractInterface):
 
         Published with a rate of 1 Hz
         """
+
+        # Upon first arming, publish the ditch sites
+        if not self.state.armed and msg.armed:
+            # let the ROS network know about the potential ditch sites
+            self.publish_ditch_sites(self.params.ditch_site_package)
+
         self.state = msg
 
 
