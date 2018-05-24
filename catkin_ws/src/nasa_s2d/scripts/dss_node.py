@@ -8,7 +8,7 @@ import dss
 
 from visual_mtt.msg import Tracks
 from mavros_msgs.msg import RCIn, State, GlobalPositionTarget, WaypointList, Waypoint
-from mavros_msgs.srv import SetMode, CommandLong, CommandLongRequest
+from mavros_msgs.srv import SetMode, CommandLong, CommandLongRequest, WaypointPull
 from sensor_msgs.msg import NavSatFix
 from geometry_msgs.msg import TwistStamped
 from std_msgs.msg import Float64
@@ -103,6 +103,9 @@ class ROSInterface(dss.interfaces.AbstractInterface):
             # let the ROS network know about the potential ditch sites
             self.publish_ditch_sites(self.params.ditch_site_package)
 
+            # Also re-publish waypoints
+            self.pull_waypoints()
+
         self.state = msg
 
 
@@ -168,6 +171,18 @@ class ROSInterface(dss.interfaces.AbstractInterface):
             return resp.success
         except rospy.ServiceException as e:
             rospy.logerr("DO_SET_ROI failed: %s", e)
+
+
+    def pull_waypoints(self):
+        """Pull mission waypoints
+        """
+        rospy.wait_for_service('mavros/mission/pull')
+        try:
+            pull = rospy.ServiceProxy('mavros/mission/pull', WaypointPull)
+            resp = pull()
+            return resp.success
+        except rospy.ServiceException as e:
+            rospy.logerr("Waypoint pull failed: %s", e)
 
 
     def publish_ditch_sites(self, sites, selected_ds=None):
