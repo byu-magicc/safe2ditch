@@ -126,6 +126,16 @@ class ROSInterface(dss.interfaces.AbstractInterface):
 
 
     def change_mode(self, mode):
+        """Request to change flight mode
+        Use mavros service call to change flight mode to GUIDED.
+        As a safety precaution, only change mode to GUIDED
+        if the current flight mode is AUTO.
+        """
+
+        if self.state.mode != 'AUTO':
+            rospy.logwarn('[Safety] Will not change mode from {} to GUIDED for DSS'.format(self.state.mode))
+            return False
+
         rospy.wait_for_service('mavros/set_mode')
         try:
             set_mode = rospy.ServiceProxy('mavros/set_mode', SetMode)
