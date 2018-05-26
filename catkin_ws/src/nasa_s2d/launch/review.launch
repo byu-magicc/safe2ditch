@@ -5,9 +5,11 @@
     <arg name="bagname"             default="run3.bag" />
     <arg name="bagpath"             default="$(arg bagroot)/$(arg bagname)" />
     <arg name="hide_bag"            default="false" />
-    <!-- <arg name="show_dashboard"      default="true" /> -->
-    <arg name="tuning"              default="false" />
     <arg name="ns"                  default="review" />
+
+    <!-- The following are useful for doing more than just viewing the data -->
+    <arg name="tuning"              default="false" />
+    <arg name="hide_dss"            default="false" />
 
     <!-- ###################################################################### -->
 
@@ -20,7 +22,10 @@
 
     <!-- Play the selected rosbag. Also, remap the camera_info topic into the review namespace -->
     <node pkg="rosbag" type="play" name="player" args="--pause $(arg bagpath) --clock" launch-prefix="$(arg prefix)">
-      <remap from="camera/camera_info" to="$(arg ns)/camera/camera_info" />
+        <remap from="camera/camera_info" to="$(arg ns)/camera/camera_info" />
+
+        <remap from="dss/path" to="orig/path" if="$(arg hide_dss)" />
+        <remap from="dss/ditch_sites" to="orig/dss/ditch_sites" if="$(arg hide_dss)" />
     </node>
 
     <group if="$(arg tuning)" ns="$(arg ns)">

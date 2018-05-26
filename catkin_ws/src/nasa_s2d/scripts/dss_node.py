@@ -145,7 +145,7 @@ class ROSInterface(dss.interfaces.AbstractInterface):
             rospy.logwarn('[Safety] Will not change mode from {} to GUIDED for DSS'.format(self.state.mode))
             return False
 
-        rospy.wait_for_service('mavros/set_mode')
+        # rospy.wait_for_service('mavros/set_mode')
         try:
             set_mode = rospy.ServiceProxy('mavros/set_mode', SetMode)
             resp = set_mode(0, mode)
@@ -163,7 +163,7 @@ class ROSInterface(dss.interfaces.AbstractInterface):
         req.param6 = lon
         req.param7 = alt
 
-        rospy.wait_for_service('mavros/cmd/command')
+        # rospy.wait_for_service('mavros/cmd/command')
         try:
             command_long = rospy.ServiceProxy('mavros/cmd/command', CommandLong)
             resp = command_long(req)
@@ -176,7 +176,7 @@ class ROSInterface(dss.interfaces.AbstractInterface):
     def pull_waypoints(self):
         """Pull mission waypoints
         """
-        rospy.wait_for_service('mavros/mission/pull')
+        # rospy.wait_for_service('mavros/mission/pull')
         try:
             pull = rospy.ServiceProxy('mavros/mission/pull', WaypointPull)
             resp = pull()
