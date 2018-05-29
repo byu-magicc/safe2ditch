@@ -10,7 +10,7 @@ AIRCRAFT="sitl_${SITL_LOCATION// /}" # remove spaces
 LATLON=$2
 
 # Catch CTRL+C and do SITL cleanup.
-trap '{ echo "Cleaning up copter_sitl.sh"; killall xterm && killall mavproxy.py; }' INT
+trap '{ echo "Cleaning up copter_sitl.sh"; killall xterm && killall -9 mavproxy.py; }' INT
 
 # Directory to call MAVProxy from (where eeprom.bin will be, i.e., waypoints)
 # and where the AIRCRAFT directory with SITL flight logs will be
