@@ -21,6 +21,8 @@
         <param name="v" type="double" value="1.0" />
         <rosparam param="waypoints_x">[0, 2.5, 2.5, 0, 0]</rosparam>
         <rosparam param="waypoints_y">[0, 0, 2.5, 2.5, 0]</rosparam>
+
+        <node pkg="nasa_s2d_sim" name="to_lla" type="mover_lla.py" />
     </group>
 
 
@@ -40,6 +42,8 @@
         <param name="v" type="double" value="0.75" />
         <rosparam param="waypoints_x">[0, -2, -4, -4, -2, 0]</rosparam>
         <rosparam param="waypoints_y">[0, -0.5, -1.5,  1.5,  0.5, 0]</rosparam>
+
+        <node pkg="nasa_s2d_sim" name="to_lla" type="mover_lla.py" />
     </group>
 
     <!-- Spawn in Gazebo -->
@@ -58,6 +62,8 @@
         <param name="v" type="double" value="1.25" />
         <param name="radius" type="double" value="2" />
         <param name="lambda" type="double" value="-1" />
+
+        <node pkg="nasa_s2d_sim" name="to_lla" type="mover_lla.py" />
     </group>
 
     <!-- Spawn in Gazebo -->
@@ -76,5 +82,7 @@
         <param name="v" type="double" value="0.75" />
         <rosparam param="waypoints_x">[0, -2, -4, -4, -2, 0]</rosparam>
         <rosparam param="waypoints_y">[0, -0.5, -1.5,  1.5,  0.5, 0]</rosparam>
+
+        <node pkg="nasa_s2d_sim" name="to_lla" type="mover_lla.py" />
     </group>
 </launch>
