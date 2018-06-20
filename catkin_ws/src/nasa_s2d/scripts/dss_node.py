@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os, sys
-import logging
+import logging, commands
 
 import rospy
 
@@ -11,7 +11,7 @@ from mavros_msgs.msg import RCIn, State, GlobalPositionTarget, WaypointList, Way
 from mavros_msgs.srv import SetMode, CommandLong, CommandLongRequest, WaypointPull
 from sensor_msgs.msg import NavSatFix
 from geometry_msgs.msg import TwistStamped
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64, String
 from nasa_s2d.msg import DitchSiteList, DitchSite
 
 
@@ -64,6 +64,7 @@ class ROSInterface(dss.interfaces.AbstractInterface):
         self.pub_setpos = rospy.Publisher('mavros/setpoint_raw/global', GlobalPositionTarget, queue_size=1, latch=True)
         self.pub_ditchsite = rospy.Publisher('dss/ditch_sites', DitchSiteList, queue_size=1, latch=True)
         self.pub_path = rospy.Publisher('dss/path', WaypointList, queue_size=1, latch=True)
+        self.pub_git = rospy.Publisher('dss/git_info', String, queue_size=1, latch=True)
 
         # store configuration parameters
         self.params = params
@@ -72,6 +73,18 @@ class ROSInterface(dss.interfaces.AbstractInterface):
         self.publish_ditch_sites(self.params.ditch_site_package)
 
         self.reset()
+
+
+    def send_git_info(self):
+        """Publish git info
+
+        Publishes the git info for this project so that it is captured in the ros bag
+        """
+        git = commands.getoutput('git rev-parse HEAD && git status && git submodule foreach --recursive git status && git submodule foreach --recursive git diff')
+
+        msg = String()
+        msg.data = git
+        self.pub_git.publish(msg)
 
 
     def globalpos_cb(self, msg):
@@ -105,6 +118,9 @@ class ROSInterface(dss.interfaces.AbstractInterface):
 
             # Also re-publish waypoints
             self.pull_waypoints()
+
+            # Send git version info to be recorded
+            self.send_git_info()
 
         self.state = msg
 
