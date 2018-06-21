@@ -80,7 +80,7 @@ class ROSInterface(dss.interfaces.AbstractInterface):
 
         Publishes the git info for this project so that it is captured in the ros bag
         """
-        git = commands.getoutput('git rev-parse HEAD && git status && git submodule foreach --recursive git status && git submodule foreach --recursive git diff')
+        git = commands.getoutput('git rev-parse HEAD && git status && git diff && git submodule foreach --recursive git status && git submodule foreach --recursive git diff')
 
         msg = String()
         msg.data = git
