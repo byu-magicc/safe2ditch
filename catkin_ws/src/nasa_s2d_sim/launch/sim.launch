@@ -38,8 +38,8 @@
         <include file="$(find nasa_s2d_sim)/launch/sitl.launch">
             <!-- NASA LaRC Back 40, VA -->
             <arg name="name" value="NASA LaRC Back 40" />
-            <arg name="lat" value="37.102250" />
-            <arg name="lon" value="-76.387290" />
+            <arg name="lat" value="37.1022496" />
+            <arg name="lon" value="-76.385938" />
             <arg name="zoom" value="22" />
             <arg name="width" value="300" />
             <arg name="height" value="200" />
@@ -47,7 +47,7 @@
             <arg name="shift_ew" value="0" />
 
             <!-- MAV ENU Location -->
-            <arg name="x" value="120" />
+            <arg name="x" value="0" />
             <arg name="y" value="0" />
             <arg name="Y" value="3.14159" />
 

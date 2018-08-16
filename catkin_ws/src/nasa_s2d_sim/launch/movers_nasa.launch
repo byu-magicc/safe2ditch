@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
+    <!-- You can use this (https://www.sunearthtools.com/tools/distance.php) -->
+    <!-- website to calculate range and bearing between the home point and   -->
+    <!-- each ditch site. Then, find the x,y distances that mover should be. -->
+
     <!-- Spawn in Gazebo -->
     <include file="$(find moving_targets)/launch/spawn_mover.launch">
         <arg name="name"    value="parker" />
         <arg name="model"   value="$(find moving_targets)/models/moving_person_walking/model.sdf" />
-        <arg name="x"       value="28"/>
-        <arg name="y"       value="0"/>
+        <arg name="x"       value="-88"/>
+        <arg name="y"       value="7.5"/>
         <arg name="z"       value="0"/>
         <arg name="yaw"     value="0"/>
     </include>
@@ -15,8 +19,8 @@
         <!-- Trajectory type: waypoints -->
         <param name="trajectory_type" type="int" value="1" />
         <param name="v" type="double" value="1.0" />
-        <rosparam param="waypoints_x">[0, 2.5, 2.5, 0, 0]</rosparam>
-        <rosparam param="waypoints_y">[0, 0, 2.5, 2.5, 0]</rosparam>
+        <rosparam param="waypoints_x">[0, 7.5, 7.5, 0, 0]</rosparam>
+        <rosparam param="waypoints_y">[0, 0, 7.5, 7.5, 0]</rosparam>
     </group>
 
 
@@ -24,8 +28,8 @@
     <include file="$(find moving_targets)/launch/spawn_mover.launch">
         <arg name="name"    value="trish" />
         <arg name="model"   value="$(find moving_targets)/models/moving_person_walking/model.sdf" />
-        <arg name="x"       value="-6"/>
-        <arg name="y"       value="0"/>
+        <arg name="x"       value="-100"/>
+        <arg name="y"       value="5"/>
         <arg name="z"       value="0"/>
         <arg name="yaw"     value="0"/>
     </include>
@@ -42,8 +46,8 @@
     <include file="$(find moving_targets)/launch/spawn_mover.launch">
         <arg name="name"    value="nerissa" />
         <arg name="model"   value="$(find moving_targets)/models/moving_person_standing/model.sdf" />
-        <arg name="x"       value="0"/>
-        <arg name="y"       value="8"/>
+        <arg name="x"       value="-92"/>
+        <arg name="y"       value="18"/>
         <arg name="z"       value="0"/>
         <arg name="yaw"     value="0"/>
     </include>
