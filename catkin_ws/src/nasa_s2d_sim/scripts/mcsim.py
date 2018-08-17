@@ -5,7 +5,7 @@ from builtins import range
 import sys, argparse, socket
 import time, datetime, pickle
 import os, subprocess, signal
-import json
+import json, datetime
 
 import rospy, rosbag, rosnode
 import dynamic_reconfigure.client
@@ -23,15 +23,15 @@ class ROSLauncher:
 
         The object that actually interfaces with the roslaunch shell command.
     """
-    def __init__(self, flags=None):
+    def __init__(self):
 
-        self.flags = flags
+        self.flags = "viz:=false"
 
         # Store the roslaunch process
         self.process = None
 
         # Hide the roslaunch output
-        self.squelch = True
+        self.squelch = False
 
 
     def run(self):
@@ -188,6 +188,9 @@ class Simulation:
     """docstring for Simulation"""
     def __init__(self, num_targets, m, end_ds):
 
+        self.num_targets = num_targets
+        self.m = m
+
         # keep track of current ditch site and
         # the ditch site we would like to end on
         self.current_ds = None
@@ -210,6 +213,14 @@ class Simulation:
         # Create a rosbag recorder
         self.bag = ROSBagRecorder()
 
+        # what time did the sim start?
+        self.time_started = None
+
+        # What is an acceptable amount of time to wait
+        # before we've started flying? If this time passes,
+        # then something is likely to be wrong. (secs)
+        self.MAX_WAIT_TIME = 80
+
 
     def start(self):
         # Run roslaunch and start a roscore
@@ -217,6 +228,9 @@ class Simulation:
         launcher.run()
 
         rospy.init_node('mcsim', anonymous=False)
+
+        # make sure to stamp when we started
+        self.time_started = time.time()
 
         try:
             #
@@ -236,8 +250,10 @@ class Simulation:
             # Connect to rc override topic to engage Safe2Ditch using channel 6
             self.rc_pub = rospy.Publisher('mavros/rc/override', OverrideRCIn, queue_size=1)
 
+            sim_error = False
+
             rate = rospy.Rate(1)
-            while not rospy.is_shutdown() and not self.sim_done:
+            while not rospy.is_shutdown() and not self.sim_done and not sim_error:
 
                 ##
                 ## Simulation heartbeat
@@ -246,21 +262,23 @@ class Simulation:
                 if '/gazebo' not in rosnode.get_node_names():
                     # something went wrong and this iteration
                     # needs to be re-ran.
-                    return False
+                   sim_error = True
+
+                if not self.flying and time.time() - self.time_started > self.MAX_WAIT_TIME:
+                    sim_error = True
 
                 rate.sleep()
         except rospy.ROSInterruptException:
-            sys.exit(0)
+            sim_error = True
+        finally:
+            launcher.stop()
+            self.bag.stop()
 
-        if self.sim_done:
-            time.sleep(2)
+            rospy.signal_shutdown("monte carlo iteration complete")
 
-        launcher.stop()
-        self.bag.stop()
+            return not sim_error
 
-        rospy.signal_shutdown("monte carlo iteration complete")
-
-        return True
+        return False # we shouldn't have gotten here...
 
     def ditchsites_cb(self, msg):
 
@@ -288,16 +306,18 @@ class Simulation:
             self.start_flying()
 
         # TODO: randomize altitude?
-        if msg.pose.position.z > 10 and not self.mission_started:
+        if msg.pose.position.z > 20 and not self.mission_started:
             self.mission_started = True
             MAVROS.change_mode('AUTO')
 
-            self.timer = rospy.Timer(rospy.Duration(10), self.timer_cb)
+            Tengage = np.random.uniform(20, 50)
+            self.timer = rospy.Timer(rospy.Duration(Tengage), self.timer_cb)
 
 
     def start_flying(self):
         # start recording a rosbag
-        self.bag.record('parker_test2_aug15.bag')
+        today = datetime.date.today().strftime('%d%b%Y')
+        self.bag.record('mcsim_{}_t{}_m{}.bag'.format(today,self.num_targets,self.m))
 
         MAVROS.change_mode('GUIDED')
         MAVROS.arm()
@@ -312,10 +332,13 @@ class Simulation:
    
 if __name__ == '__main__':
 
+    if len(sys.argv[1:]) != 3:
+        print("Use the right number of args!")
+        sys.exit(1)
 
-    num_targets = 1
-    m = 1
-    end_ds = '23681_70'
+    num_targets = sys.argv[1]
+    m = sys.argv[2]
+    end_ds = sys.argv[3]
 
     sim = Simulation(num_targets, m, end_ds)
 

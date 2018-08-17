@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <arg name="gui" default="false" />
+    <arg name="viz" default="true" />
 
     <include file="$(find nasa_s2d_sim)/launch/sitl.launch">
         <!-- NASA LaRC Back 40, VA -->
@@ -35,7 +36,17 @@
         <arg name="vmtt_tuning" value="false" />
     </include>
 
-    <!-- Safe2Ditch Visualization in rviz -->
-    <include file="$(find nasa_s2d)/launch/visualization.launch" />
+    <group if="$(arg viz)">
+        <!-- Safe2Ditch Visualization in rviz -->
+        <include file="$(find nasa_s2d)/launch/visualization.launch"  />
+    </group>
+
+    <group unless="$(arg viz)">
+        <!-- Heads-up Display -->
+        <node pkg="hud" type="hud" name="$(anon hud)">
+            <remap from="odom" to="mavros/global_position/local" />
+            <param name="image_transport" value="compressed" />
+        </node>
+    </group>
 
 </launch>

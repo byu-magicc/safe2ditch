@@ -22,7 +22,7 @@ class SimulationLauncher:
         self.process = None
 
         # Hide the roslaunch output
-        self.squelch = False
+        self.squelch = True
 
 
     def start(self):
@@ -33,7 +33,7 @@ class SimulationLauncher:
             See: https://stackoverflow.com/a/4791612/2392520
         """
         try:
-            cmd = 'python2 mcsim.py {}'.format(self.flags if self.flags is not None else '')
+            cmd = 'python2 mcsim.py {}'.format(self.flags)
             if self.squelch:
                 cmd += ' > /dev/null 2>&1'
             # print("Running command: {}".format(cmd))
@@ -80,41 +80,38 @@ class MCSim:
         
     def run(self):
 
-        # MC iteration counter for this num targets
-        m = 1
+        for num_targets in self.num_targets_list:
 
-        # which index of the num_targets_list are we currently simulating?
-        ntarget_idx = 0
+            # MC iteration counter for this num targets
+            m = 1
 
-        num_targets = self.num_targets_list[ntarget_idx]
+            while m <= self.M:
 
-        while m <= self.M:
+                # =================================================================
 
-            # =================================================================
+                sim = SimulationLauncher(num_targets, m, self.end_ds)
 
-            sim = SimulationLauncher(num_targets, m, self.end_ds)
+                print("Starting simulation t{}_m{}...".format(num_targets,m), end=''); sys.stdout.flush()
+                completed = sim.start()
 
-            print("Starting simulation {}/{}...".format(ntarget_idx,m), end=''); sys.stdout.flush()
-            completed = sim.start()
+                if completed:
+                    print("complete.")
+                else:
+                    print("failed!")
 
-            if completed:
-                print("complete.")
-            else:
-                print("failed!")
+                # time.sleep(2)
 
-            time.sleep(2)
+                # =================================================================
 
-            # =================================================================
+                #
+                # Hack for reinitializing node (https://github.com/ros/ros_comm/issues/185)
+                #
 
-            #
-            # Hack for reinitializing node (https://github.com/ros/ros_comm/issues/185)
-            #
+                if not completed:
+                    print("Re-simulating iteration t{}_m{}".format(num_targets, m))
+                    m -= 1
 
-            if not completed:
-                print("Re-simulating iteration {}/{}".format(ntarget_idx, m))
-                m -= 1
-
-            m += 1
+                m += 1
 
 
 
@@ -122,8 +119,8 @@ class MCSim:
 if __name__ == '__main__':
 
     options = {
-        'M': 2,
-        'num_targets_list': list(range(10)),
+        'M': 1,
+        'num_targets_list': list(range(1,11)),
         'ending_ditch_site': '23681_70' # terminate when the DSS reroutes to this one
     }
 
