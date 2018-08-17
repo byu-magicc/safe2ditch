@@ -119,8 +119,8 @@ class MCSim:
 if __name__ == '__main__':
 
     options = {
-        'M': 1,
-        'num_targets_list': list(range(1,11)),
+        'M': 10,
+        'num_targets_list': list(range(1,2)),
         'ending_ditch_site': '23681_70' # terminate when the DSS reroutes to this one
     }
 
