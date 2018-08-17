@@ -10,10 +10,7 @@ AIRCRAFT="sitl_${SITL_LOCATION// /}" # remove spaces
 LATLON=$2
 
 # Should I be quiet? This is useful for headless mode when running sims
-if [[ $3 ]];
-then
-    QUIET=$3
-fi
+if [[ $3 == true ]]; then QUIET=1; fi
 
 # Catch CTRL+C and do SITL cleanup.
 trap '{ echo "Cleaning up copter_sitl.sh"; killall xterm && killall -9 mavproxy.py; }' INT
