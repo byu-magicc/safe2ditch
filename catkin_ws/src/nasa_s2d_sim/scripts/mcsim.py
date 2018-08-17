@@ -95,6 +95,9 @@ class ROSBagRecorder:
 
 
     def stop(self):
+        if self.process is None:
+            return
+
         # Send a kill signal to all the process groups
         os.killpg(os.getpgid(self.process.pid), signal.SIGINT)
 
@@ -163,11 +166,9 @@ class MAVROS:
             rospy.logerr("SYSID_MYGCS set failed: %s", e)
 
     @staticmethod
-    def ch6(value):
+    def build_rc_override_ch6(value):
         # make sure that the correct SYSID_MYGCS is set:
         MAVROS.set_sysid_mygcs(1)
-
-        pub = rospy.Publisher('mavros/rc/override', OverrideRCIn, queue_size=1)
 
         rc = OverrideRCIn()
         rc.channels[0] = OverrideRCIn.CHAN_NOCHANGE
@@ -179,8 +180,7 @@ class MAVROS:
         rc.channels[6] = OverrideRCIn.CHAN_NOCHANGE
         rc.channels[7] = OverrideRCIn.CHAN_NOCHANGE
 
-        pub.publish(rc)
-
+        return rc
         
 
 
@@ -232,6 +232,9 @@ class Simulation:
 
             # subscribe to the ditch sites so we know where we are headed. This informs the termination of the sim
             self.sub_ditch_sites = rospy.Subscriber('dss/ditch_sites', DitchSiteList, self.ditchsites_cb)
+
+            # Connect to rc override topic to engage Safe2Ditch using channel 6
+            self.rc_pub = rospy.Publisher('mavros/rc/override', OverrideRCIn, queue_size=1)
 
             rate = rospy.Rate(1)
             while not rospy.is_shutdown() and not self.sim_done:
@@ -302,77 +305,20 @@ class Simulation:
 
 
     def timer_cb(self, event):
-        MAVROS.ch6(1600)
+        self.rc_pub.publish(MAVROS.build_rc_override_ch6(1600))
         self.timer.shutdown()
-
-      
-
-class MCSim:
-    """The simulation executive that manages Safe2Ditch monte carlo (MC) simulations"""
-    def __init__(self, **kwargs):
-        # list of different number of targets
-        self.num_targets_list = kwargs['num_targets_list']
-
-        # how many Monte Carlo iteration per num targets?
-        self.M = kwargs['M']
-
-        # terminate when the DSS reroutes to this one
-        self.end_ds = kwargs['ending_ditch_site']
-        
-    def run(self):
-
-        # MC iteration counter for this num targets
-        m = 1
-
-        # which index of the num_targets_list are we currently simulating?
-        ntarget_idx = 0
-
-        num_targets = self.num_targets_list[ntarget_idx]
-
-        while m <= self.M:
-
-            # =================================================================
-
-            sim = Simulation(num_targets, m, self.end_ds)
-
-            print("Starting simulation {}/{}...".format(ntarget_idx,m), end=''); sys.stdout.flush()
-            completed = sim.start()
-
-            if completed:
-                print("complete.")
-            else:
-                print("failed!")
-
-            time.sleep(2)
-
-            # =================================================================
-
-            #
-            # Hack for reinitializing node (https://github.com/ros/ros_comm/issues/185)
-            #
-            
-            rospy.client._init_node_args = None
-            rospy.core._shutdown_flag = False
-            rospy.core._in_shutdown = False
-
-            if not completed:
-                print("Re-simulating iteration {}/{}".format(ntarget_idx, m))
-                m -= 1
-
-            m += 1
-
 
 
    
 if __name__ == '__main__':
 
-    options = {
-        'M': 2,
-        'num_targets_list': list(range(10)),
-        'ending_ditch_site': '23681_70' # terminate when the DSS reroutes to this one
-    }
 
-    # setup the simulation executive
-    simexec = MCSim(**options)
+    num_targets = 1
+    m = 1
+    end_ds = '23681_70'
 
-    simexec.run()
+    sim = Simulation(num_targets, m, end_ds)
+
+    completed = sim.start()
+
+    sys.exit(0 if completed else 1)
