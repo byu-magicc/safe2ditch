@@ -310,8 +310,8 @@ class Simulation:
             self.mission_started = True
             MAVROS.change_mode('AUTO')
 
-            Tengage = np.random.uniform(20, 50)
-            self.timer = rospy.Timer(rospy.Duration(Tengage), self.timer_cb)
+            T_engage = np.random.uniform(20, 60)
+            self.timer = rospy.Timer(rospy.Duration(T_engage), self.timer_cb)
 
 
     def start_flying(self):
