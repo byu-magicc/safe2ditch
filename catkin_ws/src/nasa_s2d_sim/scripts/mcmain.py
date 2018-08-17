@@ -22,7 +22,7 @@ class SimulationLauncher:
         self.process = None
 
         # Hide the roslaunch output
-        self.squelch = True
+        self.squelch = False
 
 
     def start(self):

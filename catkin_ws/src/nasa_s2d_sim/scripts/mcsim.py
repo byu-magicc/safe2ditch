@@ -14,7 +14,7 @@ import numpy as np
 
 from geometry_msgs.msg import PoseStamped
 from mavros_msgs.srv import SetMode, CommandLong, CommandLongRequest, CommandBool, ParamSet
-from mavros_msgs.msg import OverrideRCIn, ParamValue
+from mavros_msgs.msg import OverrideRCIn, ParamValue, State
 from nasa_s2d.msg import DitchSiteList
 
 
@@ -23,9 +23,11 @@ class ROSLauncher:
 
         The object that actually interfaces with the roslaunch shell command.
     """
-    def __init__(self):
+    def __init__(self, pkg, file, flags=None):
 
-        self.flags = "viz:=false"
+        self.pkg = pkg
+        self.file = file
+        self.flags = flags if flags is not None else ''
 
         # Store the roslaunch process
         self.process = None
@@ -42,7 +44,7 @@ class ROSLauncher:
             See: https://stackoverflow.com/a/4791612/2392520
         """
         try:
-            cmd = 'roslaunch nasa_s2d_sim mcsim.launch {}'.format(self.flags if self.flags is not None else '')
+            cmd = 'roslaunch {} {} {}'.format(self.pkg, self.file, self.flags)
             if self.squelch:
                 cmd += ' > /dev/null 2>&1'
             # print("Running command: {}".format(cmd))
@@ -210,6 +212,9 @@ class Simulation:
         # period for engaging Safe2Ditch
         self.timer = None
 
+        # latest MAVROS heartbeat/state message
+        self.heartbeat = State()
+
         # Create a rosbag recorder
         self.bag = ROSBagRecorder()
 
@@ -221,10 +226,13 @@ class Simulation:
         # then something is likely to be wrong. (secs)
         self.MAX_WAIT_TIME = 80
 
+        # keep track of target launches so we can kill them
+        self.target_launches = []
+
 
     def start(self):
         # Run roslaunch and start a roscore
-        launcher = ROSLauncher()
+        launcher = ROSLauncher("nasa_s2d_sim", "mcsim.launch", "viz:=false")
         launcher.run()
 
         rospy.init_node('mcsim', anonymous=False)
@@ -236,6 +244,8 @@ class Simulation:
             #
             # setup the monte carlo simualtion node
             #
+
+            self.spawn_targets()
             
             # increase compression for smaller bag files
             client = dynamic_reconfigure.client.Client("/hud/image_raw/compressed", timeout=5)
@@ -246,6 +256,9 @@ class Simulation:
 
             # subscribe to the ditch sites so we know where we are headed. This informs the termination of the sim
             self.sub_ditch_sites = rospy.Subscriber('dss/ditch_sites', DitchSiteList, self.ditchsites_cb)
+
+            # mavlink heartbeat
+            self.sub_heartbeat = rospy.Subscriber('mavros/state', State, self.heartbeat_cb)
 
             # Connect to rc override topic to engage Safe2Ditch using channel 6
             self.rc_pub = rospy.Publisher('mavros/rc/override', OverrideRCIn, queue_size=1)
@@ -267,18 +280,48 @@ class Simulation:
                 if not self.flying and time.time() - self.time_started > self.MAX_WAIT_TIME:
                     sim_error = True
 
+                # If anything goes wrong during flight, bail
+                if self.flying:
+                    if not self.heartbeat.connected:
+                        sim_error = True
+
+                    if self.heartbeat.mode not in ['AUTO', 'GUIDED']:
+                        sim_error = True
+
                 rate.sleep()
         except rospy.ROSInterruptException:
             sim_error = True
         finally:
-            launcher.stop()
             self.bag.stop()
+            launcher.stop()
+
+            map(lambda x: x.stop(), self.target_launches)
 
             rospy.signal_shutdown("monte carlo iteration complete")
 
             return not sim_error
 
         return False # we shouldn't have gotten here...
+
+
+    def spawn_targets(self):
+        for n in range(self.num_targets):
+            # build mover name (used as namespace)
+            name = "target{}".format(n+1)
+
+            # randomly choose velocity
+            v = np.random.uniform(0.5, 2.5) # typical human walking speed is 1.4 m/s
+
+            launcher = ROSLauncher("nasa_s2d_sim", "movers_mcsim.launch", "mover_name:={} velocity:={}".format(name, v))
+            launcher.run()
+
+            # add it to the list so it can be stopped later
+            self.target_launches.append(launcher)
+
+
+    def heartbeat_cb(self, msg):
+        self.heartbeat = msg
+
 
     def ditchsites_cb(self, msg):
 
