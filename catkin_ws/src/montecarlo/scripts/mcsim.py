@@ -228,10 +228,10 @@ class Simulation:
         # What is an acceptable amount of time to wait
         # before we've started flying? If this time passes,
         # then something is likely to be wrong. (secs)
-        self.MAX_WAIT_TIME_BEFORE_FLIGHT = 80
+        self.MAX_WAIT_TIME_BEFORE_FLIGHT = 120
 
         # What is an acceptable amount of time for a sim to take? (secs)
-        self.MAX_SIM_TIME = 60*10
+        self.MAX_SIM_TIME = 60*15
 
         # keep track of target launches so we can kill them
         self.target_launches = []
