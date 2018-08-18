@@ -188,16 +188,20 @@ class MAVROS:
 
 class Simulation:
     """docstring for Simulation"""
-    def __init__(self, num_targets, m, end_ds):
+    def __init__(self, num_targets, m, viz):
 
         self.num_targets = num_targets
         self.m = m
+        self.viz = viz
 
-        # keep track of current ditch site and
-        # the ditch site we would like to end on
+        # keep track of current ditch site so we know
+        # how many reroutes there have been -- this is
+        # for the termination condition.
         self.current_ds = None
-        self.end_ds = end_ds
-        self.reroutes = 0
+        self.reroutes = -1
+
+        # Was Safe2Ditch engaged?
+        self.safe2ditch_engaged = False
     
         # Is the simulation complete?
         self.sim_done = False
@@ -224,7 +228,10 @@ class Simulation:
         # What is an acceptable amount of time to wait
         # before we've started flying? If this time passes,
         # then something is likely to be wrong. (secs)
-        self.MAX_WAIT_TIME = 80
+        self.MAX_WAIT_TIME_BEFORE_FLIGHT = 80
+
+        # What is an acceptable amount of time for a sim to take? (secs)
+        self.MAX_SIM_TIME = 60*10
 
         # keep track of target launches so we can kill them
         self.target_launches = []
@@ -232,7 +239,7 @@ class Simulation:
 
     def start(self):
         # Run roslaunch and start a roscore
-        launcher = ROSLauncher("montecarlo", "sim.launch", "viz:=false")
+        launcher = ROSLauncher("montecarlo", "sim.launch", "viz:={}".format("true" if self.viz else "false"))
         launcher.run()
 
         rospy.init_node('mcsim', anonymous=False)
@@ -279,9 +286,13 @@ class Simulation:
                    sim_error = True
                    reason = 1
 
-                if not self.flying and time.time() - self.time_started > self.MAX_WAIT_TIME:
+                if not self.flying and time.time() - self.time_started > self.MAX_WAIT_TIME_BEFORE_FLIGHT:
                     sim_error = True
                     reason = 2
+
+                if time.time() - self.time_started > self.MAX_SIM_TIME:
+                    sim_error = True
+                    reason = 5
 
                 # If anything goes wrong during flight, bail
                 if self.flying:
@@ -334,16 +345,16 @@ class Simulation:
         for ds in msg.ditch_sites:
             if ds.selected:
 
+                if self.current_ds is None:
+                    self.safe2ditch_engaged = True
+
                 # Keep track of the number of reroutes
                 if self.current_ds != ds.name:
                     self.reroutes += 1
 
-                # Once we reroute to the ending ditch site, we can close the simulation
-                if ds.name == self.end_ds:
-                    self.sim_done = True
-
-                # as a precaution, lets also end if we reroute more than 3 times
-                if self.reroutes > 3:
+                # end once we have rerouted ditch sites once
+                # (i.e., the original ds was deemed bad)
+                if self.reroutes >= 1:
                     self.sim_done = True
 
                 self.current_ds = ds.name
@@ -361,6 +372,11 @@ class Simulation:
 
             T_engage = np.random.uniform(20, 60)
             self.timer = rospy.Timer(rospy.Duration(T_engage), self.timer_cb)
+
+        # If we made it all the way to 4m after Safe2Ditch was engaged,
+        # the emergency landing was successful without a reroute.
+        if np.round(msg.pose.position.z) <= 4.0 and self.safe2ditch_engaged:
+            self.sim_done = True
 
 
     def start_flying(self):
@@ -385,11 +401,11 @@ if __name__ == '__main__':
         print("Use the right number of args!")
         sys.exit(1)
 
-    num_targets = sys.argv[1]
-    m = sys.argv[2]
-    end_ds = sys.argv[3]
+    num_targets = int(sys.argv[1])
+    m = int(sys.argv[2])
+    viz = True if sys.argv[3] == "1" else False
 
-    sim = Simulation(num_targets, m, end_ds)
+    sim = Simulation(num_targets, m, viz)
 
     completed, reason = sim.start()
 

@@ -5,7 +5,7 @@ from builtins import range
 import sys, argparse, socket
 import time, datetime, pickle
 import os, subprocess, signal
-import json
+import json, re
 
 import numpy as np
 
@@ -14,9 +14,9 @@ class SimulationLauncher:
 
         The object that actually interfaces with the roslaunch shell command.
     """
-    def __init__(self, num_targets, m, end_ds):
+    def __init__(self, num_targets, m, viz):
 
-        self.flags = "{} {} {}".format(num_targets, m, end_ds)
+        self.flags = "{} {} {}".format(num_targets, m, 1 if viz else 0)
 
         # Store the roslaunch process
         self.process = None
@@ -75,8 +75,26 @@ class MCSim:
         # how many Monte Carlo iteration per num targets?
         self.M = kwargs['M']
 
-        # terminate when the DSS reroutes to this one
-        self.end_ds = kwargs['ending_ditch_site']
+        # Should we show the rviz?
+        self.viz = kwargs['viz']
+
+        # sometimes you might want to resume were you left off
+        if 'start' in kwargs:
+            t, m = kwargs['start']
+
+            if m <= self.M:
+                self.start_m = m
+
+            # Make sure that the requested start target is in the list
+            if t in self.num_targets_list:
+                # find the index of this item in the list
+                idx = self.num_targets_list.index(t)
+
+                # Chop off everything before that in the list
+                self.num_targets_list = self.num_targets_list[idx:]
+        else:
+            self.start_m = None
+
         
     def run(self):
 
@@ -85,11 +103,16 @@ class MCSim:
             # MC iteration counter for this num targets
             m = 1
 
+            # Check if we should start this one time at a given m
+            if self.start_m is not None:
+                m = self.start_m
+                self.start_m = None
+
             while m <= self.M:
 
                 # =================================================================
 
-                sim = SimulationLauncher(num_targets, m, self.end_ds)
+                sim = SimulationLauncher(num_targets, m, self.viz)
 
                 print("Starting simulation t{}_m{}...".format(num_targets,m), end=''); sys.stdout.flush()
                 completed, reason = sim.start()
@@ -120,9 +143,16 @@ if __name__ == '__main__':
 
     options = {
         'M': 100,
-        'num_targets_list': list(range(1,5)),
-        'ending_ditch_site': '23681_70' # terminate when the DSS reroutes to this one
+        'num_targets_list': list(range(1,11)),
+        'viz': False,
     }
+
+    if len(sys.argv[1:]) >= 1 and sys.argv[1] == 'viz':
+        options['viz'] = True
+
+    if len(sys.argv[1:]) >= 2:
+        t, m = re.findall(r't(\d+)_m(\d+)', sys.argv[2])[0]
+        options['start'] = (int(t), int(m))
 
     # setup the simulation executive
     simexec = MCSim(**options)
