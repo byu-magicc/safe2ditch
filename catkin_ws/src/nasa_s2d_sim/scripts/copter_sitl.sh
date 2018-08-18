@@ -30,9 +30,18 @@ SIM_CMD="sim_vehicle.py -v ArduCopter -f gazebo-iris -l $LATLON,0,0 --no-mavprox
 MP_CMD="mavproxy.py --master tcp:127.0.0.1:5760 --sitl 127.0.0.1:5501 --out 127.0.0.1:14550 --out 127.0.0.1:14551 "
 MP_CMD+="--state-basedir=$LAUNCH_DIR --aircraft=$AIRCRAFT --cmd='set streamrate 20'"
 
-# Combine the above commands, making SIM_CMD go to the bg and waiting before running the MP_CMD
-# On slower computers, this number may need to be increased.
-XTERM_CMD="$SIM_CMD & sleep 6 && $MP_CMD"
+# We use this blocking utility to detect when sim_vehicle is ready for us to run while SIM_CMD to run in the
+# background. once sim_vehicle is complete, this utility exits and we can then run MP_CMD. This is a better
+# solution than just waiting a few seconds because it is based on feedback.
+PIPE=/tmp/sitl_check
+# make a temporary named pipe that will allow us to communicate with the SITL process
+if [[ ! -p $PIPE ]]; then
+    mkfifo "$PIPE"
+fi
+SITL_CHECK_CMD="rosrun nasa_s2d_sim sitl_check.sh $PIPE"
+
+# Combine the above commands, making SIM_CMD go to the bg and waiting (intelligently) before running the MP_CMD
+XTERM_CMD="$SIM_CMD | tee $PIPE & $SITL_CHECK_CMD && $MP_CMD"
 
 if [[ $QUIET ]];
 then
