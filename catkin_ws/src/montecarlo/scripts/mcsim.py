@@ -232,7 +232,7 @@ class Simulation:
 
     def start(self):
         # Run roslaunch and start a roscore
-        launcher = ROSLauncher("nasa_s2d_sim", "mcsim.launch", "viz:=false")
+        launcher = ROSLauncher("montecarlo", "sim.launch", "viz:=false")
         launcher.run()
 
         rospy.init_node('mcsim', anonymous=False)
@@ -318,7 +318,7 @@ class Simulation:
             # randomly choose velocity
             v = np.random.uniform(0.5, 2.5) # typical human walking speed is 1.4 m/s
 
-            launcher = ROSLauncher("nasa_s2d_sim", "movers_mcsim.launch", "mover_name:={} velocity:={}".format(name, v))
+            launcher = ROSLauncher("montecarlo", "movers.launch", "mover_name:={} velocity:={}".format(name, v))
             launcher.run()
 
             # add it to the list so it can be stopped later

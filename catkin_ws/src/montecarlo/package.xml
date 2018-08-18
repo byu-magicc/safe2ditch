@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>montecarlo</name>
+  <version>0.0.0</version>
+  <description>Package for running Safe2Ditch Monte Carlo simulations</description>
+
+  <maintainer email="parkerclusk@gmail.com">Parker Lusk</maintainer>
+
+
+  <!-- One license tag required, multiple allowed, one license per tag -->
+  <!-- Commonly used license strings: -->
+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+  <license>TODO</license>
+
+  <depend>gazebo_ros</depend>
+  <buildtool_depend>catkin</buildtool_depend>
+
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <gazebo_ros gazebo_model_path="${prefix}/models" />
+  </export>
+</package>
