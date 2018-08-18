@@ -1,0 +1,29 @@
+[
+ {
+   "name": "DS1",
+   "type": "1",
+   "longitude": "-76.386933",
+   "latitude": "37.102317",
+   "altitude": "0.0",
+   "radius": "9.0", // meters
+   "reliability": "90.0"
+ },
+ {
+   "name": "DS2",
+   "type": "1",
+   "longitude": "-76.387799",
+   "latitude": "37.102519",
+   "altitude": "0.0",
+   "radius": "9.0", // meters
+   "reliability": "60.0"
+ },
+ {
+   "name": "DS3",
+   "type": "1",
+   "longitude": "-76.387259",
+   "latitude": "37.102929",
+   "altitude": "0.0",
+   "radius": "9.0", // meters
+   "reliability": "20.0"
+ }
+]

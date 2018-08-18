@@ -303,7 +303,7 @@ class S2DVIZ:
 
             txt.text = site.name
             txt.pose.position.z += txt.scale.z
-            txt.scale.z = 2
+            txt.scale.z = 4
 
             txt.color.r = 1
             txt.color.g = 1

@@ -28,8 +28,8 @@
     </include>
 
     <!-- Setup DSS Configuration Paths -->
-    <param name="dss/config_dir" type="string" value="$(find dss)/param" />
-    <param name="dss/config_file" type="string" value="n40_config.json" />
+    <param name="dss/config_dir" type="string" value="$(find montecarlo)/param" />
+    <param name="dss/config_file" type="string" value="mc_nasa_config.json" />
 
     <!-- Launch Safe2Ditch core system -->
     <include file="$(find nasa_s2d)/launch/safe2ditch.launch">
