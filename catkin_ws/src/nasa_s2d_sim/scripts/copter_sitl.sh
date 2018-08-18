@@ -31,7 +31,8 @@ MP_CMD="mavproxy.py --master tcp:127.0.0.1:5760 --sitl 127.0.0.1:5501 --out 127.
 MP_CMD+="--state-basedir=$LAUNCH_DIR --aircraft=$AIRCRAFT --cmd='set streamrate 20'"
 
 # Combine the above commands, making SIM_CMD go to the bg and waiting before running the MP_CMD
-XTERM_CMD="$SIM_CMD & sleep 5 && $MP_CMD"
+# On slower computers, this number may need to be increased.
+XTERM_CMD="$SIM_CMD & sleep 6 && $MP_CMD"
 
 if [[ $QUIET ]];
 then
