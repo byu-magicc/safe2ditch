@@ -264,6 +264,7 @@ class Simulation:
             self.rc_pub = rospy.Publisher('mavros/rc/override', OverrideRCIn, queue_size=1)
 
             sim_error = False
+            reason = 0
 
             rate = rospy.Rate(1)
             while not rospy.is_shutdown() and not self.sim_done and not sim_error:
@@ -276,21 +277,26 @@ class Simulation:
                     # something went wrong and this iteration
                     # needs to be re-ran.
                    sim_error = True
+                   reason = 1
 
                 if not self.flying and time.time() - self.time_started > self.MAX_WAIT_TIME:
                     sim_error = True
+                    reason = 2
 
                 # If anything goes wrong during flight, bail
                 if self.flying:
                     if not self.heartbeat.connected:
                         sim_error = True
+                        reason = 3
 
-                    if self.heartbeat.mode not in ['AUTO', 'GUIDED']:
+                    if self.heartbeat.mode not in ['STABILIZE', 'AUTO', 'GUIDED']:
                         sim_error = True
+                        reason = 4
 
                 rate.sleep()
         except rospy.ROSInterruptException:
             sim_error = True
+            reason = -98
         finally:
             self.bag.stop()
             launcher.stop()
@@ -299,9 +305,9 @@ class Simulation:
 
             rospy.signal_shutdown("monte carlo iteration complete")
 
-            return not sim_error
+            return not sim_error, reason
 
-        return False # we shouldn't have gotten here...
+        return False, -99 # we shouldn't have gotten here...
 
 
     def spawn_targets(self):
@@ -385,6 +391,6 @@ if __name__ == '__main__':
 
     sim = Simulation(num_targets, m, end_ds)
 
-    completed = sim.start()
+    completed, reason = sim.start()
 
-    sys.exit(0 if completed else 1)
+    sys.exit(reason)

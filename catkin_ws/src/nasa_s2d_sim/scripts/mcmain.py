@@ -22,7 +22,7 @@ class SimulationLauncher:
         self.process = None
 
         # Hide the roslaunch output
-        self.squelch = False
+        self.squelch = True
 
 
     def start(self):
@@ -52,7 +52,7 @@ class SimulationLauncher:
                 sys.exit(1)
 
 
-            return self.process.returncode == 0
+            return self.process.returncode == 0, self.process.returncode
 
         except Exception as e:
             print("could not run simulation command")
@@ -92,12 +92,12 @@ class MCSim:
                 sim = SimulationLauncher(num_targets, m, self.end_ds)
 
                 print("Starting simulation t{}_m{}...".format(num_targets,m), end=''); sys.stdout.flush()
-                completed = sim.start()
+                completed, reason = sim.start()
 
                 if completed:
                     print("complete.")
                 else:
-                    print("failed!")
+                    print("failed! ({})".format(reason))
 
                 # time.sleep(2)
 
