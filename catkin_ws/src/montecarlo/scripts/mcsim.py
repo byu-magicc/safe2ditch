@@ -398,7 +398,7 @@ class Simulation:
 if __name__ == '__main__':
 
     if len(sys.argv[1:]) != 3:
-        print("Use the right number of args!")
+        print("Use the right number of args! (did you mean to run mcmain.py?)")
         sys.exit(1)
 
     num_targets = int(sys.argv[1])
