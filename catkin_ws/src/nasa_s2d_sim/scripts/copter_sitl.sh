@@ -13,7 +13,7 @@ LATLON=$2
 if [[ $3 == true ]]; then QUIET=1; fi
 
 # Catch CTRL+C (and all other exit signals) and do SITL cleanup.
-trap '{ echo "Cleaning up copter_sitl.sh"; pkill -f ardupilot && killall xterm && killall -9 mavproxy.py; }' EXIT
+trap '{ echo "Cleaning up copter_sitl.sh"; pkill -f ardupilot; pkill -f xterm; pkill -9 -f mavproxy.py; }' EXIT
 
 # Directory to call MAVProxy from (where eeprom.bin will be, i.e., waypoints)
 # and where the AIRCRAFT directory with SITL flight logs will be

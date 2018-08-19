@@ -375,7 +375,7 @@ class Simulation:
 
         # If we made it all the way to 4m after Safe2Ditch was engaged,
         # the emergency landing was successful without a reroute.
-        if np.round(msg.pose.position.z) <= 4.0 and self.safe2ditch_engaged:
+        if np.round(msg.pose.position.z) <= 5.0 and self.safe2ditch_engaged:
             self.sim_done = True
 
 
