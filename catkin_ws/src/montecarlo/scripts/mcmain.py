@@ -122,13 +122,7 @@ class MCSim:
                 else:
                     print("failed! ({})".format(reason))
 
-                # time.sleep(2)
-
                 # =================================================================
-
-                #
-                # Hack for reinitializing node (https://github.com/ros/ros_comm/issues/185)
-                #
 
                 if not completed:
                     print("Re-simulating iteration t{}_m{}".format(num_targets, m))
@@ -143,7 +137,7 @@ if __name__ == '__main__':
 
     options = {
         'M': 100,
-        'num_targets_list': list(range(1,11)),
+        'num_targets_list': list(range(1,7)),
         'viz': False,
     }
 
