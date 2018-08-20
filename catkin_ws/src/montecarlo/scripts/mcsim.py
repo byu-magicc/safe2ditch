@@ -365,7 +365,7 @@ class Simulation:
             self.flying = True
             self.start_flying()
 
-        # TODO: randomize altitude?
+        # TODO: randomize altitude? This currently takes about 10 seconds from arming
         if msg.pose.position.z > 20 and not self.mission_started:
             self.mission_started = True
             MAVROS.change_mode('AUTO')
