@@ -13,6 +13,7 @@
   <license>TODO</license>
 
   <depend>gazebo_ros</depend>
+  <depend>nasa_s2d</depend>
   <buildtool_depend>catkin</buildtool_depend>
 
 

@@ -17,10 +17,12 @@ find_package(catkin REQUIRED
   cv_bridge
   std_msgs
   sensor_msgs
-  dynamic_reconfigure
+  geometry_msgs
+  geographic_msgs
+  nasa_s2d
   image_transport
-  camera_info_manager
   rosbag
+  geodesy
 )
 
 ## System dependencies are found with CMake's conventions
@@ -142,7 +144,7 @@ include_directories(include lib ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_process_bag src/process_bag.cpp src/mc_processor.cpp)
+add_executable(${PROJECT_NAME}_process_bag src/process_bag.cpp src/mc_processor.cpp src/mc_trial.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

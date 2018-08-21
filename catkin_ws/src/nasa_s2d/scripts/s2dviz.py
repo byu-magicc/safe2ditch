@@ -450,6 +450,7 @@ class S2DVIZ:
             are completely inside one UTM zone. Otherwise, something
             like the Haversine-based LLA measurement function can be
             used.
+            https://answers.ros.org/question/50763/need-help-converting-lat-long-coordinates-into-meters/?answer=243041#post-id-243041
         """
         
         utm_home = utm.fromLatLong(self.home_position.latitude,

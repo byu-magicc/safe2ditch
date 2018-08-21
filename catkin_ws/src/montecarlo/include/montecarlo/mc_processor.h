@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+#include "montecarlo/mc_trial.h"
+
 namespace montecarlo {
 
   using Bag = std::tuple<std::string, int, int>;
@@ -45,7 +47,7 @@ namespace montecarlo {
 
     void for_each_Nt();
 
-    void process_trial(std::string bagpath, int Nt, int m);
+    TrialResult process_trial(std::string bagpath, int Nt, int m);
     
   };
 

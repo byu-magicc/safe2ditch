@@ -23,6 +23,16 @@
 #include <sensor_msgs/CompressedImage.h>
 #include <sensor_msgs/image_encodings.h>
 
+#include <geometry_msgs/PoseStamped.h>
+
+#include <nav_msgs/Odometry.h>
+
+#include <mavros_msgs/State.h>
+#include <mavros_msgs/HomePosition.h>
+
+#include <nasa_s2d/DitchSiteList.h>
+#include <nasa_s2d/DitchSite.h>
+
 namespace montecarlo {
 
 MCProcessor::MCProcessor(std::string bagdir)
@@ -127,32 +137,46 @@ void MCProcessor::get_mc_stats(const std::vector<Bag>& bags, std::vector<int>& N
 
 void MCProcessor::for_each_Nt()
 {
-  for (auto&& Nt : Nts_)
+
+  int Nt = 0;
+  int m = 0;
+
+  TrialResult total;
+
+  // we assume that bags_ is already sorted
+  for (auto&& bag : bags_)
   {
-    for (int m=1; m<=M_; m++)
+    // Update Nt and m if needed
+    if (m != std::get<2>(bag)) m = std::get<2>(bag);
+    if (Nt != std::get<1>(bag))
     {
-
-      std::cout << "t" << Nt << "_m" << m << std::endl;
-
-      auto it = std::find_if(bags_.begin(), bags_.end(),
-        [&Nt, m](const Bag& bag) {
-          return (std::get<1>(bag) == Nt) && std::get<2>(bag) == m;
-        });
-
-      std::string bagpath = std::get<0>(*it);
-
-      // std::string bagpath = "mcsim_18Aug2018_t1_m1.bag";
-
-      process_trial(bagdir_ + bagpath, Nt, m);
-
+      Nt = std::get<1>(bag);
+      std::cout << std::string(35, '-') <<  " Nt = " << Nt << " " << std::string(35, '-') << std::endl;
     }
+
+    std::cout << "Processing t" << Nt << "_m" << m << " (" << std::get<0>(bag) << ")" << std::endl;
+    auto result = process_trial(bagdir_ + std::get<0>(bag), Nt, m);
+
+    total += result;
+
+    // early termination
+    // if (Nt == 1 && m == 100) break;
+    
+    if (m == 100) std::cout << total << std::endl;
   }
+
+  std::cout << total << std::endl;
 }
 
 // ----------------------------------------------------------------------------
 
-void MCProcessor::process_trial(std::string bagpath, int Nt, int m)
+TrialResult MCProcessor::process_trial(std::string bagpath, int Nt, int m)
 {
+  //
+  // Create a trial object
+  //
+
+  MCTrial trial(Nt, m);
 
   //
   // rosbag setup
@@ -165,74 +189,76 @@ void MCProcessor::process_trial(std::string bagpath, int Nt, int m)
   topics.push_back("/hud/image_raw/compressed");
   topics.push_back("/mavros/local_position/pose");
   topics.push_back("/mavros/state");
+  topics.push_back("/dss/ditch_sites");
   topics.push_back("/clock");
 
   // Create a view into the rosbag using the topics
-  rosbag::View view(bag, rosbag::TopicQuery(topics));
+  // rosbag::View view(bag, rosbag::TopicQuery(topics));
+  rosbag::View view(bag);
 
 
   // Loop through each message in the view, deciding if it is
   // a compressed or raw image and handling appropriately.
-  BOOST_FOREACH(const rosbag::MessageInstance& msg, view)
+  BOOST_FOREACH(const rosbag::MessageInstance& mm, view)
   {
 
-    // // A place to store the image from the message
-    // cv::Mat image;
-    // int frame_number = 0;
-    // std_msgs::Header header;
+    //
+    // Pose
+    //
 
-    // //
-    // // Image messages
-    // //
-
-    // sensor_msgs::Image::ConstPtr msg_image = m.instantiate<sensor_msgs::Image>();
-    // if (msg_image != nullptr)
-    // {
-    //   header = msg_image->header;
-      
-    //   image = cv_bridge::toCvShare(msg_image, "bgr8")->image;
-    // }
-
-    // //
-    // // Compressed Image messages
-    // //
-
-    sensor_msgs::CompressedImage::ConstPtr msg_compressed = msg.instantiate<sensor_msgs::CompressedImage>();
-    if (msg_compressed != nullptr)
+    geometry_msgs::PoseStamped::ConstPtr msg_pose = mm.instantiate<geometry_msgs::PoseStamped>();
+    if (msg_pose != nullptr)
     {
-      auto header = msg_compressed->header;
-      // std::cout << "\t" << header.seq << std::endl;
-
+      trial.recv_msg_pose(msg_pose);
+      trial.step();
     }
 
-    // // Capture the first frame number in case we need to offset everything
-    // if (first_frame == -1) first_frame = header.seq;
+    //
+    // DitchSiteList
+    //
+    
+    nasa_s2d::DitchSiteList::ConstPtr msg_ds_list = mm.instantiate<nasa_s2d::DitchSiteList>();
+    if (msg_ds_list != nullptr)
+    {
+      trial.recv_msg_ditchsites(msg_ds_list);
+    }
 
-    // // Build the filename based on what frame this is
-    // frame_number = header.seq - first_frame;
-    // std::string filename = (filename_format % frame_number).str();
+    //
+    // State
+    //
 
-    // // Write the image to file
-    // cv::imwrite(filename, image);
+    mavros_msgs::State::ConstPtr msg_state = mm.instantiate<mavros_msgs::State>();
+    if (msg_state != nullptr)
+    {
+      trial.recv_msg_state(msg_state);
+    }
 
-    // // Display the current message header
-    // std::cout << header;
+    //
+    // Home
+    //
 
-    // // Keep displaying in the same place. The tabs are to clear
-    // // anything left over on the first line to keep it clean.
-    // std::cout << "\e[A\e[A\e[A\t\t\t\t\t\r";
+    mavros_msgs::HomePosition::ConstPtr msg_home = mm.instantiate<mavros_msgs::HomePosition>();
+    if (msg_home != nullptr)
+    {
+      trial.recv_msg_home(msg_home);
+    }
 
-    // // // Write the frame and timestamp to the XML file
-    // // xml.openElt("frame");
-    // // xml.openElt("num").content(std::to_string(frame_number).c_str()).closeElt();
-    // // xml.openElt("t").content(std::to_string(header.stamp.toSec()).c_str()).closeElt();
-    // // xml.closeElt();
+    //
+    // Target Pose
+    //
 
-    // // If there was a duration specified, should I bail?
-    // if (duration > 0 && (header.stamp - view.getBeginTime()).toSec() >= duration)
-    //   break;
+    nav_msgs::Odometry::ConstPtr msg_target = mm.instantiate<nav_msgs::Odometry>();
+    if (msg_target != nullptr)
+    {
+      trial.recv_msg_target(1, msg_target);
+    }
+    
   }
 
+  return trial.get_results();
 }
+
+// ----------------------------------------------------------------------------
+
 
 }
