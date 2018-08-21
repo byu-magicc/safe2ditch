@@ -160,7 +160,7 @@ void MCProcessor::for_each_Nt()
     total += result;
 
     // early termination
-    // if (Nt == 1 && m == 100) break;
+    if (Nt == 1 && m == 100) break;
     
     if (m == 100) std::cout << total << std::endl;
   }
@@ -207,7 +207,7 @@ TrialResult MCProcessor::process_trial(std::string bagpath, int Nt, int m)
     //
 
     geometry_msgs::PoseStamped::ConstPtr msg_pose = mm.instantiate<geometry_msgs::PoseStamped>();
-    if (msg_pose != nullptr)
+    if (msg_pose != nullptr && mm.getTopic() == "/mavros/local_position/pose")
     {
       trial.recv_msg_pose(msg_pose);
       trial.step();
@@ -218,7 +218,7 @@ TrialResult MCProcessor::process_trial(std::string bagpath, int Nt, int m)
     //
     
     nasa_s2d::DitchSiteList::ConstPtr msg_ds_list = mm.instantiate<nasa_s2d::DitchSiteList>();
-    if (msg_ds_list != nullptr)
+    if (msg_ds_list != nullptr && mm.getTopic() == "/dss/ditch_sites")
     {
       trial.recv_msg_ditchsites(msg_ds_list);
     }
@@ -228,7 +228,7 @@ TrialResult MCProcessor::process_trial(std::string bagpath, int Nt, int m)
     //
 
     mavros_msgs::State::ConstPtr msg_state = mm.instantiate<mavros_msgs::State>();
-    if (msg_state != nullptr)
+    if (msg_state != nullptr && mm.getTopic() == "/mavros/state")
     {
       trial.recv_msg_state(msg_state);
     }
@@ -238,7 +238,7 @@ TrialResult MCProcessor::process_trial(std::string bagpath, int Nt, int m)
     //
 
     mavros_msgs::HomePosition::ConstPtr msg_home = mm.instantiate<mavros_msgs::HomePosition>();
-    if (msg_home != nullptr)
+    if (msg_home != nullptr && mm.getTopic() == "/mavros/home_position/home")
     {
       trial.recv_msg_home(msg_home);
     }
@@ -248,7 +248,7 @@ TrialResult MCProcessor::process_trial(std::string bagpath, int Nt, int m)
     //
 
     nav_msgs::Odometry::ConstPtr msg_target = mm.instantiate<nav_msgs::Odometry>();
-    if (msg_target != nullptr)
+    if (msg_target != nullptr && mm.getTopic().find("/targets") != std::string::npos)
     {
       trial.recv_msg_target(1, msg_target);
     }

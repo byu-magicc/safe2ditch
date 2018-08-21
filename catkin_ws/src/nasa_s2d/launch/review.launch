@@ -52,6 +52,8 @@
 
 
     <!-- Safe2Ditch Visualization in rviz -->
-    <include file="$(find nasa_s2d)/launch/visualization.launch" />
+    <include file="$(find nasa_s2d)/launch/visualization.launch">
+        <arg name="review" value="true" />
+    </include>
 
 </launch>

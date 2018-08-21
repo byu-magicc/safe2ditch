@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
+    <arg name="review" default="false" />
 
     <!-- Anonymous names are used to allow multiple machines to run this launch file -->
 
@@ -12,7 +13,9 @@
 
 
     <!-- Helper node to publish mission information -->
-    <node pkg="nasa_s2d" type="s2dviz.py" name="$(anon s2dviz)" output="screen" />
+    <node pkg="nasa_s2d" type="s2dviz.py" name="$(anon s2dviz)" output="screen">
+        <remap if="$(arg review)" from="camera/camera_info" to="review/camera/camera_info" />
+    </node>
 
 
     <!-- Heads-up Display -->
