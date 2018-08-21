@@ -74,7 +74,7 @@ class ROSBagRecorder:
         self.squelch = True
 
         # self.topics = '-a -x "/camera/(.*)|/tracks_video(.*)|/hud(.*)|/rviz(.*)|/visualization(.*)" /camera/image_raw/compressed /camera/camera_info /tracks_video/compressed'
-        self.topics = '-a -x "/camera/(.*)|/tracks_video(.*)|/hud(.*)|/rviz(.*)|/visualization(.*)|/gazebo(.*)|/iris(.*)|/mavlink/from|/mavros/battery|/rransac(.*)|/visual_frontend(.*)|/mavros/vfr_hud|/clock" /hud/image_raw/compressed'
+        self.topics = '-a -x "/camera/(.*)|/tracks_video(.*)|/hud(.*)|/rviz(.*)|/visualization(.*)|/gazebo(.*)|/iris(.*)|/mavlink/from|/mavros/battery|/rransac(.*)|/visual_frontend(.*)|/mavros/vfr_hud|/clock" /hud/image_raw/compressed /camera/camera_info'
 
 
     def record(self, bagname):
