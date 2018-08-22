@@ -245,7 +245,18 @@ TrialResult MCProcessor::process_trial(std::string bagpath, int Nt, int m)
     nav_msgs::Odometry::ConstPtr msg_target = mm.instantiate<nav_msgs::Odometry>();
     if (msg_target != nullptr && mm.getTopic().find("/targets") != std::string::npos)
     {
-      trial.recv_msg_target(1, msg_target);
+      const boost::regex re("/targets/target([[:digit:]]+)/state");
+
+      boost::smatch what;
+
+      // Skip if not a match
+      if (boost::regex_search(mm.getTopic(), what, re))
+      {
+        // extract the target number
+        std::string target_num(what[1].first, what[1].second);
+
+        trial.recv_msg_target(stoi(target_num), msg_target);
+      }
     }
     
   }
