@@ -51,12 +51,21 @@ void MCTrial::recv_msg_ditchsites(const nasa_s2d::DitchSiteList::ConstPtr& msg)
         // take a snapshot (copy) of the current estimate (tracks) of targets
         tracks3d_reroute_.push_back(msg_tracks3d_);
 
+        // take a snapshot (copy) of the multirotors current pose
+        msg_pose_reroute_.push_back(msg_pose_);
+
         // increase the number of reroutes
         reroutes_++;
       }
 
       // If the previously selected ditch site is empty then we are now engaged
-      if (!safe2ditch_engaged_ && current_ds_.name.empty()) safe2ditch_engaged_ = true;
+      if (!safe2ditch_engaged_ && current_ds_.name.empty())
+      {
+        safe2ditch_engaged_ = true;
+
+        // capture height at Safe2Ditch engagement
+        msg_pose_engage_ = msg_pose_;
+      }
 
       current_ds_ = ds;
     }
@@ -148,6 +157,31 @@ TrialResult MCTrial::get_results()
     // what is the number of tracks unassociated with true targets that
     // where inside the selected ditch site at the time of reroute?
     result.N_false = number_reroute_false_positives();
+  }
+
+  //
+  // Metric: altitude at Safe2Ditch engage
+  //
+
+  if (safe2ditch_engaged_)
+  {
+    result.h_engage = msg_pose_engage_->pose.position.z;
+  }
+
+  //
+  // Metric: altitude at Safe2Ditch reroute
+  //
+
+  if (rerouted())
+  {
+    // Get the multirotor pose from the first reroute.
+    // We currently assume that there will only be one reroute
+    auto msg_pose = msg_pose_reroute_.front();
+
+    if (msg_pose)
+    {
+      result.h_reroute = msg_pose->pose.position.z;
+    }
   }
 
   return result;

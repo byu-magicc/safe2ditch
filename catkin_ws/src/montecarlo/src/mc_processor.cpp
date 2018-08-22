@@ -141,7 +141,8 @@ void MCProcessor::for_each_Nt()
   int Nt = 0;
   int m = 0;
 
-  TrialResult total;
+  std::vector<TrialResult> totals(Nts_.size());
+  TrialResult grandtotal;
 
   // we assume that bags_ is already sorted
   for (auto&& bag : bags_)
@@ -154,19 +155,27 @@ void MCProcessor::for_each_Nt()
       std::cout << std::string(35, '-') <<  " Nt = " << Nt << " " << std::string(35, '-') << std::endl;
     }
 
+    // idx for totals
+    int idx = std::distance(Nts_.begin(), std::find(Nts_.begin(), Nts_.end(), Nt));
+
     std::cout << "Processing t" << Nt << "_m" << m << " (" << std::get<0>(bag) << "): " << std::flush;
     auto result = process_trial(bagdir_ + std::get<0>(bag), Nt, m);
     std::cout << result << std::endl;
 
-    total += result;
+    totals[idx] += result;
+    grandtotal += result;
 
     // early termination
     // if (Nt == 1 && m == 100) break;
     
-    if (m == 100) std::cout << total << std::endl;
+    if (m == M_)
+    {
+      totals[idx] = totals[idx].average(m);
+      std::cout << totals[idx] << " / " << grandtotal.average((idx+1)*m) << std::endl;
+    }
   }
 
-  std::cout << total << std::endl;
+  std::cout << grandtotal.average(Nts_.size()*m) << std::endl;
 }
 
 // ----------------------------------------------------------------------------

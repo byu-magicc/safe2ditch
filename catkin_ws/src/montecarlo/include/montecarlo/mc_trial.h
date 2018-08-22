@@ -31,6 +31,8 @@ namespace montecarlo {
     double t_action = 0;
     double N_fail = 0;
     double N_false = 0;
+    double h_engage = 0;
+    double h_reroute = 0;
 
     bool complete = false;
 
@@ -43,6 +45,8 @@ namespace montecarlo {
       lhs.t_action /= rhs;
       lhs.N_fail /= rhs;
       lhs.N_false /= rhs;
+      lhs.h_engage /= rhs;
+      lhs.h_reroute /= rhs;
       return lhs;
     }
 
@@ -55,12 +59,15 @@ namespace montecarlo {
       t_action += other.t_action;
       N_fail += other.N_fail;
       N_false += other.N_false;
+      h_engage += other.h_engage;
+      h_reroute += other.h_reroute;
       complete = complete || other.complete;
       return *this;
     }
 
     friend std::ostream& operator<<(std::ostream& out, const TrialResult& result) {
-      out << "Result: <" << result.t_action << ", " << result.N_fail << ", " << result.N_false << ">";
+      out << "Result: <" << result.t_action << ", " << result.N_fail << ", " << result.N_false << ", ";
+      out << result.h_engage << ", " << result.h_reroute << ">";
       return out;
     }
   };
@@ -88,8 +95,10 @@ namespace montecarlo {
     int Nt_;      ///< Current number of targets used in this trial
     int m_;       ///< iteration number of this trial
 
-    bool safe2ditch_engaged_ = false;     ///< Has Safe2Ditch been engaged yet?
-    int reroutes_ = 0;                    ///< How many times did Safe2Ditch choose alternate ditch sites?
+    bool safe2ditch_engaged_ = false;                           ///< Has Safe2Ditch been engaged yet?
+    int reroutes_ = 0;                                          ///< How many times did Safe2Ditch choose alternate ditch sites?
+    geometry_msgs::PoseStamped::ConstPtr msg_pose_engage_;      ///< pose of multirotor when Safe2Ditch is engaged
+    std::vector<geometry_msgs::PoseStamped::ConstPtr> msg_pose_reroute_; ///< pose of multirotor when Safe2Ditch rerouted the ith time
 
     nasa_s2d::DitchSite current_ds_;      ///< Currently selected Ditch Site
 
