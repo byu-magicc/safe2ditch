@@ -89,10 +89,10 @@ namespace montecarlo {
     nasa_s2d::DitchSite current_ds_;      ///< Currently selected Ditch Site
 
 
-    geometry_msgs::PoseStamped::ConstPtr msg_pose_;
-    mavros_msgs::State::ConstPtr msg_state_;
-    nasa_s2d::DitchSiteList::ConstPtr msg_ds_;
-    mavros_msgs::HomePosition::ConstPtr msg_home_;
+    geometry_msgs::PoseStamped::ConstPtr msg_pose_;       ///< pose of multirotor
+    mavros_msgs::State::ConstPtr msg_state_;              ///< status and mode information of APM
+    nasa_s2d::DitchSiteList::ConstPtr msg_ds_;            ///< ditch site list from Safe2Ditch DSS
+    mavros_msgs::HomePosition::ConstPtr msg_home_;        ///< position where the multirotor was armed
 
     std::vector<nav_msgs::Odometry::ConstPtr> targets_;   ///< vector of latest msg for the ith target
 

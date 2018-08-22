@@ -60,6 +60,11 @@ void MCTrial::recv_msg_home(const mavros_msgs::HomePosition::ConstPtr& msg)
 
 void MCTrial::recv_msg_target(int n, const nav_msgs::Odometry::ConstPtr& msg)
 {
+  // because we don't have access to the coordinates of the geolocated camera
+  // frustum, just do this hack. I looked at a simulation and the ditch site
+  // is pretty much inscribed in the frustum when the multirotor is 15 m AGL.
+  if (msg_pose_->pose.position.z <= 15.0) return;
+
   targets_[n-1] = msg;
 }
 

@@ -19,9 +19,6 @@
 #include <rosbag/view.h>
 
 #include <std_msgs/Header.h>
-#include <sensor_msgs/Image.h>
-#include <sensor_msgs/CompressedImage.h>
-#include <sensor_msgs/image_encodings.h>
 
 #include <geometry_msgs/PoseStamped.h>
 
@@ -185,17 +182,15 @@ TrialResult MCProcessor::process_trial(std::string bagpath, int Nt, int m)
   rosbag::Bag bag;
   bag.open(bagpath, rosbag::bagmode::Read);
 
-  std::vector<std::string> topics;
-  topics.push_back("/hud/image_raw/compressed");
-  topics.push_back("/mavros/local_position/pose");
-  topics.push_back("/mavros/state");
-  topics.push_back("/dss/ditch_sites");
-  topics.push_back("/clock");
+  // std::vector<std::string> topics;
+  // topics.push_back("/hud/image_raw/compressed");
+  // topics.push_back("/mavros/local_position/pose");
+  // topics.push_back("/mavros/state");
+  // topics.push_back("/dss/ditch_sites");
 
   // Create a view into the rosbag using the topics
   // rosbag::View view(bag, rosbag::TopicQuery(topics));
   rosbag::View view(bag);
-
 
   // Loop through each message in the view, deciding if it is
   // a compressed or raw image and handling appropriately.
