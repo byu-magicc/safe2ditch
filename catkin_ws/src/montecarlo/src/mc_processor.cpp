@@ -30,6 +30,9 @@
 #include <nasa_s2d/DitchSiteList.h>
 #include <nasa_s2d/DitchSite.h>
 
+#include <visual_mtt/Tracks.h>
+#include <visual_mtt/Track.h>
+
 namespace montecarlo {
 
 MCProcessor::MCProcessor(std::string bagdir)
@@ -239,7 +242,7 @@ TrialResult MCProcessor::process_trial(std::string bagpath, int Nt, int m)
     }
 
     //
-    // Target Pose
+    // Target Pose (truth)
     //
 
     nav_msgs::Odometry::ConstPtr msg_target = mm.instantiate<nav_msgs::Odometry>();
@@ -257,6 +260,16 @@ TrialResult MCProcessor::process_trial(std::string bagpath, int Nt, int m)
 
         trial.recv_msg_target(stoi(target_num), msg_target);
       }
+    }
+
+    //
+    // Tracks (estimate of target positions)
+    //
+
+    visual_mtt::Tracks::ConstPtr msg_tracks3d = mm.instantiate<visual_mtt::Tracks>();
+    if (msg_tracks3d != nullptr && mm.getTopic() == "/tracks3d")
+    {
+      trial.recv_msg_tracks3d(msg_tracks3d);
     }
     
   }
