@@ -154,8 +154,9 @@ void MCProcessor::for_each_Nt()
       std::cout << std::string(35, '-') <<  " Nt = " << Nt << " " << std::string(35, '-') << std::endl;
     }
 
-    std::cout << "Processing t" << Nt << "_m" << m << " (" << std::get<0>(bag) << ")" << std::endl;
+    std::cout << "Processing t" << Nt << "_m" << m << " (" << std::get<0>(bag) << "):" << std::flush;
     auto result = process_trial(bagdir_ + std::get<0>(bag), Nt, m);
+    std::cout << result << std::endl;
 
     total += result;
 

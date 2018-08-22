@@ -123,7 +123,6 @@ TrialResult MCTrial::get_results()
   {
     if (failure())
     {
-      std::cout << "Failure!" << std::endl;
       result.N_fail = 1;
     }
   }
@@ -189,7 +188,7 @@ bool MCTrial::failure()
       auto p_ti_last = std::make_pair(target_last->pose.pose.position.x, target_last->pose.pose.position.y);
       if (norm(p_ds - p_ti_last) < current_ds_.radius)
       {
-        std::cout << "Target " << i+1 << " " << p_ti << " is inside ditch site " << current_ds_.name << "!" << std::endl;
+        // std::cout << "Target " << i+1 << " " << p_ti << " is inside ditch site " << current_ds_.name << "!" << std::endl;
         return true;
       }
 
