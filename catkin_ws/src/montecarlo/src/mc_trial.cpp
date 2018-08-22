@@ -15,6 +15,7 @@ MCTrial::MCTrial(int Nt, int m)
 : Nt_(Nt), m_(m)
 {
   targets_.resize(Nt);
+  targets_out_of_view_.resize(Nt);
 }
 
 // ----------------------------------------------------------------------------
@@ -63,7 +64,14 @@ void MCTrial::recv_msg_target(int n, const nav_msgs::Odometry::ConstPtr& msg)
   // because we don't have access to the coordinates of the geolocated camera
   // frustum, just do this hack. I looked at a simulation and the ditch site
   // is pretty much inscribed in the frustum when the multirotor is 15 m AGL.
-  if (msg_pose_->pose.position.z <= 15.0) return;
+  if (msg_pose_ != nullptr && safe2ditch_engaged_ && msg_pose_->pose.position.z >= 15.0)
+  {
+    // this is the position of the ith target before the camera FOV was smaller
+    // than the ditch site. If the target was not in the ditch site then, we
+    // assume that it will not be in the ditch site at the end. We assume rational
+    // human agents that run *away* from a landing multirotor.
+    targets_out_of_view_[n-1] = msg;
+  }
 
   targets_[n-1] = msg;
 }
@@ -129,10 +137,22 @@ bool MCTrial::failure()
 
     auto p_ti = std::make_pair(target->pose.pose.position.x, target->pose.pose.position.y);
 
+    // was the final position of the target inside the selected ditch site?
     if (norm(p_ds - p_ti) < current_ds_.radius)
     {
-      std::cout << "Target " << i+1 << " " << p_ti << " is inside ditch site " << current_ds_.name << "!" << std::endl;
-      return true;
+      // double-check: was the target in the ditch site right before
+      // the camera FOV was smaller than the ditch site? If not, the
+      // chance of noticing the target greatly diminishes, so don't
+      // count this as a failure
+      auto target_last = targets_out_of_view_[i];
+      auto p_ti_last = std::make_pair(target_last->pose.pose.position.x, target_last->pose.pose.position.y);
+      if (norm(p_ds - p_ti_last) < current_ds_.radius)
+      {
+        std::cout << "Target " << i+1 << " " << p_ti << " is inside ditch site " << current_ds_.name << "!" << std::endl;
+        return true;
+      }
+
+      return false;
     }
     
   }

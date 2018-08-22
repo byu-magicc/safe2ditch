@@ -94,7 +94,8 @@ namespace montecarlo {
     nasa_s2d::DitchSiteList::ConstPtr msg_ds_;            ///< ditch site list from Safe2Ditch DSS
     mavros_msgs::HomePosition::ConstPtr msg_home_;        ///< position where the multirotor was armed
 
-    std::vector<nav_msgs::Odometry::ConstPtr> targets_;   ///< vector of latest msg for the ith target
+    std::vector<nav_msgs::Odometry::ConstPtr> targets_;               ///< vector of latest msg for the ith target
+    std::vector<nav_msgs::Odometry::ConstPtr> targets_out_of_view_;   ///< vector of latest msg for the ith target before ds out of view
 
     bool landed();
     bool failure();
