@@ -23,6 +23,22 @@ MCTrial::MCTrial(int Nt, int m)
 void MCTrial::recv_msg_pose(const geometry_msgs::PoseStamped::ConstPtr& msg)
 {
   msg_pose_ = msg;
+
+  // create a transform for the geolocator
+  tf::Transform T;
+  tf::poseMsgToTF(msg->pose, T);
+
+  // grab the geolocated corners of the camera field of view
+  geolocate_frustum(frustum_corners_, T);
+
+  // update the frustum polygon
+  std::vector<Polygon::Point> vertices;
+  vertices.push_back( {frustum_corners_(0,0),frustum_corners_(0,1)} );
+  vertices.push_back( {frustum_corners_(1,0),frustum_corners_(1,1)} );
+  vertices.push_back( {frustum_corners_(2,0),frustum_corners_(2,1)} );
+  vertices.push_back( {frustum_corners_(3,0),frustum_corners_(3,1)} );
+  frustum_.update(vertices);
+
 }
 
 // ----------------------------------------------------------------------------
@@ -392,6 +408,114 @@ std::vector<int> MCTrial::nearest_neighbors(const visual_mtt::Tracks::ConstPtr& 
   N_unassoc = unassociated_tracks.size();
 
   return associations;
+}
+
+// ----------------------------------------------------------------------------
+
+void MCTrial::geolocate_frustum(Eigen::MatrixX3d& frustum, const tf::Transform& T)
+{
+  // Incoming measurements are assumed to be in the normalized image plane
+
+  //
+  // cheat and construct the frustum in the nip manually.
+  // 
+
+  // a better way would be to just do this in the geolocator node and then
+  // record the `/frustum` topic and use that here.
+
+  double width = 800;
+  double height = 600;
+
+  // got these values from /camera/camera_info topic
+  Eigen::Vector3d f = Eigen::Vector3d(1308.7504841320101,1308.7504841320101,1);
+  Eigen::Vector3d c = Eigen::Vector3d(400.5,300.5,0);
+  
+  // create the normalized image plane coordinates of the four corners as rows
+  frustum = Eigen::MatrixX3d::Zero(4,3);
+  frustum.row(0) = (Eigen::Vector3d(0,0,1).array() - c.array())/f.array();
+  frustum.row(1) = (Eigen::Vector3d(width,0,1).array() - c.array())/f.array();
+  frustum.row(2) = (Eigen::Vector3d(width,height,1).array() - c.array())/f.array();
+  frustum.row(3) = (Eigen::Vector3d(0,height,1).array() - c.array())/f.array();
+
+  ///////////////////////////////////////////////////////////////////////////
+
+  // how many measurements are there?
+  uint32_t N = frustum.rows();
+
+  // UAV Position
+  double pn = T.getOrigin().x();
+  double pe = T.getOrigin().y();
+  double pd = T.getOrigin().z();
+
+  // ------------------------------------------------------------------------
+  // Compute equation (13.9) in UAV book      (pts == ell_unit_c)
+  // ------------------------------------------------------------------------
+
+  // norm each row of the pts matrix
+  Eigen::VectorXd F = frustum.rowwise().norm();
+
+  // Make the Nx1 vector an Nx3 matrix so we can element-wise divide
+  Eigen::MatrixX3d Fdiv = F.replicate(1, 3);
+
+  // divide to normalize and create unit vectors in the camera frame
+  Eigen::MatrixXd pts = (frustum.array() / Fdiv.array());
+
+  // ========================================================================
+
+
+  // Create the rotation from camera frame to vehicle frame
+  Eigen::Affine3d e;
+  tf::transformTFToEigen(T, e);
+  Eigen::Matrix3d R_c_to_v = e.rotation();
+
+  // Rotate camera frame unit vectors (ell_unit_c) into vehicle frame
+  // (see the numerator of RHS of (13.18) in UAV book)
+  Eigen::Matrix3Xd ell_unit_v = R_c_to_v * pts.transpose();
+
+  // ------------------------------------------------------------------------
+  // Compute equation (13.17) in UAV book     (target's range estimate)
+  // ------------------------------------------------------------------------
+
+  // cosine of the angle between the the ki axis and ell_unit_v
+  // (the unit vector that points at each target)
+  //
+  // Instead of creating a ki_unit << (0 0 1) and doing a dot product,
+  // just grab the last row of ell_unit_v, since that's what
+  // <ki_unit, ell_unit_v> would have done anyways.
+  Eigen::VectorXd cos_psi = ell_unit_v.row(2);
+
+  // The UAV's height above ground (well, actually the gimbal/camera)
+  float h = -pd;
+
+  // 1 x N vector
+  Eigen::VectorXd L = h / cos_psi.array();
+
+  // ========================================================================
+
+
+  // ------------------------------------------------------------------------
+  // Compute equation (13.18) in UAV book   (target's pos in intertial frame)
+  // ------------------------------------------------------------------------
+
+  // Construct a vector for the UAV's inertial position
+  Eigen::Vector3d tmp; tmp << pn, pe, pd;
+  Eigen::Matrix3Xd P_mav_i = tmp.replicate(1, N);
+
+  // Replicate L vector to a matrix so dimensions are happy
+  Eigen::Matrix3Xd Lmat = L.transpose().replicate(3, 1);
+
+  // Based on current attitude, find offset from the body to vehicle frame.
+  // This is because the camera (on the gimbal) sees targets, not the UAV.
+  // Mat offset = rot_v2b(phi,theta,psi).t() * cv::repeat(d_b2g(), 1, N);
+  Eigen::Matrix3Xd offset = Eigen::Matrix3Xd::Zero(3, N);
+
+  // Based on the line-of-sight vector, find the inertial object points
+  Eigen::Matrix3Xd P_obj_i = P_mav_i + offset + (Lmat.array() * ell_unit_v.array()).matrix();
+
+  // ========================================================================
+
+  // Copy object points back to measurements for the caller
+  frustum = P_obj_i.transpose();
 }
 
 }

@@ -9,6 +9,12 @@
 #include <vector>
 #include <utility>
 
+#include <Eigen/Dense>
+
+#include <tf/tf.h>
+#include <tf_conversions/tf_eigen.h>
+#include <tf/transform_datatypes.h>
+
 #include <geodesy/utm.h>
 
 #include <geometry_msgs/PoseStamped.h>
@@ -23,6 +29,8 @@
 
 #include <visual_mtt/Tracks.h>
 #include <visual_mtt/Track.h>
+
+#include "montecarlo/polygon.h"
 
 namespace montecarlo {
 
@@ -102,6 +110,9 @@ namespace montecarlo {
 
     nasa_s2d::DitchSite current_ds_;      ///< Currently selected Ditch Site
 
+    Eigen::MatrixX3d frustum_corners_;  ///< current corners of geolocated camera FOV
+    Polygon frustum_;                   ///< polygon representation of frustum
+
 
     static constexpr double LAND_ALT = 5.50;          ///< consider multirotor to have landed below this altitude
     static constexpr double OUTSIDE_FOV_ALT = 15.0;   ///< ditch site roughly fills up entire camera FOV at this altitude
@@ -144,6 +155,8 @@ namespace montecarlo {
     int number_reroute_false_positives();
 
     std::vector<int> nearest_neighbors(const visual_mtt::Tracks::ConstPtr& tracks_msg, const std::vector<nav_msgs::Odometry::ConstPtr>& targets, int& N_unassoc);
+
+    void geolocate_frustum(Eigen::MatrixX3d& frustum, const tf::Transform& T);
   };
 
   // --------------------------------------------------------------------------

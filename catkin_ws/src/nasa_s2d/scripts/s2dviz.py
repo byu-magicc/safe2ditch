@@ -513,6 +513,12 @@ class S2DVIZ:
 
     def geolocate_frustum(self):
         """Geolocate Camera Frustum
+
+        This should really be done in the geolocation c++ node and then just
+        publish a topic called `/fov` or something. That way we can save this
+        in a bag or use it for analysis. Also, a "truth" topic could be published
+        by adding a `camera_truth` frame, starting a new geolocation node, and
+        just specifying that tf use the `camera_truth` frame instead.
         """
         if self.cinfo is None:
             return np.zeros((3,1))

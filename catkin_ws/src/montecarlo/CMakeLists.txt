@@ -23,10 +23,14 @@ find_package(catkin REQUIRED
   image_transport
   rosbag
   geodesy
+  tf
+  tf_conversions
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
+
+find_package(Eigen3 REQUIRED)
 
 find_package(OpenCV 3 REQUIRED)
 message(STATUS "OpenCV Version: ${OpenCV_VERSION} (${OpenCV_DIR})")
@@ -129,7 +133,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include lib ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
+include_directories(include lib ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
@@ -144,7 +148,7 @@ include_directories(include lib ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_process_bag src/process_bag.cpp src/mc_processor.cpp src/mc_trial.cpp)
+add_executable(${PROJECT_NAME}_process_bag src/process_bag.cpp src/mc_processor.cpp src/mc_trial.cpp src/polygon.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
