@@ -145,6 +145,8 @@ TrialResult MCTrial::get_results()
   // Did any false positives from the visual system cause a reroute?
   if (rerouted())
   {
+    // what is the number of tracks unassociated with true targets that
+    // where inside the selected ditch site at the time of reroute?
     result.N_false = number_reroute_false_positives();
   }
 
@@ -186,15 +188,8 @@ bool MCTrial::failure()
       // count this as a failure
       auto target_last = targets_out_of_view_[i];
       auto p_ti_last = std::make_pair(target_last->pose.pose.position.x, target_last->pose.pose.position.y);
-      if (norm(p_ds - p_ti_last) < current_ds_.radius)
-      {
-        // std::cout << "Target " << i+1 << " " << p_ti << " is inside ditch site " << current_ds_.name << "!" << std::endl;
-        return true;
-      }
-
-      return false;
+      if (norm(p_ds - p_ti_last) < current_ds_.radius) return true;
     }
-    
   }
 
 
