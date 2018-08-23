@@ -18,6 +18,7 @@ MCTrial::MCTrial(int Nt, int m)
 {
   targets_.resize(Nt);
   targets_out_of_view_.resize(Nt);
+  targets_fov_ds_.resize(Nt);
 }
 
 // ----------------------------------------------------------------------------
@@ -108,14 +109,36 @@ void MCTrial::recv_msg_target(int n, const nav_msgs::Odometry::ConstPtr& msg)
     targets_out_of_view_[n-1] = msg;
   }
 
-  if (safe2ditch_engaged_)
+  if (safe2ditch_engaged_ && !rerouted())
   {
+    // check if target (expressed in ENU) is inside the camera FOV
     Polygon::Point p{msg->pose.pose.position.x, msg->pose.pose.position.y};
     bool in_fov = frustum_.contains(p);
 
-    if (in_fov)
-    {
+    // check if target is also in the selected ditch site
+    auto p_ti = std::make_pair(msg->pose.pose.position.x, msg->pose.pose.position.y);
+    // ditch site position (in meters)
+    auto p_ds = calculate_lla_diff(current_ds_.position.latitude, current_ds_.position.longitude);
+    // was the final position of the target inside the selected ditch site?
+    bool in_ds = norm(p_ds - p_ti) < current_ds_.radius;
 
+    // check if this target was already in both the FOV and ds
+    bool already_in = targets_fov_ds_[n-1].first != nullptr;
+
+    if (in_fov && in_ds && !already_in)
+    {
+      // std::cout << "Target " << n << " in ds and fov" << std::endl;
+
+      targets_fov_ds_[n-1] = std::make_pair(msg, msg_pose_->header);
+    }
+    else if (already_in && (!in_fov || !in_ds))
+    {
+      // std::cout << "Target " << n << " left ";
+      // if (!in_fov && !in_ds) std::cout << "fov and ds" << std::endl;
+      // else if (!in_fov) std::cout << "fov" << std::endl;
+      // else if (!in_ds) std::cout << "ds" << std::endl;
+      // take this target out of the list
+      targets_fov_ds_[n-1] = std::make_pair(nullptr, msg_pose_->header);
     }
   }
 
@@ -154,6 +177,7 @@ TrialResult MCTrial::get_results()
   // if the multirotor landed, did it 'fail', i.e., land on someone?
   if (landed())
   {
+    // std::cout << "Land" << std::endl;
     if (failure())
     {
       result.N_fail = 1;
@@ -168,7 +192,30 @@ TrialResult MCTrial::get_results()
   // detected, tracked, and then made actionable?
   if (rerouted())
   {
+    // Get the multirotor pose from the first reroute.
+    // We currently assume that there will only be one reroute.
+    auto msg_pose = msg_pose_reroute_.front();
 
+    // time of reroute (i.e., when track was actionable)
+    auto T_reroute = msg_pose->header.stamp.toSec();
+
+    // std::cout << "Rerouted at " << T_reroute << std::endl;
+
+    double earliest = T_reroute;
+    
+    // time target was in the field of view
+    for (int i=0; i<targets_fov_ds_.size(); i++)
+    {
+      auto target = targets_fov_ds_[i];
+
+      if (target.first != nullptr)
+      {
+        // std::cout << "\tTarget " << i+1 << " entered FOV and ditch site at " << target.second.stamp.toSec() << std::endl;
+        if (target.second.stamp.toSec() < earliest) earliest = target.second.stamp.toSec();
+      }
+    }
+
+    result.t_action = T_reroute - earliest;
   }
 
   //

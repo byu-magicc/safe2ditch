@@ -17,6 +17,8 @@
 
 #include <geodesy/utm.h>
 
+#include <std_msgs/Header.h>
+
 #include <geometry_msgs/PoseStamped.h>
 
 #include <nav_msgs/Odometry.h>
@@ -127,6 +129,7 @@ namespace montecarlo {
 
     std::vector<nav_msgs::Odometry::ConstPtr> targets_;               ///< vector of latest msg for the ith target
     std::vector<nav_msgs::Odometry::ConstPtr> targets_out_of_view_;   ///< vector of latest msg for the ith target before ds out of view
+    std::vector<std::pair<nav_msgs::Odometry::ConstPtr, std_msgs::Header>> targets_fov_ds_;       ///< pose and time of ith target when it is both in the FOV and the selected ds
     std::vector<std::vector<nav_msgs::Odometry::ConstPtr>> targets_reroute_; ///< pose of jth target when Safe2Ditch rerouted the ith time
 
     /**

@@ -166,7 +166,7 @@ void MCProcessor::for_each_Nt()
     grandtotal += result;
 
     // early termination
-    if (Nt == 1 && m == 100) break;
+    // if (Nt == 1 && m == 100) break;
     
     if (m == M_)
     {
