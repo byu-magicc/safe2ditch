@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <fstream>
 
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
@@ -59,7 +60,17 @@ void MCProcessor::start()
   std::cout << "* Trials per Nt: " << M_ << std::endl;
   std::cout << std::string(80, '*') << std::endl;
 
-  for_each_Nt();
+  // process that data!
+  auto results = for_each_Nt();
+
+  // save data report to file
+  std::ofstream file;
+  file.open("processed_mcsim_data.csv");
+  for (int i=0; i<results.size(); i++)
+  {
+    file << results[i].print_data(Nts_[i/M_], i%M_+1) << std::endl;
+  }
+  file.close();
 }
 
 // ----------------------------------------------------------------------------
@@ -135,18 +146,21 @@ void MCProcessor::get_mc_stats(const std::vector<Bag>& bags, std::vector<int>& N
 
 // -----------------------------------------------------------------------------
 
-void MCProcessor::for_each_Nt()
+std::vector<TrialResult> MCProcessor::for_each_Nt()
 {
 
   int Nt = 0;
   int m = 0;
 
+  std::vector<TrialResult> results(Nts_.size()*M_);
   std::vector<TrialResult> totals(Nts_.size());
   TrialResult grandtotal;
 
   // we assume that bags_ is already sorted
-  for (auto&& bag : bags_)
+  for (int i=0; i<bags_.size(); i++)
   {
+    auto bag = bags_[i];
+
     // Update Nt and m if needed
     if (m != std::get<2>(bag)) m = std::get<2>(bag);
     if (Nt != std::get<1>(bag))
@@ -162,6 +176,7 @@ void MCProcessor::for_each_Nt()
     auto result = process_trial(bagdir_ + std::get<0>(bag), Nt, m);
     std::cout << result << std::endl;
 
+    results[i] = result;
     totals[idx] += result;
     grandtotal += result;
 
@@ -170,12 +185,13 @@ void MCProcessor::for_each_Nt()
     
     if (m == M_)
     {
-      totals[idx] = totals[idx].average(m);
-      std::cout << totals[idx] << " / " << grandtotal.average((idx+1)*m) << std::endl;
+      std::cout << "Averages: " << totals[idx].average(m) << " / " << grandtotal.average((idx+1)*m) << std::endl;
     }
   }
 
-  std::cout << grandtotal.average(Nts_.size()*m) << std::endl;
+  std::cout << "Grand Total Avg: " << grandtotal.average(Nts_.size()*m) << std::endl;
+
+  return results;
 }
 
 // ----------------------------------------------------------------------------

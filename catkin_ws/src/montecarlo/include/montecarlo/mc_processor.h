@@ -45,7 +45,7 @@ namespace montecarlo {
      */
     void get_mc_stats(const std::vector<Bag>& bags, std::vector<int>& Nts, int& M);
 
-    void for_each_Nt();
+    std::vector<TrialResult> for_each_Nt();
 
     TrialResult process_trial(std::string bagpath, int Nt, int m);
     

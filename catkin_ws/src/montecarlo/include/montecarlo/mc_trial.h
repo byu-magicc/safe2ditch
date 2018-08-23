@@ -6,6 +6,7 @@
 #pragma once
 
 #include <string>
+#include <sstream>
 #include <vector>
 #include <utility>
 
@@ -45,6 +46,13 @@ namespace montecarlo {
     double h_reroute = 0;
 
     bool complete = false;
+
+    std::string print_data(int Nt, int M) {
+      std::ostringstream os;
+      os << Nt << "," << M << "," << t_action << "," << N_fail << ",";
+      os << N_false << "," << h_engage << "," << h_reroute;
+      return os.str();
+    }
 
     TrialResult average(int total) {
       return (*this)/total;
