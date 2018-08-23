@@ -156,7 +156,7 @@ namespace montecarlo {
 
     std::vector<int> nearest_neighbors(const visual_mtt::Tracks::ConstPtr& tracks_msg, const std::vector<nav_msgs::Odometry::ConstPtr>& targets, int& N_unassoc);
 
-    void geolocate_frustum(Eigen::MatrixX3d& frustum, const tf::Transform& T);
+    void geolocate_frustum(Eigen::MatrixX3d& frustum, const geometry_msgs::PoseStamped::ConstPtr& msg);
   };
 
   // --------------------------------------------------------------------------

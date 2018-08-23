@@ -17,6 +17,9 @@ void Polygon::update(const std::vector<Point>& vertices)
 // Returns true if the point p lies inside the polygon[] with n vertices
 bool Polygon::contains(Point p)
 {
+  // there have to be at least three vertices for a closed, convex polygon
+  if (vertices_.size() < 3) return false;
+
   // Create a point for line segment from p to infinite
   Point extreme = {INF, p.y};
 

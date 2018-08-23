@@ -9,6 +9,8 @@
 
 #include <geographic_msgs/GeoPoint.h>
 
+#include <tf_conversions/tf_eigen.h>
+
 namespace montecarlo {
 
 MCTrial::MCTrial(int Nt, int m)
@@ -24,12 +26,8 @@ void MCTrial::recv_msg_pose(const geometry_msgs::PoseStamped::ConstPtr& msg)
 {
   msg_pose_ = msg;
 
-  // create a transform for the geolocator
-  tf::Transform T;
-  tf::poseMsgToTF(msg->pose, T);
-
   // grab the geolocated corners of the camera field of view
-  geolocate_frustum(frustum_corners_, T);
+  geolocate_frustum(frustum_corners_, msg);
 
   // update the frustum polygon
   std::vector<Polygon::Point> vertices;
@@ -38,7 +36,6 @@ void MCTrial::recv_msg_pose(const geometry_msgs::PoseStamped::ConstPtr& msg)
   vertices.push_back( {frustum_corners_(2,0),frustum_corners_(2,1)} );
   vertices.push_back( {frustum_corners_(3,0),frustum_corners_(3,1)} );
   frustum_.update(vertices);
-
 }
 
 // ----------------------------------------------------------------------------
@@ -109,6 +106,17 @@ void MCTrial::recv_msg_target(int n, const nav_msgs::Odometry::ConstPtr& msg)
     // assume that it will not be in the ditch site at the end. We assume rational
     // human agents that run *away* from a landing multirotor.
     targets_out_of_view_[n-1] = msg;
+  }
+
+  if (safe2ditch_engaged_)
+  {
+    Polygon::Point p{msg->pose.pose.position.x, msg->pose.pose.position.y};
+    bool in_fov = frustum_.contains(p);
+
+    if (in_fov)
+    {
+
+    }
   }
 
   targets_[n-1] = msg;
@@ -412,7 +420,7 @@ std::vector<int> MCTrial::nearest_neighbors(const visual_mtt::Tracks::ConstPtr& 
 
 // ----------------------------------------------------------------------------
 
-void MCTrial::geolocate_frustum(Eigen::MatrixX3d& frustum, const tf::Transform& T)
+void MCTrial::geolocate_frustum(Eigen::MatrixX3d& frustum, const geometry_msgs::PoseStamped::ConstPtr& msg)
 {
   // Incoming measurements are assumed to be in the normalized image plane
 
@@ -437,15 +445,54 @@ void MCTrial::geolocate_frustum(Eigen::MatrixX3d& frustum, const tf::Transform& 
   frustum.row(2) = (Eigen::Vector3d(width,height,1).array() - c.array())/f.array();
   frustum.row(3) = (Eigen::Vector3d(0,height,1).array() - c.array())/f.array();
 
+  // frustum.row(0) *= 0.9;
+  // frustum.row(1) *= 0.9;
+  // frustum.row(2) *= 0.9;
+  // frustum.row(3) *= 0.9;
+
   ///////////////////////////////////////////////////////////////////////////
+
+  // body ENU (flu) to inertial ENU -- AKA, this is the orientation of the flu body expressed in the ENU frame
+  tf::Matrix3x3 Rflu2enu(tf::Quaternion(msg->pose.orientation.x, msg->pose.orientation.y, msg->pose.orientation.z, msg->pose.orientation.w));
+
+  // inertial ENU to inertial NED
+  tf::Matrix3x3 Renu2ned(tf::createQuaternionFromRPY(3.14159, 0, 1.5707));
+
+  // body NED (frd) to body ENU (flu)
+  tf::Matrix3x3 Rfrd2flu(tf::createQuaternionFromRPY(3.14159, 0, 0));
+
+  // gimbal frame to body NED (frd) 
+  tf::Matrix3x3 Rg2frd(tf::createQuaternionFromRPY(0, -0.7854, 0));
+
+  // camera frame to gimbal frame
+  tf::Matrix3x3 Rcam2g(tf::createQuaternionFromRPY(1.5708, 0, 1.5708));
+
+  // for help with these rotations, see `tf_frames.launch`
+
+  tf::Matrix3x3 R_c2v = Renu2ned*Rflu2enu*Rfrd2flu*Rg2frd*Rcam2g;
+  // tf::Matrix3x3 R_c2v = Rflu2enu*Rfrd2flu*Rg2frd*Rcam2g;
+
+
+  // tf::Vector3 vec = tf::Vector3(100.0,0.0,0.0);
+  // auto v = Renu2ned*Rflu2enu*Rfrd2flu*Rg2frd*Rcam2g*vec;
+  // std::cout << "VEC: " << v.x() << " " << v.y() << " " << v.z() << std::endl;
+
 
   // how many measurements are there?
   uint32_t N = frustum.rows();
 
   // UAV Position
-  double pn = T.getOrigin().x();
-  double pe = T.getOrigin().y();
-  double pd = T.getOrigin().z();
+  double pn =  msg->pose.position.y;
+  double pe =  msg->pose.position.x;
+  double pd = -msg->pose.position.z;
+
+
+  // double R,P,Y;
+  // (Renu2ned*Rflu2enu*Rfrd2flu*Rg2frd*Rcam2g).getRPY(R,P,Y);
+  // std::cout << msg->header.stamp << std::endl;
+  // std::cout << "RPY: " << R << " " << P << " " << Y << "\t" << std::endl;
+  // std::cout << "NED: " << pn << " " << pe << " " << pd << "\t" << std::endl;
+  // std::cout << std::endl;
 
   // ------------------------------------------------------------------------
   // Compute equation (13.9) in UAV book      (pts == ell_unit_c)
@@ -465,12 +512,22 @@ void MCTrial::geolocate_frustum(Eigen::MatrixX3d& frustum, const tf::Transform& 
 
   // Create the rotation from camera frame to vehicle frame
   Eigen::Affine3d e;
-  tf::transformTFToEigen(T, e);
-  Eigen::Matrix3d R_c_to_v = e.rotation();
+  // tf::transformTFToEigen(T, e);
+  // Eigen::Matrix3d R_c_to_v = e.rotation();
+
+
+  Eigen::Matrix3d R_c_to_v;
+  tf::matrixTFToEigen(R_c2v, R_c_to_v);
 
   // Rotate camera frame unit vectors (ell_unit_c) into vehicle frame
   // (see the numerator of RHS of (13.18) in UAV book)
   Eigen::Matrix3Xd ell_unit_v = R_c_to_v * pts.transpose();
+
+  // std::cout << std::endl;
+  // std::cout << pts.transpose() << std::endl;
+  // std::cout << std::string(10, '-') << std::endl;
+  // std::cout << ell_unit_v << std::endl;
+  // std::cout << std::endl;
 
   // ------------------------------------------------------------------------
   // Compute equation (13.17) in UAV book     (target's range estimate)
@@ -514,8 +571,10 @@ void MCTrial::geolocate_frustum(Eigen::MatrixX3d& frustum, const tf::Transform& 
 
   // ========================================================================
 
-  // Copy object points back to measurements for the caller
-  frustum = P_obj_i.transpose();
+  // Copy object points back to measurements for the caller (expressed in ENU)
+  Eigen::Matrix3d R_enu_to_ned;
+  tf::matrixTFToEigen(Renu2ned, R_enu_to_ned);
+  frustum = (R_enu_to_ned.transpose()*P_obj_i).transpose();
 }
 
 }
