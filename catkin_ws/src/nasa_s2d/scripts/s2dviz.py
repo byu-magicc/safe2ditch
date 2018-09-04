@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from builtins import range
 
 import copy, threading
@@ -10,8 +11,9 @@ from geodesy import utm
 import numpy as np
 
 from visualization_msgs.msg import Marker, MarkerArray
+from geometry_msgs.msg import PolygonStamped, Point32
 from mavros_msgs.msg import HomePosition, Waypoint, WaypointList, CommandCode, State
-from sensor_msgs.msg import NavSatFix
+from sensor_msgs.msg import NavSatFix, CameraInfo
 from nav_msgs.msg import Odometry
 from nasa_s2d.msg import DitchSiteList
 
@@ -45,6 +47,10 @@ def get_target_subs(ns="/", cb=None):
 
     return subs
 
+def nice_quat(quaternion):
+    Phi = tf.transformations.euler_from_quaternion(quaternion)
+    Phi = np.degrees(np.array(Phi))
+    return ["{:.2f}".format(x) for x in Phi]
 
 class S2DVIZ:
     """
@@ -57,7 +63,10 @@ class S2DVIZ:
     def __init__(self):
 
         # Connect to tf tree
-        self.listener = tf.TransformListener()
+        self.tf = tf.TransformListener()
+
+        # camera information (from the initial, unscaled hardware camera)
+        self.cinfo = None
 
         # current vehicle status
         self.status = State()
@@ -92,14 +101,17 @@ class S2DVIZ:
         self.pub_ditchsites = rospy.Publisher('visualization/ditch_sites', MarkerArray, queue_size=5, latch=True)
         self.pub_path = rospy.Publisher('visualization/path', MarkerArray, queue_size=5, latch=True)
         self.pub_movers = rospy.Publisher('visualization/movers', MarkerArray, queue_size=1)
+        self.pub_frustum = rospy.Publisher('visualization/frustum', PolygonStamped, queue_size=1)
 
-        # ROS subscribers
+        # ROS subscribers -- be careful! Some of these are referenced below.
+        # I probably shouldn't have used numbers (sub*) ¯\_(ツ)_/¯
         self.sub0 = rospy.Subscriber('mavros/home_position/home', HomePosition, self.home_cb)
         self.sub1 = rospy.Subscriber('mavros/global_position/global', NavSatFix, self.globalpos_cb)
         self.sub2 = rospy.Subscriber('mavros/mission/waypoints', WaypointList, self.wp_cb)
         self.sub3 = rospy.Subscriber('mavros/state', State, self.state_cb)
         self.sub4 = rospy.Subscriber('dss/path', WaypointList, self.path_cb)
         self.sub5 = rospy.Subscriber('dss/ditch_sites', DitchSiteList, self.ditchsites_cb)
+        self.sub6 = rospy.Subscriber('camera/camera_info', CameraInfo, self.cinfo_cb)
 
 
     def publish_home(self, msg):
@@ -175,6 +187,35 @@ class S2DVIZ:
         home.longitude = msg.geo.longitude
 
         self.publish_home(home)
+
+
+    def cinfo_cb(self, msg):
+        # Just receive a single camera info msg and unregister the pub
+        self.cinfo = msg
+        # self.sub6.unregister()
+
+        p_ned = self.geolocate_frustum()
+
+        R_ned_to_enu = np.array([[0,1,0],
+                                 [1,0,0],
+                                 [0,0,-1]
+                                ], dtype=np.float64)
+
+        # convert to ENU
+        p_enu = R_ned_to_enu.dot(p_ned)
+
+        frustum = PolygonStamped()
+        frustum.header.stamp = rospy.Time.now()
+        frustum.header.frame_id = self.fixed_frame
+
+        for i in range(p_enu.shape[1]):
+            pt = Point32()
+            pt.x = p_enu[0,i]
+            pt.y = p_enu[1,i]
+            pt.z = p_enu[2,i]
+            frustum.polygon.points.append(pt)
+
+        self.pub_frustum.publish(frustum)
 
 
     def path_cb(self, msg):
@@ -303,7 +344,7 @@ class S2DVIZ:
 
             txt.text = site.name
             txt.pose.position.z += txt.scale.z
-            txt.scale.z = 2
+            txt.scale.z = 4
 
             txt.color.r = 1
             txt.color.g = 1
@@ -450,6 +491,7 @@ class S2DVIZ:
             are completely inside one UTM zone. Otherwise, something
             like the Haversine-based LLA measurement function can be
             used.
+            https://answers.ros.org/question/50763/need-help-converting-lat-long-coordinates-into-meters/?answer=243041#post-id-243041
         """
         
         utm_home = utm.fromLatLong(self.home_position.latitude,
@@ -468,6 +510,109 @@ class S2DVIZ:
         y = utm_wp.northing - utm_home.northing
 
         return (x, y)
+
+    def geolocate_frustum(self):
+        """Geolocate Camera Frustum
+
+        This should really be done in the geolocation c++ node and then just
+        publish a topic called `/fov` or something. That way we can save this
+        in a bag or use it for analysis. Also, a "truth" topic could be published
+        by adding a `camera_truth` frame, starting a new geolocation node, and
+        just specifying that tf use the `camera_truth` frame instead.
+        """
+        if self.cinfo is None:
+            return np.zeros((3,1))
+
+        if not self.tf.frameExists("map_ned") or not self.tf.frameExists("camera"):
+            return np.zeros((3,1))
+
+        try:
+            position, quaternion = self.tf.lookupTransform("map_ned", "camera", rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            return np.zeros((3,1))
+
+
+        #
+        # Fiddling with rotation between body and gimbal (i.e., 48-degree mounted camera)
+        #
+
+        # print
+        # _, q_c2v = self.tf.lookupTransform("map_ned", "camera", rospy.Time(0))
+        # print("R_c_to_v: {}".format(nice_quat(q_c2v)))
+
+        # _, q_b2v = self.tf.lookupTransform("map_ned", "base_link_ned", rospy.Time(0))
+        # print("R_b_to_v: {}".format(nice_quat(q_b2v)))
+
+        # _, q_g2b = self.tf.lookupTransform("base_link_ned", "gimbal", rospy.Time(0))
+        # # axes may be wrong, but since we are only rotating about one axis, it doesn't matter
+        # q_g2b = tf.transformations.quaternion_from_euler(0, np.radians(-48), 0, axes='sxyz')
+        # print("R_g_to_b: {}".format(nice_quat(q_g2b)))
+
+        # _, q_c2g = self.tf.lookupTransform("gimbal", "camera", rospy.Time(0))
+        # print("R_c_to_g: {}".format(nice_quat(q_c2g)))
+
+
+        # q_final = tf.transformations.quaternion_multiply(tf.transformations.quaternion_multiply(q_b2v,q_g2b), q_c2g)
+        # print("My R_c_to_v: {}".format(nice_quat(q_final)))
+        # print
+
+        # quaternion = q_final
+
+        #
+        # Define normalized image plane (nip) points we are interested in
+        #
+
+        # extract from camera calibration matrix
+        fx_px = self.cinfo.K[0]
+        cx_px = self.cinfo.K[2]
+        fy_px = self.cinfo.K[4]
+        cy_px = self.cinfo.K[5]
+
+        # pixel corners of the image
+        p_px = np.array(
+            [[0,0],
+             [self.cinfo.width,0],
+             [self.cinfo.width,self.cinfo.height],
+             [0,self.cinfo.height]
+            ], dtype=np.float64).T
+
+        # convert to homogeneous normalized image plane coordinates (camera frame)
+        XX = (p_px[0,:] - cx_px)/fx_px
+        YY = (p_px[1,:] - cy_px)/fy_px
+        p_im_h = np.vstack( (XX, YY, np.ones((1,p_px.shape[1]))) )
+
+        # construct normalized line-of-sight vectors (camera frame)
+        ellhat = p_im_h / np.linalg.norm(p_im_h, axis=0)
+
+        #
+        # Geolocate!
+        #
+
+        # rotation matrix from quaternion
+        R_c_to_v = tf.transformations.quaternion_matrix(quaternion)[0:3,0:3]
+
+        # rotate from camera frame into vehicle frame
+        ellhat_v = R_c_to_v.dot(ellhat)
+
+        # calculate cosine between k_v and ellhat_v
+        cos_psi = ellhat_v[2]
+
+        # UAV height AGL
+        h = -position[2]
+
+        # 1xN vector of ranges
+        L = h / cos_psi
+
+        # make an estimate of the full LOS vector
+        ell_v = L*ellhat_v
+
+        # make position a numpy column vector
+        p_uav = np.array([position], dtype=np.float64).T
+
+        # location of pixel points given a flat earth
+        p_w = p_uav + ell_v
+
+        return p_w
 
 
     def should_wait(self, handler, msg):

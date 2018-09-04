@@ -86,7 +86,7 @@ Visualization Manager:
       Marker Topic: /visualization/mission
       Name: Mission Waypoints
       Namespaces:
-        {}
+        "": true
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -130,7 +130,7 @@ Visualization Manager:
       Marker Topic: /visualization/ditch_sites
       Name: Ditch Sites
       Namespaces:
-        {}
+        "": true
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -146,8 +146,16 @@ Visualization Manager:
       Marker Topic: /visualization/movers
       Name: Mover Ground Truth
       Namespaces:
-        {}
+        "": true
       Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Class: rviz/Polygon
+      Color: 25; 255; 0
+      Enabled: true
+      Name: Camera Frustum
+      Topic: /visualization/frustum
+      Unreliable: false
       Value: true
   Enabled: true
   Global Options:
@@ -212,5 +220,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1672
-  X: 2084
-  Y: 121
+  X: 2072
+  Y: 130

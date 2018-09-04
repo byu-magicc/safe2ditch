@@ -5,8 +5,8 @@ For information about this project and the hardware/software platform view the [
 
 This project contains git [submodules](http://bhilburn.org/cheat-sheet-for-git-submodules/). To clone this repo and all of the submodules:
 ```bash
-$ git clone ssh://git@magiccvs.byu.edu:290/robust_tracking/nasa-s2d2.git # Make sure to add an SSH key to gitlab
-$ git submodule update --init --recursive
+$ git clone ssh://git@magiccvs.byu.edu:290/robust_tracking/safe2ditch.git # Make sure to add an SSH key to gitlab
+$ cd safe2ditch && git submodule update --init --recursive
 ```
 
 After installing the dependencies listed below, you can build the ROS packages:
@@ -14,6 +14,24 @@ After installing the dependencies listed below, you can build the ROS packages:
 $ cd catkin_ws
 $ catkin_make
 ```
+
+## Environment Setup ##
+
+The easiest way to setup the Safe2Ditch environment is by sourcing `s2denv`. You can add it to your `~/.bashrc` for convenience, but beware: having multiple catkin workspaces sourced at once is generally a bad idea. This script is found in `safe2ditch/startup/s2devnv`. See [wiki/Software Setup](https://magiccvs.byu.edu/gitlab/robust_tracking/safe2ditch/wikis/software-setup) for other helpful environment setup tips.
+
+### Software-in-the-Loop (SIL) ###
+
+Make sure to setup the [`ardupilot_sim`](https://magiccvs.byu.edu/gitlab/lab/ardupilot_sim) package by following the instructions on its README. After you've installed all of its dependencies, make it run once (`roslaunch ardupilot_sim copter.launch`) so that it builds everything and you can verify that it is working (you may get `link down` errors, see the `ardupilot_sim` README for info).
+
+After doing all that, run the Safe2Ditch SIL:
+
+```bash
+roslaunch nasa_s2d_sim sim.launch
+```
+
+This uses [`gzsatellite`](https://github.com/plusk01/gzsatellite) to pull down satellite imagery and build a world. On your first run, you will have to wait ~5 minutes for it to download.
+
+If you get `connection errors` in the `xterm` window that pops up, go into `nasa_s2d_sim/scripts/copter_sitl.sh` and increase the `sleep` time -- there is a note about slower computers.
 
 ## Dependencies ##
 
