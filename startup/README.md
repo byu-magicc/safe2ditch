@@ -5,9 +5,9 @@ A collection of shell scripts and aliases to setup the Safe2Ditch environment.
 
 ## `s2denv` ##
 
-Setup the Safe2Ditch environment for use with ROS, etc. This file can be safely source by non-flight computers (i.e., your working desktop computer).
+Setup the Safe2Ditch environment for use with ROS, etc. This file can be safely sourced by non-flight computers (i.e., your working desktop computer).
 
-In addition to sourcing the `safe2ditch/catkin_ws` workspace, it creates a series of `S2D*` environment variable sthat are used for data logging and other flight / sim configuration.
+In addition to sourcing the `safe2ditch/catkin_ws` workspace, it creates a series of `S2D*` environment variables that are used for data logging and other flight / sim configuration.
 
 Also, this script exposes the following functions:
 
