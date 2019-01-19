@@ -31,6 +31,3 @@
 [submodule "catkin_ws/src/dss/src"]
 	path = catkin_ws/src/dss/src
 	url = git@github.com:nasa/Safe2Ditch.git
-[submodule "ardupilot_gazebo"]
-	path = ardupilot_gazebo
-	url = https://github.com/khancyr/ardupilot_gazebo
