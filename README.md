@@ -10,11 +10,19 @@ $ cd safe2ditch && git checkout s2d_ros_standalone
 $ git submodule update --init --recursive
 ```
 
+The submodule updates will require login information a github account that has
+access to the NASA Safe2Ditch repository since it is a private repo.  If you
+require access, contact Bryan Petty at bryan.j.petty@nasa.gov.
+
 After installing the dependencies listed below, you can build the ROS packages:
 ```bash
 $ cd catkin_ws
 $ catkin_make
 ```
+
+The catkin_make make command will take a few minutes to complete.  Once done,
+you can test the build by running the software in the loop simulations.
+Insturctions for this are below in the Software-in-the-Loop (SIL) section.
 
 ## Environment Setup ##
 
@@ -29,6 +37,14 @@ After doing all that, run the Safe2Ditch SIL:
 ```bash
 roslaunch nasa_s2d_sim sim.launch
 ```
+
+Safe2Ditch can be activated when the copter is flying a mission in auto mode by
+setting RC channel 6 above 1500.  This can be done by typing 
+```bash
+rc 6 rc_value
+```
+where rc_value is a number above 1500 and below 2000.  This command should be
+typed into the mavproxy console connected to the simulation.
 
 This uses [`gzsatellite`](https://github.com/plusk01/gzsatellite) to pull down satellite imagery and build a world. On your first run, you will have to wait ~5 minutes for it to download.
 
