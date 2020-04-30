@@ -6,7 +6,8 @@ For information about this project and the hardware/software platform view the [
 This project contains git [submodules](http://bhilburn.org/cheat-sheet-for-git-submodules/). To clone this repo and all of the submodules:
 ```bash
 $ git clone ssh://git@magiccvs.byu.edu:290/robust_tracking/safe2ditch.git # Make sure to add an SSH key to gitlab
-$ cd safe2ditch && git submodule update --init --recursive
+$ cd safe2ditch && git checkout cpp_merge 
+$ git submodule update --init --recursive
 ```
 
 After installing the dependencies listed below, you can build the ROS packages:
@@ -61,7 +62,9 @@ To achieve a consistent interface across simulation and hardware testing of Safe
 
 ## Ditch Site Selector (DSS) ##
 
-One of the core pieces of the Safe2Ditch project is choosing viable *ditch sites* or landing zones. The Ditch Site Selector (DSS) component (`catkin_ws/src/dss/src`) is currently written in Python and is actively being worked on by Trish Glaab.
+One of the core pieces of the Safe2Ditch project is choosing viable *ditch sites* or landing zones. The Ditch Site Selector (DSS) component (`catkin_ws/src/dss`) is currently written in C++ and is actively being worked on by Bryan Petty, Analytical Mechanics Associates INC., under direction of Trish Glaab and Lou Glaab.
+
+Contact Info: bryan.j.petty@nasa.gov
 
 ## Mission Planner ##
 
