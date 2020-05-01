@@ -16,7 +16,7 @@
     <!-- Start mavros and connect to the Pixhawk running APM:Copter through MAVProxy layer -->
     <include file="$(find nasa_s2d)/launch/mavros.launch">
         <!-- Connect via a MAVProxy GCS output -->
-        <arg name="fcu_url"  value="udp://127.0.0.1:14550@" />
+        <arg name="fcu_url"  value="udp://127.0.0.1:14567@" />
     </include>
 
 
