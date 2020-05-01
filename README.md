@@ -3,6 +3,11 @@ NASA S2D2 Emergency Landing Project
 
 For information about this project and the hardware/software platform view the [wiki](https://magiccvs.byu.edu/gitlab/robust_tracking/safe2ditch/wikis/home).
 
+WARNING: This implementation assumes that you will be running the STEReO branch of 
+ICAROUS being that is being developed by NASA in parallel to Safe2Ditch.  This
+branch has restricted access, so use of the icarous_s2d branch should be for
+advanced users with the appropriate access rights only.
+
 This project contains git [submodules](http://bhilburn.org/cheat-sheet-for-git-submodules/). To clone this repo and all of the submodules:
 ```bash
 $ git clone ssh://git@magiccvs.byu.edu:290/robust_tracking/safe2ditch.git # Make sure to add an SSH key to gitlab
