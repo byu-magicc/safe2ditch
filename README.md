@@ -6,7 +6,7 @@ For information about this project and the hardware/software platform view the [
 This project contains git [submodules](http://bhilburn.org/cheat-sheet-for-git-submodules/). To clone this repo and all of the submodules:
 ```bash
 $ git clone ssh://git@magiccvs.byu.edu:290/robust_tracking/safe2ditch.git # Make sure to add an SSH key to gitlab
-$ cd safe2ditch && git checkout s2d_ros_standalone 
+$ cd safe2ditch && git checkout icarous_s2d 
 $ git submodule update --init --recursive
 ```
 
