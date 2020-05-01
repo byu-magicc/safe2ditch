@@ -5,7 +5,7 @@
     <param name="dss/config_file" type="string" value="$(env S2D_DSS_CONFIG_FILE)" />
     
     <!-- Connect to HW using MAVProxy, expose UDP pipe to mavros -->
-    <node name="mavproxy" pkg="nasa_s2d" type="mavproxy_launcher.sh" />
+    <!--<node name="mavproxy" pkg="nasa_s2d" type="mavproxy_launcher.sh" />-->
 
     <!-- Connect to ueye camera and publish camera/image_raw topic and camera_info -->
     <include file="$(find nasa_s2d)/launch/run-camera.launch" />
