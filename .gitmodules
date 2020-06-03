@@ -32,3 +32,7 @@
 	path = catkin_ws/src/dss
 	url = https://github.com/nasa/Safe2Ditch.git
 	branch = IcarousIntegration
+[submodule "catkin_ws/src/vn200"]
+	path = catkin_ws/src/vn200
+	url = https://github.com/thanedowning/vectornav.git
+	branch = publish_pose_tf
