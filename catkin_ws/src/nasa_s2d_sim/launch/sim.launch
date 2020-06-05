@@ -65,7 +65,8 @@
     </group>
 
 
-
+    <!-- Run the laucnch file that reads in VN200 data-->
+    <include file="$(find vectornav)/launch/vectornav.launch"/>
 
     <!-- Launch Safe2Ditch core system -->
     <include file="$(find nasa_s2d)/launch/safe2ditch.launch">

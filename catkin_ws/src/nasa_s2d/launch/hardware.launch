@@ -9,6 +9,9 @@
 
     <!-- Connect to ueye camera and publish camera/image_raw topic and camera_info -->
     <include file="$(find nasa_s2d)/launch/run-camera.launch" />
+    
+    <!-- Run the laucnch file that reads in VN200 data-->
+    <include file="$(find vectornav)/launch/vectornav.launch"/>
 
     <!-- Kick off the Safe2Ditch system: DSS and VAL -->
     <include file="$(find nasa_s2d)/launch/safe2ditch.launch" />
