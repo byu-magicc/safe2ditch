@@ -41,7 +41,7 @@
 
 
     <!-- connect the geolocator to the output of visual_mtt -->
-    <remap from="pose"  to="mavros/local_position/pose" />
+    <remap from="pose"  to="vectornav/Pose" />
     <include file="$(find flat_earth_geolocation)/launch/geolocate.launch">
         <arg name="show3d" value="false" />
         <arg name="camera_name" value="camera" />
@@ -63,14 +63,14 @@
 
     <!-- Adaptive Parameter Tuning -->
     <node pkg="nasa_s2d" type="adaptive_params.py" name="adaptive_params">
-        <remap from="odom" to="/mavros/global_position/local" />
+        <remap from="odom" to="vectornav/Odom" />
     </node>
 
 
 
     <!-- Visual Obstacle Detection -->
     <node name="obstacle_detection" pkg="nasa_s2d" type="obstacle_detection.py" output="screen">
-        <remap from="uav_gps_fix" to="/mavros/global_position/global" />
+        <remap from="uav_gps_fix" to="vectornav/GPS" />
     </node>
 
 
