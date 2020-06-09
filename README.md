@@ -92,3 +92,7 @@ Contact Info: bryan.j.petty@nasa.gov
 Because Mission Planner is built on Microsoft .NET, it is possible to run Mission Planner on Linux using the [mono project](http://www.mono-project.com/). Install `mono`, download Mission Planner, and then just run `sudo mono MissionPlanner.exe`. See [here](https://discuss.ardupilot.org/t/running-mission-planner-on-linux/19100).
 
 In order for this to work, you must install `mono` from the official ppa and not from the one packaged with Ubuntu. Follow the instructions at the `mono` [project website](https://www.mono-project.com/download/stable/). Tested and works with Mission Planner 1.3.53 and `mono` 5.12.0.226 on Ubuntu 16.04 (and in Gnome).
+
+## Invlaid Operation in VN200 Module ##
+Generally this happens due to permissions on the usb serial port.  To solve this, type this in the command line
+'sudo chmod a+rw /dev/ttyUSB0'
