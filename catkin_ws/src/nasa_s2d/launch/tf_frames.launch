@@ -22,20 +22,29 @@
     <!-- at (0,0,0). It is a fixed frame. It is ENU. -->
 
     <!-- Create an NED inertial map: Note that args are (x y z Y P R) -->
-    <node pkg="tf" type="static_transform_publisher" name="static_tf0" args="0 0 0 1.5708 0 3.14159 map map_ned 10" />
-
+    <!--<node pkg="tf" type="static_transform_publisher" name="static_tf0" args="0 0 0 1.5708 0 3.14159 map map_ned 10" />-->
+    
+    <!-- Create an NED inertial map with the vn200 configuration: Note that args are (x y z Y P R) -->
+    <node pkg="tf" type="static_transform_publisher" name="static_tf0" args="0 0 0 0 0 0 map map_ned 10" />
+    
+    <!-- Create link between the camera and the Vector Nav node-->
+    <node pkg="tf" type="static_transform_publisher" name="static_tf1" args="0 0 0 -1.1959156 -1.5342661 2.7667959 imu_link camera 10" />
+    
+    <!-- Create link between the imu_link and the base_link used by nasa_s2d tf frames-->
+    <node pkg="tf" type="static_transform_publisher" name="static_tf2" args="0 0 0 0 0 0 base_link imu_link 10" />
+    
     <!-- Relate the inertial map (ENU) to the fcu (ENU) inertial frame -->
     <!-- <node pkg="tf" type="static_transform_publisher" name="static_tf1" args="0 0 0 0 0 0 map fcu 10" /> -->
 
     <!-- Transform FLU base_link (ROS body frame) to body NED (UAV book) -->
-    <node pkg="tf" type="static_transform_publisher" name="static_tf2" args="0 0 0 0 0 3.14159 base_link base_link_ned 10" />
+    <!--<node pkg="tf" type="static_transform_publisher" name="static_tf2" args="0 0 0 0 0 3.14159 base_link base_link_ned 10" />-->
 
     <!-- Transform from body NED frame into the gimbal frame. For Sully, it's a static 45 deg camera -->
     <!-- Remember that gimbal rotation uses a 3-1-2 (y-r-p) Euler angle sequence -->
-    <node pkg="tf" type="static_transform_publisher" name="static_tf3" args="0 0 0 0 -0.7854 0 base_link_ned gimbal 10" />
+    <!--<node pkg="tf" type="static_transform_publisher" name="static_tf3" args="0 0 0 0 -0.7854 0 base_link_ned gimbal 10" />-->
 
     <!-- Transform from gimbal body-NED frame into the camera frame (right-down-optical_axis) -->
-    <node pkg="tf" type="static_transform_publisher" name="static_tf4" args="0 0 0 1.5708 0 1.5708 gimbal camera 10" />
+    <!--<node pkg="tf" type="static_transform_publisher" name="static_tf4" args="0 0 0 1.5708 0 1.5708 gimbal camera 10" />-->
     
 
 </launch>
