@@ -55,9 +55,9 @@
 
 
     <!-- Ditch Site Selection: Pass in the configuration file directory (mavproxy aircraft dir) -->
-    <rosparam command="load" file="$(find dss_cpp)/examples/config_files/S2D_config.yaml" />
-    <rosparam command="load" file="$(find dss_cpp)/examples/ditchsite_lists/ditch_sites.yaml"/>
-    <node name="dss_node" pkg="dss_cpp" type="safe2ditch_dss" output="screen"/>
+    <rosparam command="load" file="$(find dss)/examples/config_files/S2D_config.yaml" />
+    <rosparam command="load" file="$(find dss)/examples/ditchsite_lists/ditch_sites.yaml"/>
+    <node name="dss_node" pkg="dss" type="safe2ditch_dss" output="screen"/>
 
 
 
