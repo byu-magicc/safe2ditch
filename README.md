@@ -96,3 +96,6 @@ In order for this to work, you must install `mono` from the official ppa and not
 ## Invlaid Operation in VN200 Module ##
 Generally this happens due to permissions on the usb serial port.  To solve this, type this in the command line
 'sudo chmod a+rw /dev/ttyUSB0'
+
+## Compilation and Execution on Nvidia Jetson Xavier ##
+- TODO
