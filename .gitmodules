@@ -18,3 +18,30 @@
 	path = catkin_ws/src/vn200
 	url = https://github.com/thanedowning/vectornav.git
 	branch = publish_pose_tf
+[submodule "required_installs/rransac"]
+	path = required_installs/rransac
+	url = git@magiccvs.byu.edu:recursive_ransac/rransac.git
+[submodule "required_installs/ceres-solver"]
+	path = required_installs/ceres-solver
+	url = https://ceres-solver.googlesource.com/ceres-solver
+[submodule "required_installs/parallax_cpp"]
+	path = required_installs/parallax_cpp
+	url = git@magiccvs.byu.edu:robust_tracking/parallax_cpp.git
+[submodule "catkin_ws/src/geographic_info"]
+	path = catkin_ws/src/geographic_info
+	url = https://github.com/ros-geographic-info/geographic_info.git
+[submodule "catkin_ws/src/geometry"]
+	path = catkin_ws/src/geometry
+	url = https://github.com/ros/geometry.git
+[submodule "catkin_ws/src/geometry2"]
+	path = catkin_ws/src/geometry2
+	url = https://github.com/ros/geometry2.git
+[submodule "catkin_ws/src/mavros"]
+	path = catkin_ws/src/mavros
+	url = https://github.com/mavlink/mavros.git
+[submodule "catkin_ws/visual_mtt"]
+	path = catkin_ws/visual_mtt
+	url = git@magiccvs.byu.edu:visual_mtt/visual_mtt.git
+[submodule "catkin_ws/src/visual_mtt"]
+	path = catkin_ws/src/visual_mtt
+	url = git@magiccvs.byu.edu:visual_mtt/visual_mtt.git
