@@ -98,4 +98,16 @@ Generally this happens due to permissions on the usb serial port.  To solve this
 'sudo chmod a+rw /dev/ttyUSB0'
 
 ## Compilation and Execution on Nvidia Jetson Xavier ##
-- TODO
+- Install ROS Base: http://wiki.ros.org/melodic/Installation/Ubuntu
+- uninstall ros tf and tf2 if installed: sudo apt-get remove ros-melodic-tf ros-melodic-tf2
+- Pull submodules (see above)
+- Read README.md in both required_installs and catkin_ws/src
+- set python3 as default: sudo unlink /usr/bin/python && sudo ln -s /usr/bin/python3.6 /usr/bin/python
+- install python3 tools: sudo apt-get install -y python3-pip python3-dev python3-setuptools
+- pip3 install catkin_pkg
+- sudo apt-get install ros-melodic-mavlink ros-melodic-uuid-msgs ros-melodic-tf2-bullet python3-numpy libgeographic-dev ros-melodic-camera-calibration ros-melodic-unique-id ros-melodic-camera-info-manager apt-get install python3-empy geographiclib-tools python3-future python3-defusedxml python3-netifaces python3-pycryptodome python3-gnupg python3-pyproj
+- sudo ./catkin_ws/src/mavros/mavros/scripts/install_geographiclib_datasets.sh
+- install ueye drivers: https://www.ids-imaging.us/downloads.html (version 4.91.1.0_arm64 used)
+- compile with catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DCATKIN_BLACKLIST_PACKAGES="test_mavros"
+
+For issue with Installation or execution, contact Bryan J Petty (AMA Inc.) at bryan.j.petty@nasa.gov.

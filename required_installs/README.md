@@ -18,14 +18,15 @@ Install the dependencies
 Build the code and install
 
     cd ceres-solver
-    mkdir build    
+    mkdir build
+    cd build
     cmake ..
     make -j3
     make test
     # Optionally install Ceres, it can also be exported using CMake which
     # allows Ceres to be used without requiring installation, see the documentation
     # for the EXPORT_BUILD_DIR option for more information.
-    make install
+    sudo make install
 
 reference: http://ceres-solver.org/installation.html
 
@@ -37,7 +38,8 @@ Dependencies
     Boost (comes with Xavier Ubuntu)
     Ceres Solver (above)
     OpenCV4 (comes with Xavier Ubuntu)
-    LieGroups (Submodule)
+    LieGroups (Submodule)(may need to change liegroups/cmake/googletest.cmake.in master->main)
+    (may need to change cmake/googletest.cmake.in master->main)
 
 Building the code
 
