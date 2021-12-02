@@ -87,8 +87,8 @@ fi
 #                                  ROS Setup                                  #
 ###############################################################################
 
-# ROS Kinetic and Safe2Ditch ROS catkin_ws
-source /opt/ros/kinetic/setup.bash
+# ROS Melodic and Safe2Ditch ROS catkin_ws
+source /opt/ros/melodic/setup.bash
 source $S2DROOT/catkin_ws/devel/setup.bash
 
 # ROS Tools
