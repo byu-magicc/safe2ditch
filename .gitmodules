@@ -7,9 +7,6 @@
 [submodule "catkin_ws/src/flat_earth_geolocation"]
 	path = catkin_ws/src/flat_earth_geolocation
 	url = ssh://git@magiccvs.byu.edu/robust_tracking/flat_earth_geolocation.git
-[submodule "catkin_ws/src/state_plotter"]
-    path = catkin_ws/src/state_plotter
-    url = ssh://git@magiccvs.byu.edu/lab/state_plotter.git
 [submodule "catkin_ws/src/dss"]
 	path = catkin_ws/src/dss
 	url = https://github.com/nasa/Safe2Ditch.git
