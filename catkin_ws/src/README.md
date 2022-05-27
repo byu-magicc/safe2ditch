@@ -1,11 +1,5 @@
 The following modifications should be run before catkin_make is run
 
-dss
-===
-examples/vision_interface/ROSVisionInterface/ros_vision_interface.cpp
-
-    if (itr.inlier_ratio >= 0.95) { ----> if (itr.model_likelihood >= 0.95) {
-
 flat_earth_geolocation
 ======================
 src/geolocator/geolocator.cpp
