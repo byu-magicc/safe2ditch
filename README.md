@@ -110,4 +110,4 @@ Generally this happens due to permissions on the usb serial port.  To solve this
 - install ueye drivers: https://www.ids-imaging.us/downloads.html (version 4.91.1.0_arm64 used)
 - compile with catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DCATKIN_BLACKLIST_PACKAGES="test_mavros"
 
-For issue with Installation or execution, contact Bryan J Petty (AMA Inc.) at bryan.j.petty@nasa.gov.
+For issue with Installation or execution, contact Bryan J Petty at bryan.j.petty@nasa.gov.
