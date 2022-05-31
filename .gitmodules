@@ -1,9 +1,6 @@
 [submodule "catkin_ws/src/ueye_cam"]
 	path = catkin_ws/src/ueye_cam
 	url = https://github.com/anqixu/ueye_cam
-[submodule "catkin_ws/src/vision_opencv"]
-	path = catkin_ws/src/vision_opencv
-	url = https://github.com/ros-perception/vision_opencv
 [submodule "catkin_ws/src/flat_earth_geolocation"]
 	path = catkin_ws/src/flat_earth_geolocation
 	url = ssh://git@magiccvs.byu.edu/robust_tracking/flat_earth_geolocation.git
