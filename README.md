@@ -22,7 +22,7 @@ require access, contact Bryan Petty at bryan.j.petty@nasa.gov.
 After installing the dependencies listed below, you can build the ROS packages:
 ```bash
 $ cd catkin_ws
-$ catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m -DPYTHON_LIBRARY=/usr/lib/aarch64-linux-gnu/libpython3.6m.so
+$ catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m -DPYTHON_LIBRARY=/usr/lib/aarch64-linux-gnu/libpython3.6m.so -DCATKIN_BLACKLIST_PACKAGES="test_mavros"
 ```
 
 The catkin_make make command will take a few minutes to complete.
@@ -87,6 +87,6 @@ Generally this happens due to permissions on the usb serial port.  To solve this
 - sudo apt-get install ros-melodic-mavlink ros-melodic-uuid-msgs ros-melodic-tf2-bullet python3-numpy libgeographic-dev ros-melodic-camera-calibration ros-melodic-unique-id ros-melodic-camera-info-manager apt-get install python3-empy geographiclib-tools python3-future python3-defusedxml python3-netifaces python3-pycryptodome python3-gnupg python3-pyproj
 - sudo ./catkin_ws/src/mavros/mavros/scripts/install_geographiclib_datasets.sh
 - install ueye drivers: https://www.ids-imaging.us/downloads.html (version 4.91.1.0_arm64 used)
-- compile with catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DCATKIN_BLACKLIST_PACKAGES="test_mavros"
+- compile with catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m -DPYTHON_LIBRARY=/usr/lib/aarch64-linux-gnu/libpython3.6m.so -DCATKIN_BLACKLIST_PACKAGES="test_mavros"
 
 For issue with Installation or execution, contact Bryan J Petty at bryan.j.petty@nasa.gov.
