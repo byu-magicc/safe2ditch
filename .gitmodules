@@ -39,3 +39,6 @@
 [submodule "catkin_ws/src/visual_mtt"]
 	path = catkin_ws/src/visual_mtt
 	url = git@magiccvs.byu.edu:visual_mtt/visual_mtt.git
+[submodule "catkin_ws/src/vision_opencv"]
+	path = catkin_ws/src/vision_opencv
+	url = https://github.com/bryanpetty14/vision_opencv.git
