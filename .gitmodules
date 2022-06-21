@@ -3,28 +3,28 @@
 	url = https://github.com/anqixu/ueye_cam
 [submodule "catkin_ws/src/moving_targets"]
 	path = catkin_ws/src/moving_targets
-	url = ssh://git@magiccvs.byu.edu/robust_tracking/moving_targets.git
+	url = git@github.com:byu-magicc/moving_targets.git
 [submodule "catkin_ws/src/vision_opencv"]
 	path = catkin_ws/src/vision_opencv
 	url = https://github.com/ros-perception/vision_opencv
-[submodule "catkin_ws/src/visual_mtt2"]
-	path = catkin_ws/src/visual_mtt2
-	url = ssh://git@magiccvs.byu.edu/robust_tracking/visual_mtt2.git
+[submodule "catkin_ws/src/visual_mtt"]
+	path = catkin_ws/src/visual_mtt
+	url = git@github.com:byu-magicc/visual_mtt.git
 [submodule "catkin_ws/src/flat_earth_geolocation"]
 	path = catkin_ws/src/flat_earth_geolocation
-	url = ssh://git@magiccvs.byu.edu/robust_tracking/flat_earth_geolocation.git
+	url = git@github.com:byu-magicc/flat_earth_geolocation.git
 [submodule "catkin_ws/src/rviz_satellite"]
 	path = catkin_ws/src/rviz_satellite
 	url = https://github.com/gareth-cross/rviz_satellite
 [submodule "rransac"]
 	path = rransac
-	url = ssh://git@magiccvs.byu.edu/robust_tracking/rransac.git
+	url = git@github.com:byu-magicc/rransac.git
 [submodule "catkin_ws/src/ardupilot_sim"]
 	path = catkin_ws/src/ardupilot_sim
-    url = ssh://git@magiccvs.byu.edu/lab/ardupilot_sim.git
+        url = git@github.com:byu-magicc/ardupilot_sim.git
 [submodule "catkin_ws/src/state_plotter"]
-    path = catkin_ws/src/state_plotter
-    url = ssh://git@magiccvs.byu.edu/lab/state_plotter.git
+        path = catkin_ws/src/state_plotter
+        url = git@github.com:byu-magicc/state_plotter.git
 [submodule "catkin_ws/src/gzsatellite"]
 	path = catkin_ws/src/gzsatellite
 	url = https://github.com/plusk01/gzsatellite
